@@ -12,7 +12,7 @@ const menuItems = {
           title: 'Home',
           type: 'item',
           icon: 'feather icon-home',
-          url: '/home'
+          url: '/'
         },
         {
           id: 'sales',
