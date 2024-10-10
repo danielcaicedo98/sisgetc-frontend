@@ -46,7 +46,7 @@ export const routes = [
     routes: [
       {
         exact: 'true',
-        path: '/home',
+        path: '/',
         element: lazy(() => import('./views/home/home'))
       },
       {
