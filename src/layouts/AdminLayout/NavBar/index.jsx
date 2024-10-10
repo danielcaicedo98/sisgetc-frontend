@@ -8,7 +8,7 @@ import { ConfigContext } from '../../../contexts/ConfigContext';
 import * as actionType from '../../../store/actions';
 
 // assets
-import logo from '../../../assets/images/logo1.png';
+import logo from '../../../assets/images/Logo1.png';
 
 // ==============================|| NAV BAR ||============================== //
 
