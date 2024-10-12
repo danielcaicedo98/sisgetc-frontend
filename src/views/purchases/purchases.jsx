@@ -1,55 +1,29 @@
+// src/views/purchases/Purchases.jsx
 import React, { useState, useCallback, useEffect } from 'react';
 import { Card, Modal, Button } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import ProductItem from './ProductItem'; // Asegúrate de importar el componente actualizado
 import './Purchases.scss';
 
-// Componente individual para cada producto, optimizado con React.memo
-const ProductItem = React.memo(({ 
-  producto, 
-  onChangeProducto, 
-  onChangePrecio, 
-  onRemove, 
-  productOptions, 
-  isLoadingProducts, 
-  onProductInputChange 
-}) => {
-  return (
-    <div className="producto">
-      <Typeahead
-        id={`producto-${producto.id}`}
-        labelKey="name" // Asumiendo que cada producto tiene una propiedad 'name'
-        onChange={(selected) => onChangeProducto(producto.id, selected[0] || null)}
-        onInputChange={(text) => onProductInputChange(text, producto.id)}
-        options={productOptions}
-        placeholder="Selecciona o escribe el producto"
-        selected={producto.productoObj ? [producto.productoObj] : []}
-        isLoading={isLoadingProducts}
-        minLength={1}
-        clearButton
-      />
-      <input
-        type="number"
-        step="0.01"
-        value={producto.precio}
-        onChange={(e) => onChangePrecio(producto.id, e.target.value)}
-        placeholder="Precio"
-      />
-      <button type="button" onClick={() => onRemove(producto.id)}>Eliminar</button>
-    </div>
-  );
-});
-
 const Purchases = () => {
-  const [productos, setProductos] = useState([{ id: Date.now(), text: '', precio: '', productoObj: null }]);
+  const [productos, setProductos] = useState([{ 
+    id: Date.now(), 
+    text: '', 
+    precio: '', 
+    cantidad: '', 
+    unidad: '', 
+    productoObj: null 
+  }]);
   const [errors, setErrors] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
   const [productToRemove, setProductToRemove] = useState(null);
   
-  // Nuevos estados para fecha, proveedor y descripción
+  // Nuevos estados para fecha, proveedor, descripción y total
   const [fecha, setFecha] = useState('');
   const [proveedor, setProveedor] = useState([]);
   const [descripcion, setDescripcion] = useState('');
+  const [total, setTotal] = useState(0);
   
   // Estados de error para fecha, proveedor y descripción
   const [fechaError, setFechaError] = useState('');
@@ -80,7 +54,7 @@ const Purchases = () => {
     fetch(`http://localhost:5000/providers?name_like=${encodeURIComponent(query)}`)
       .then(response => response.json())
       .then(data => {
-        setProviderOptions(data.providers); // Asegúrate de que tu API devuelve { providers: [...] }
+        setProviderOptions(data);
         setIsLoadingProviders(false);
       })
       .catch(error => {
@@ -101,7 +75,7 @@ const Purchases = () => {
     fetch(`http://localhost:5000/products?name_like=${encodeURIComponent(query)}`)
       .then(response => response.json())
       .then(data => {
-        setProductOptions(data.products); // Asegúrate de que tu API devuelve { products: [...] }
+        setProductOptions(data);
         setIsLoadingProducts(false);
       })
       .catch(error => {
@@ -134,7 +108,7 @@ const Purchases = () => {
     setProductDebounceTimer(timer);
   };
 
-  // Manejar cambios en el nombre del producto seleccionado
+  // Manejar cambios en el producto seleccionado
   const handleProductoChange = useCallback((id, productoObj) => {
     setProductos((prevProductos) =>
       prevProductos.map(p => (p.id === id ? { ...p, productoObj, text: productoObj ? productoObj.name : '' } : p))
@@ -150,9 +124,25 @@ const Purchases = () => {
     setErrors((prevErrors) => ({ ...prevErrors, [id]: { ...prevErrors[id], precio: '' } }));
   }, []);
 
+  // Manejar cambios en la cantidad del producto
+  const handleCantidadChange = useCallback((id, cantidad) => {
+    setProductos((prevProductos) =>
+      prevProductos.map(p => (p.id === id ? { ...p, cantidad: cantidad === '' ? '' : parseInt(cantidad) } : p))
+    );
+    setErrors((prevErrors) => ({ ...prevErrors, [id]: { ...prevErrors[id], cantidad: '' } }));
+  }, []);
+
+  // Manejar cambios en la unidad del producto
+  const handleUnidadChange = useCallback((id, unidad) => {
+    setProductos((prevProductos) =>
+      prevProductos.map(p => (p.id === id ? { ...p, unidad } : p))
+    );
+    setErrors((prevErrors) => ({ ...prevErrors, [id]: { ...prevErrors[id], unidad: '' } }));
+  }, []);
+
   // Agregar un nuevo producto
   const addProduct = () => {
-    setProductos([...productos, { id: Date.now(), text: '', precio: '', productoObj: null }]);
+    setProductos([...productos, { id: Date.now(), text: '', precio: '', cantidad: '', unidad: '', productoObj: null }]);
   };
 
   // Solicitar confirmación antes de eliminar un producto
@@ -177,10 +167,22 @@ const Purchases = () => {
   // Limpiar todos los productos
   const clearAll = () => {
     if (window.confirm('¿Estás seguro de que deseas eliminar todos los productos?')) {
-      setProductos([{ id: Date.now(), text: '', precio: '', productoObj: null }]);
+      setProductos([{ id: Date.now(), text: '', precio: '', cantidad: '', unidad: '', productoObj: null }]);
       setErrors({});
     }
   };
+
+  // Calcular el total cada vez que cambian los productos
+  useEffect(() => {
+    const newTotal = productos.reduce((acc, producto) => {
+      const precio = parseFloat(producto.precio) || 0;
+      const cantidad = parseInt(producto.cantidad) || 0;
+      return acc + precio;
+      //return acc + (precio * cantidad);
+      
+    }, 0);
+    setTotal(newTotal);
+  }, [productos]);
 
   // Validar los campos antes de enviar
   const validate = () => {
@@ -201,15 +203,7 @@ const Purchases = () => {
       setProveedorError('El proveedor es requerido.');
     } else {
       setProveedorError('');
-    }
-
-    // Validar descripción
-    if (!descripcion.trim()) {
-      valid = false;
-      setDescripcionError('La descripción es requerida.');
-    } else {
-      setDescripcionError('');
-    }
+    } 
 
     // Validar productos
     productos.forEach(producto => {
@@ -225,6 +219,14 @@ const Purchases = () => {
         valid = false;
         newErrors[producto.id] = { ...newErrors[producto.id], producto: 'Selecciona un producto válido.' };
       }
+      if (producto.cantidad === '' || isNaN(producto.cantidad) || producto.cantidad <= 0) {
+        valid = false;
+        newErrors[producto.id] = { ...newErrors[producto.id], cantidad: 'La cantidad debe ser un número positivo.' };
+      }
+      if (!producto.unidad) {
+        valid = false;
+        newErrors[producto.id] = { ...newErrors[producto.id], unidad: 'Selecciona una unidad válida.' };
+      }
     });
 
     setErrors(newErrors);
@@ -239,8 +241,11 @@ const Purchases = () => {
         fecha,
         proveedor: proveedor[0], // Asumiendo que solo se selecciona un proveedor
         descripcion,
+        total,
         productos: productos.map(p => ({
           producto: p.productoObj, // Incluye el objeto completo del producto
+          cantidad: p.cantidad,
+          unidad: p.unidad,
           precio: p.precio
         }))
       };
@@ -251,7 +256,7 @@ const Purchases = () => {
       setFecha('');
       setProveedor([]);
       setDescripcion('');
-      setProductos([{ id: Date.now(), text: '', precio: '', productoObj: null }]);
+      setProductos([{ id: Date.now(), text: '', precio: '', cantidad: '', unidad: '', productoObj: null }]);
       setErrors({});
       setFechaError('');
       setProveedorError('');
@@ -283,7 +288,7 @@ const Purchases = () => {
                 <label htmlFor="proveedor">Proveedor:</label>
                 <Typeahead
                   id="proveedor-typeahead"
-                  labelKey="name" // Asumiendo que cada proveedor tiene una propiedad 'name'
+                  labelKey="name"
                   onChange={(selected) => setProveedor(selected)}
                   onInputChange={handleProviderInputChange}
                   options={providerOptions}
@@ -314,6 +319,8 @@ const Purchases = () => {
                   producto={producto}
                   onChangeProducto={handleProductoChange}
                   onChangePrecio={handlePriceChange}
+                  onChangeCantidad={handleCantidadChange}
+                  onChangeUnidad={handleUnidadChange}
                   onRemove={requestRemoveProduct}
                   productOptions={productOptions}
                   isLoadingProducts={isLoadingProducts}
@@ -323,11 +330,18 @@ const Purchases = () => {
                   <div className="error-messages">
                     {errors[producto.id].text && <span className="error">{errors[producto.id].text}</span>}
                     {errors[producto.id].precio && <span className="error">{errors[producto.id].precio}</span>}
+                    {errors[producto.id].cantidad && <span className="error">{errors[producto.id].cantidad}</span>}
+                    {errors[producto.id].unidad && <span className="error">{errors[producto.id].unidad}</span>}
                     {errors[producto.id].producto && <span className="error">{errors[producto.id].producto}</span>}
                   </div>
                 )}
               </div>
             ))}
+
+            {/* Total */}
+            <div className="total-container">
+              <h3>Total: ${total.toFixed(2)}</h3>
+            </div>
 
             {/* Botones del formulario */}
             <div className="buttons-group">

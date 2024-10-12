@@ -1,8 +1,10 @@
-$form-max-width: 600px;
-$primary-color: #4CAF50;
+// src/views/purchases/Purchases.scss
+
+$form-max-width: 800px;
+$primary-color: #4B4B4B;
 $secondary-color: #f1f1f1;
 $button-color: #fff;
-$error-color: #ff4d4f;
+$error-color: #A52A2A;
 
 .form-container {
   max-width: $form-max-width;
@@ -26,7 +28,7 @@ $error-color: #ff4d4f;
       gap: 15px;
       margin-bottom: 20px;
 
-      @media (min-width: 600px) {
+      @media (min-width: 800px) {
         flex-direction: row;
         justify-content: space-between;
       }
@@ -43,6 +45,7 @@ $error-color: #ff4d4f;
 
         input,
         textarea,
+        select,
         .rbt-input-main {
           padding: 10px;
           border: 1px solid #ccc;
@@ -58,6 +61,10 @@ $error-color: #ff4d4f;
         textarea {
           resize: vertical;
           min-height: 80px;
+        }
+
+        select {
+          height: 40px;
         }
 
         .error {
@@ -85,9 +92,10 @@ $error-color: #ff4d4f;
     .producto {
       display: flex;
       flex-direction: column;
+      gap: 10px;
       margin-bottom: 15px;
 
-      @media (min-width: 600px) {
+      @media (min-width: 800px) {
         flex-direction: row;
         align-items: center;
       }
@@ -96,25 +104,26 @@ $error-color: #ff4d4f;
         flex: 3;
         margin-right: 10px;
 
-        @media (max-width: 599px) {
+        @media (max-width: 799px) {
           width: 100%;
         }
       }
 
-      input[type="number"] {
+      input[type="number"],
+      select {
         flex: 1;
         width: 100%;
         max-width: 150px;
         margin-right: 10px;
 
-        @media (max-width: 599px) {
+        @media (max-width: 799px) {
           width: 100%;
         }
       }
 
       button {
         padding: 10px 15px;
-        background-color: $primary-color;
+        background-color: #C0001E;
         color: $button-color;
         border: none;
         border-radius: 4px;
@@ -122,13 +131,21 @@ $error-color: #ff4d4f;
         transition: background-color 0.3s;
 
         &:hover {
-          background-color: darken($primary-color, 10%);
+          background-color: #d24231;
         }
 
-        @media (max-width: 599px) {
+        @media (max-width: 799px) {
           width: 100%;
-          margin-top: 10px;
         }
+      }
+    }
+
+    .total-container {
+      text-align: right;
+      margin-bottom: 20px;
+
+      h3 {
+        color: $primary-color;
       }
     }
 
@@ -137,7 +154,7 @@ $error-color: #ff4d4f;
       flex-direction: column;
       gap: 10px;
 
-      @media (min-width: 600px) {
+      @media (min-width: 800px) {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
@@ -146,7 +163,7 @@ $error-color: #ff4d4f;
       .agregar-producto,
       .clear-all,
       .submit-button {
-        background-color: $primary-color;
+        background-color: #4B8B3B;
         color: $button-color;
         padding: 10px 15px;
         border: none;
@@ -157,27 +174,27 @@ $error-color: #ff4d4f;
         flex: 1;
 
         &:hover {
-          background-color: darken($primary-color, 10%);
+          background-color: #6BBF5B;
         }
 
-        @media (min-width: 600px) {
+        @media (min-width: 800px) {
           width: auto;
         }
       }
 
       .clear-all {
-        background-color: #f44336; // Color rojo para "Limpiar Todo"
+        background-color: #C0001E; // Color rojo para "Limpiar Todo"
 
         &:hover {
-          background-color: darken(#f44336, 10%);
+          background-color: #d24231;
         }
       }
 
       .submit-button {
-        background-color: #2196F3; // Color azul para "Guardar"
+        background-color: #003366; // Color azul para "Guardar"
 
         &:hover {
-          background-color: darken(#2196F3, 10%);
+          background-color: #00509E;
         }
       }
     }
@@ -193,3 +210,22 @@ $error-color: #ff4d4f;
     }
   }
 }
+
+
+select {
+    padding: 10px;
+    border: 1px solid #f9f9f9;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+  
+  select:hover {
+    border-color: #f9f9f9;
+  }
+  
+  select:focus {
+    outline: none;
+    border-color: #007BFF; /* Color del borde al enfocar */
+  }
