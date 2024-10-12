@@ -6,7 +6,7 @@
     overflow: hidden;
     width: 100%;
     height: 100vh;
-    background: linear-gradient(45deg, #f71818b4, #DD9933);
+    background: linear-gradient(30deg, rgba(182, 35, 35, 0.541), #ff9900a4);
 }
 
 .auth-bg {
@@ -15,7 +15,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.1);
+    border-radius: 7px;
+    background: rgba(134, 134, 134, 0.1);
 }
 
 .auth-content {
@@ -63,7 +64,7 @@ padding: 0px;
 .btn-block {
     width: 100%;    
     font-size: 1.1rem;
-    background-color: #105db6;
+    background-color: #bb1c1f;
     border: none;
     border-radius: 5px;
     color: white;
