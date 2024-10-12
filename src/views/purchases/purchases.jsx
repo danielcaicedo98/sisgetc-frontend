@@ -7,7 +7,7 @@ const Purchases = () => {
     return (
         <React.Fragment>
              <Card.Body>
-              <h1>COMPRAS</h1>
+              <h1>COMPRAS DE PRODUCTOS</h1>
               <Card.Text className="text-muted mb-4">
                 Suspendisse vel quam malesuada, aliquet sem sit amet, fringilla elit. Morbi tempor tincidunt tempor. Etiam id turpis
                 viverra, vulputate sapien nec, varius sem. Curabitur ullamcorper fringilla eleifend. In ut eros hendrerit est consequat
