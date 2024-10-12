@@ -1,21 +1,16 @@
 import React from 'react';
-
-// react-bootstrap
 import { Row, Col, Alert, Button } from 'react-bootstrap';
-
-// third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-
-// ==============================|| JWT LOGIN ||============================== //
+import '../../../assets/scss/themes/_homecustom.scss';
 
 const JWTLogin = () => {
   return (
     <>
       <Formik
         initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
+          email: '',
+          password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -28,30 +23,30 @@ const JWTLogin = () => {
             <div className="form-group mb-3">
               <input
                 className="form-control"
-                label="Email Address / Username"
                 name="email"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 type="email"
                 value={values.email}
+                placeholder="Email Address / Username"
               />
               {touched.email && errors.email && <small className="text-danger form-text">{errors.email}</small>}
             </div>
             <div className="form-group mb-4">
               <input
                 className="form-control"
-                label="Password"
                 name="password"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 type="password"
                 value={values.password}
+                placeholder="Password"
               />
               {touched.password && errors.password && <small className="text-danger form-text">{errors.password}</small>}
             </div>
 
-            <div className="custom-control custom-checkbox  text-start mb-4 mt-2">
-              <input type="checkbox" className="custom-control-input mx-2" id="customCheck1" />
+            <div className="custom-control custom-checkbox text-start mb-4 mt-2">
+              <input type="checkbox" className="custom-control-input" id="customCheck1" />
               <label className="custom-control-label" htmlFor="customCheck1">
                 Save credentials.
               </label>
@@ -63,29 +58,32 @@ const JWTLogin = () => {
               </Col>
             )}
 
+           
             <Row>
               <Col mt={2}>
-                <Button className="btn-block mb-4" color="primary" disabled={isSubmitting} size="large" type="submit" variant="primary">
-                  Signin
+                <Button className="btn-block mb-4" disabled={isSubmitting} size="large" type="submit" variant="primary">
+                  Ingresar
                 </Button>
               </Col>
             </Row>
           </form>
         )}
-      </Formik>
-      <Row>
+      </Formik> 
+      
+      {/* Para implementar como una tarea adicional algo extra, por el momento sólo dejar el botón ingresar*/}
+      {/* <Row>
         <Col sm={12}>
-          <h5 className="my-3"> OR </h5>
+          <h5 className="my-3"> O </h5>
         </Col>
       </Row>
-
+        
       <Row>
         <Col sm={12}>
           <Button variant="danger">
-            <i className="fa fa-lock" /> Sign in with Google
+            <i className="fa fa-lock" /> Ingresar con Google
           </Button>
         </Col>
-      </Row>
+      </Row> */}
 
       <hr />
     </>
