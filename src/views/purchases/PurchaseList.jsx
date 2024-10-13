@@ -37,7 +37,7 @@ const PurchasesList = () => {
   };
 
   const handleEdit = (id) => {
-    navigate(`/purchases/edit/${id}`);
+    navigate(`/purchases`);
   };
 
   if (loading) {

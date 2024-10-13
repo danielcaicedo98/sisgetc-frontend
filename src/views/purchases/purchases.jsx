@@ -5,14 +5,18 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import ProductItem from './ProductItem'; // Asegúrate de importar el componente actualizado
 import './Purchases.scss';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Purchases = () => {
+  const { id } = useParams(); // Obtener el ID de la compra a editar, si existe
+  const navigate = useNavigate();
+
   const [productos, setProductos] = useState([{
     id: Date.now(),
     text: '',
     precio: '',
     cantidad: '',
-    unidad: '',
+    unidad: 'Unidades',
     productoObj: null
   }]);
   const [errors, setErrors] = useState({});
@@ -172,6 +176,38 @@ const Purchases = () => {
     }
   };
 
+  useEffect(() => {
+    if (id) {
+      // Obtener los datos de la compra a editar
+      fetch(`http://localhost:5000/purchases/${id}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Compra no encontrada');
+          }
+          return response.json();
+        })
+        .then(data => {
+          setFecha(data.fecha);
+          setProveedor([data.proveedor]);
+          setDescripcion(data.descripcion);
+          setTotal(data.total);
+          setProductos(data.productos.map(p => ({
+            id: Date.now() + Math.random(), // Generar un ID único para el formulario
+            text: p.producto.name,
+            precio: p.precio,
+            cantidad: p.cantidad,
+            unidad: p.unidad,
+            productoObj: p.producto
+          })));
+        })
+        .catch(error => {
+          console.error('Error fetching purchase:', error);
+          alert('No se encontró la compra que deseas editar.');
+          navigate('/purchases/list');
+        });
+    }
+  }, [id, navigate]);
+
   // Calcular el total cada vez que cambian los productos
   useEffect(() => {
     const newTotal = productos.reduce((acc, producto) => {
@@ -233,7 +269,6 @@ const Purchases = () => {
     return valid;
   };
 
-  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
@@ -251,40 +286,45 @@ const Purchases = () => {
       };
 
       try {
-        const response = await fetch('http://localhost:5000/purchases', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(compra)
-        });
+        let response;
+        if (id) {
+          // Editar una compra existente
+          response = await fetch(`http://localhost:5000/purchases/${id}`, {
+            method: 'PUT', // o 'PATCH' si solo actualizas algunos campos
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(compra)
+          });
+        } else {
+          // Crear una nueva compra
+          response = await fetch('http://localhost:5000/purchases', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(compra)
+          });
+        }
 
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
 
         const data = await response.json();
-        console.log('Compra guardada:', data);
-        alert('Compra guardada exitosamente.');
+        console.log(id ? 'Compra actualizada:' : 'Compra guardada:', data);
+        alert(id ? 'Compra actualizada exitosamente.' : 'Compra guardada exitosamente.');
 
-        // Limpiar el formulario después de guardar
-        setFecha('');
-        setProveedor([]);
-        setDescripcion('');
-        setProductos([{ id: Date.now(), text: '', precio: '', cantidad: 1, unidad: '', productoObj: null }]);
-        setErrors({});
-        setFechaError('');
-        setProveedorError('');
-        setDescripcionError('');
+        // Redireccionar a la lista de compras después de guardar
+        navigate('/purchases/list');
       } catch (error) {
-        console.error('Error al guardar la compra:', error);
-        alert('Hubo un problema al guardar la compra. Por favor, inténtalo nuevamente.');
+        console.error(id ? 'Error al actualizar la compra:' : 'Error al guardar la compra:', error);
+        alert(`Hubo un problema al ${id ? 'actualizar' : 'guardar'} la compra. Por favor, inténtalo nuevamente.`);
       }
     } else {
       alert('Por favor, corrige los errores en el formulario.');
     }
   };
-
   return (
     <React.Fragment>
       <Card.Body>
