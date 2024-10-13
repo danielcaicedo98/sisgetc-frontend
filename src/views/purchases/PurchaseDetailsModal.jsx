@@ -34,7 +34,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   // Calcular el total cada vez que cambian los productos
   useEffect(() => {
     const newTotal = productos.reduce((acc, producto) => {
-      const precio = parseFloat(producto.precio) || 0;     
+      const precio = parseFloat(producto.precio) || 0;
       return acc + precio;
     }, 0);
     setTotal(newTotal);
@@ -205,7 +205,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       alert('Hubo un problema al actualizar la compra. Por favor, inténtalo nuevamente.');
     }
   };
-
+  
   return (
     <Modal show={show} onHide={handleClose} size="lg" scrollable>
       <Modal.Header closeButton>
@@ -226,14 +226,13 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
               {errors.fecha}
             </Form.Control.Feedback>
           </Form.Group>
-
           {/* Proveedor */}
           <Form.Group className="mb-3" controlId="formProveedor">
             <Form.Label>Proveedor</Form.Label>
             <Typeahead
               id="proveedor-typeahead-modal"
               labelKey="name"
-              onChange={(selected) => setProveedor(selected)}
+              onChange={(selected) => handleProvChange(selected)}
               onInputChange={handleProviderInputChange}
               options={providerOptions}
               placeholder="Escribe el proveedor"
@@ -245,7 +244,6 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
             />
             {errors.proveedor && <div className="text-danger">{errors.proveedor}</div>}
           </Form.Group>
-
           {/* Descripción */}
           <Form.Group className="mb-3" controlId="formDescripcion">
             <Form.Label>Descripción</Form.Label>
@@ -260,7 +258,6 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
               {errors.descripcion}
             </Form.Control.Feedback>
           </Form.Group>
-
           {/* Productos */}
           <Form.Label>Productos</Form.Label>
           {productos.map((producto, index) => (
@@ -283,7 +280,6 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
                 />
                 {errors[`producto_${index}`] && <div className="text-danger">{errors[`producto_${index}`]}</div>}
               </Form.Group>
-
               <div className="d-flex gap-3">
                 {/* Cantidad */}
                 <Form.Group className="mb-3 flex-fill" controlId={`formCantidad_${index}`}>
@@ -299,7 +295,6 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
                     {errors[`cantidad_${index}`]}
                   </Form.Control.Feedback>
                 </Form.Group>
-
                 {/* Unidad */}
                 <Form.Group className="mb-3 flex-fill" controlId={`formUnidad_${index}`}>
                   <Form.Label>Unidad</Form.Label>
@@ -316,7 +311,6 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
                     {errors[`unidad_${index}`]}
                   </Form.Control.Feedback>
                 </Form.Group>
-
                 {/* Precio */}
                 <Form.Group className="mb-3 flex-fill" controlId={`formPrecio_${index}`}>
                   <Form.Label>Precio ($)</Form.Label>
@@ -332,7 +326,6 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
                     {errors[`precio_${index}`]}
                   </Form.Control.Feedback>
                 </Form.Group>
-
                 {/* Botón para eliminar producto */}
                 <div className="d-flex align-items-end">
                   <Button variant="danger" onClick={() => removeProduct(index)}>
@@ -347,7 +340,6 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
           <Button variant="secondary" onClick={addProduct}>
             Agregar Producto
           </Button>
-
           {/* Total */}
           <div className="mt-4">
             <h5>Total: ${total.toFixed(2)}</h5>

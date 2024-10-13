@@ -1,12 +1,22 @@
-
-
 /*ESTILOS SISGETC  */
+
+.modal-dialog {
+  display: flex;
+  align-items: center;
+  max-height: 600px;
+  min-height: calc(100% - 1rem);
+}
+
+.modal {
+  z-index: 10050; /* Asegúrate de que sea mayor que otros elementos */
+}
+
 .pcoded-navbar:not(.theme-horizontal) .navbar-content {
   height: calc(100% - 56px);
 }
 
 .navbar-color {
-  background-color:#DD9933; 
+  background-color: #DD9933;
 }
 
 
@@ -61,8 +71,8 @@ $error-color: #ff4d4f;
         border: 1px solid #ccc;
         border-radius: 4px;
         margin-right: 10px;
-        margin-bottom: 10px;
-        font-size: 1em;
+        margin-bottom: 5px;
+        font-size: 1.1em;
 
         &:focus {
           border-color: $primary-color;
@@ -70,25 +80,7 @@ $error-color: #ff4d4f;
         }
       }
 
-      input[type="text"] {
-        flex: 3;
-        margin-right: 10px;
 
-        @media (max-width: 599px) {
-          width: 100%;
-        }
-      }
-
-      input[type="number"] {
-        flex: 1;
-        width: 100%;
-        max-width: 150px;
-        margin-right: 10px;
-
-        @media (max-width: 599px) {
-          width: 100%;
-        }
-      }
 
       button {
         padding: 10px 15px;
@@ -121,7 +113,9 @@ $error-color: #ff4d4f;
         align-items: center;
       }
 
-      .agregar-producto, .clear-all, .submit-button {
+      .agregar-producto,
+      .clear-all,
+      .submit-button {
         background-color: $primary-color;
         color: $button-color;
         padding: 10px 15px;
@@ -164,8 +158,10 @@ $error-color: #ff4d4f;
 
 /* Tamaño del logo*/
 .logo-home {
-  width: 185px; /* Cambia el tamaño según necesites */
-  height: auto; /* Mantiene la proporción */
+  width: 185px;
+  /* Cambia el tamaño según necesites */
+  height: auto;
+  /* Mantiene la proporción */
 }
 
 
@@ -186,30 +182,36 @@ $error-color: #ff4d4f;
 /* menu */
 .pcoded-navbar {
   .pcoded-inner-navbar {
-    > li {
-      > a.active {
+    >li {
+      >a.active {
         background: rgba(202, 202, 202, 0.3);
+
         &:before {
           background: $primary-color;
         }
       }
     }
+
     li {
-      > a.active {
+      >a.active {
         font-weight: 600;
       }
-      .pcoded-submenu > li {
+
+      .pcoded-submenu>li {
+
         &.active,
         &:focus,
         &:hover {
-          > a,
-          > a.active {
+
+          >a,
+          >a.active {
             &:before {
               background: $primary-color;
             }
           }
         }
-        > a.active {
+
+        >a.active {
           &:before {
             background: $primary-color;
           }
@@ -217,7 +219,8 @@ $error-color: #ff4d4f;
       }
     }
 
-    > .pcoded-menu-caption {
+    >.pcoded-menu-caption {
+
       &.active,
       &.pcoded-trigger {
         &:after {
@@ -229,7 +232,7 @@ $error-color: #ff4d4f;
 }
 
 /* card header */
-.card .card-header + .collapse {
+.card .card-header+.collapse {
   .card-body {
     padding-top: 0;
   }

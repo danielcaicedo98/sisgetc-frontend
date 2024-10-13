@@ -1,8 +1,6 @@
 // src/views/purchases/PurchasesList.scss
-
-.purchases-list-container {
-  display: flex;
-  flex-direction: column;
+$primary-color: #4B4B4B;
+.purchases-list-container { 
   max-width: 1000px;
   margin: 20px auto;
   padding: 20px;
@@ -18,7 +16,7 @@
 
   h2 {
     text-align: center;
-    color: #4CAF50;
+    color: $primary-color;
     margin-bottom: 20px;
   }
 

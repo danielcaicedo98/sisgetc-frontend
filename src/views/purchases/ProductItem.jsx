@@ -1,6 +1,7 @@
 // src/views/purchases/ProductItem.jsx
 import React from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { Form } from 'react-bootstrap';
 
 const ProductItem = React.memo(({
     producto,
@@ -15,8 +16,9 @@ const ProductItem = React.memo(({
 }) => {
     return (
         <div className="producto">
-            <div className="campo">
-                <label htmlFor="proveedor">Producto</label>
+            {/* Cantidad */}
+            <Form.Group className="mb-3 flex-fill" >
+                <Form.Label>Producto</Form.Label>
                 <Typeahead
                     id={`producto-${producto.id}`}
                     labelKey="name"
@@ -29,28 +31,31 @@ const ProductItem = React.memo(({
                     minLength={1}
                     clearButton
                 />
-            </div>
-            <div className="campo">
-                <label htmlFor="proveedor">Cantidad</label>
+            </Form.Group>
+            <Form.Group className="mb-3 flex-fill" >
+                <Form.Label>Cantidad</Form.Label>
                 <input
                     type="number"
                     value={producto.cantidad}
                     onChange={(e) => onChangeCantidad(producto.id, e.target.value)}
                     placeholder="Escribe la cantidad"
                 />
-            </div>
-            <div className="campo">               
-                <select
-                    className="form-select"
+            </Form.Group>
+            <Form.Group className="mb-3 flex-fill" >
+                <Form.Label>Unidad</Form.Label>
+                <Form.Select
                     value={producto.unidad}
                     onChange={(e) => onChangeUnidad(producto.id, e.target.value)}
                 >
+                    <option value="">Selecciona unidad</option>
                     <option value="Unidades">Unidades</option>
+                    <option value="Gramos">Libras</option>
+                    <option value="Gramos">Kilos</option>
                     <option value="Gramos">Gramos</option>
-                </select>
-            </div>
-            <div className="campo">
-                <label htmlFor="proveedor">Precio</label>
+                </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3 flex-fill" >
+                <Form.Label>Precio ($)</Form.Label>
                 <input
                     type="number"
                     step="0.01"
@@ -58,9 +63,9 @@ const ProductItem = React.memo(({
                     onChange={(e) => onChangePrecio(producto.id, e.target.value)}
                     placeholder="Escribe el precio"
                 />
-            </div>
+            </Form.Group>
             <button type="button" onClick={() => onRemove(producto.id)}>Eliminar</button>
-        </div>
+        </div >
     );
 });
 
