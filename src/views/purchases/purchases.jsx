@@ -7,37 +7,37 @@ import ProductItem from './ProductItem'; // Asegúrate de importar el componente
 import './Purchases.scss';
 
 const Purchases = () => {
-  const [productos, setProductos] = useState([{ 
-    id: Date.now(), 
-    text: '', 
-    precio: '', 
-    cantidad: '', 
-    unidad: '', 
-    productoObj: null 
+  const [productos, setProductos] = useState([{
+    id: Date.now(),
+    text: '',
+    precio: '',
+    cantidad: '',
+    unidad: '',
+    productoObj: null
   }]);
   const [errors, setErrors] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
   const [productToRemove, setProductToRemove] = useState(null);
-  
+
   // Nuevos estados para fecha, proveedor, descripción y total
   const [fecha, setFecha] = useState('');
   const [proveedor, setProveedor] = useState([]);
   const [descripcion, setDescripcion] = useState('');
   const [total, setTotal] = useState(0);
-  
+
   // Estados de error para fecha, proveedor y descripción
   const [fechaError, setFechaError] = useState('');
   const [proveedorError, setProveedorError] = useState('');
   const [descripcionError, setDescripcionError] = useState('');
-  
+
   // Estados para sugerencias de proveedores y productos
   const [providerOptions, setProviderOptions] = useState([]);
   const [productOptions, setProductOptions] = useState([]);
-  
+
   // Estados para manejar el loading de las sugerencias
   const [isLoadingProviders, setIsLoadingProviders] = useState(false);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
-  
+
   // Debounce timers
   const [providerDebounceTimer, setProviderDebounceTimer] = useState(null);
   const [productDebounceTimer, setProductDebounceTimer] = useState(null);
@@ -48,9 +48,9 @@ const Purchases = () => {
       setProviderOptions([]);
       return;
     }
-    
+
     setIsLoadingProviders(true);
-    
+
     fetch(`http://localhost:5000/providers?name_like=${encodeURIComponent(query)}`)
       .then(response => response.json())
       .then(data => {
@@ -69,9 +69,9 @@ const Purchases = () => {
       setProductOptions([]);
       return;
     }
-    
+
     setIsLoadingProducts(true);
-    
+
     fetch(`http://localhost:5000/products?name_like=${encodeURIComponent(query)}`)
       .then(response => response.json())
       .then(data => {
@@ -89,7 +89,7 @@ const Purchases = () => {
     if (providerDebounceTimer) {
       clearTimeout(providerDebounceTimer);
     }
-    
+
     const timer = setTimeout(() => {
       searchProviders(query);
     }, 300); // Espera 300ms después del último cambio
@@ -101,7 +101,7 @@ const Purchases = () => {
     if (productDebounceTimer) {
       clearTimeout(productDebounceTimer);
     }
-    
+
     const timer = setTimeout(() => {
       searchProducts(query);
     }, 300);
@@ -179,7 +179,7 @@ const Purchases = () => {
       const cantidad = parseInt(producto.cantidad) || 0;
       return acc + precio;
       //return acc + (precio * cantidad);
-      
+
     }, 0);
     setTotal(newTotal);
   }, [productos]);
@@ -203,7 +203,7 @@ const Purchases = () => {
       setProveedorError('El proveedor es requerido.');
     } else {
       setProveedorError('');
-    } 
+    }
 
     // Validar productos
     productos.forEach(producto => {
@@ -234,7 +234,7 @@ const Purchases = () => {
   };
 
   // Manejar el envío del formulario
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       const compra = {
@@ -249,18 +249,37 @@ const Purchases = () => {
           precio: p.precio
         }))
       };
-      console.log('Compra:', compra);
-      // Aquí podrías enviar los datos a un servidor o realizar otra acción
-      alert('Compra guardada exitosamente.');
-      // Limpiar el formulario después de guardar
-      setFecha('');
-      setProveedor([]);
-      setDescripcion('');
-      setProductos([{ id: Date.now(), text: '', precio: '', cantidad: '', unidad: '', productoObj: null }]);
-      setErrors({});
-      setFechaError('');
-      setProveedorError('');
-      setDescripcionError('');
+
+      try {
+        const response = await fetch('http://localhost:5000/purchases', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(compra)
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Compra guardada:', data);
+        alert('Compra guardada exitosamente.');
+
+        // Limpiar el formulario después de guardar
+        setFecha('');
+        setProveedor([]);
+        setDescripcion('');
+        setProductos([{ id: Date.now(), text: '', precio: '', cantidad: 1, unidad: '', productoObj: null }]);
+        setErrors({});
+        setFechaError('');
+        setProveedorError('');
+        setDescripcionError('');
+      } catch (error) {
+        console.error('Error al guardar la compra:', error);
+        alert('Hubo un problema al guardar la compra. Por favor, inténtalo nuevamente.');
+      }
     } else {
       alert('Por favor, corrige los errores en el formulario.');
     }
@@ -274,41 +293,45 @@ const Purchases = () => {
           <form onSubmit={handleSubmit}>
             {/* Campos estáticos para Fecha, Proveedor y Descripción */}
             <div className="static-fields">
-              <div className="campo">
-                <label htmlFor="fecha">Fecha:</label>
-                <input
-                  type="date"
-                  id="fecha"
-                  value={fecha}
-                  onChange={(e) => setFecha(e.target.value)}
-                />
-                {fechaError && <span className="error">{fechaError}</span>}
+              <div className="left-column">
+                <div className="campo">
+                  <label htmlFor="proveedor">Proveedor</label>
+                  <Typeahead
+                    id="proveedor-typeahead"
+                    labelKey="name"
+                    onChange={(selected) => setProveedor(selected)}
+                    onInputChange={handleProviderInputChange}
+                    options={providerOptions}
+                    placeholder="Escribe el proveedor"
+                    selected={proveedor}
+                    isLoading={isLoadingProviders}
+                    minLength={1}
+                    clearButton
+                  />
+                  {proveedorError && <span className="error">{proveedorError}</span>}
+                </div>
+                <div className="campo">
+                  <label htmlFor="fecha">Fecha</label>
+                  <input
+                    type="date"
+                    id="fecha"
+                    value={fecha}
+                    onChange={(e) => setFecha(e.target.value)}
+                  />
+                  {fechaError && <span className="error">{fechaError}</span>}
+                </div>
               </div>
-              <div className="campo">
-                <label htmlFor="proveedor">Proveedor:</label>
-                <Typeahead
-                  id="proveedor-typeahead"
-                  labelKey="name"
-                  onChange={(selected) => setProveedor(selected)}
-                  onInputChange={handleProviderInputChange}
-                  options={providerOptions}
-                  placeholder="Selecciona o escribe el proveedor"
-                  selected={proveedor}
-                  isLoading={isLoadingProviders}
-                  minLength={1}
-                  clearButton
-                />
-                {proveedorError && <span className="error">{proveedorError}</span>}
-              </div>
-              <div className="campo">
-                <label htmlFor="descripcion">Descripción:</label>
-                <textarea
-                  id="descripcion"
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
-                  placeholder="Descripción de la compra"
-                />
-                {descripcionError && <span className="error">{descripcionError}</span>}
+              <div className="right-column">
+                <div className="campo">
+                  <label htmlFor="descripcion">Descripción</label>
+                  <textarea
+                    id="descripcion"
+                    value={descripcion}
+                    onChange={(e) => setDescripcion(e.target.value)}
+                    placeholder="Descripción de la compra"
+                  />
+                  {descripcionError && <span className="error">{descripcionError}</span>}
+                </div>
               </div>
             </div>
 

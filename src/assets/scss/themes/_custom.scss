@@ -18,7 +18,7 @@ $error-color: #ff4d4f;
 
 .form-container {
   max-width: $form-max-width;
-  margin: 20px auto;
+  margin: 10px auto;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -33,7 +33,7 @@ $error-color: #ff4d4f;
 
   form {
     .producto-container {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
 
       .error-messages {
         margin-top: 5px;

@@ -1,6 +1,6 @@
 // src/views/purchases/Purchases.scss
 
-$form-max-width: 800px;
+$form-max-width: 900px;
 $primary-color: #4B4B4B;
 $secondary-color: #f1f1f1;
 $button-color: #fff;
@@ -19,18 +19,31 @@ $error-color: #A52A2A;
     text-align: center;
     color: $primary-color;
     margin-bottom: 20px;
-  }
-
+  } 
+  
   form {
     .static-fields {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       gap: 15px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
 
       @media (min-width: 800px) {
         flex-direction: row;
         justify-content: space-between;
+      }
+
+      .left-column {
+        flex: 1; // Ajusta según sea necesario
+        margin-right: 20px; // Espacio entre las columnas
+      }
+    
+      .right-column {
+        flex: 2; // Ajusta para que ocupe más espacio
+      }
+    
+      .campo {
+        margin-bottom: 5px; // Espaciado entre los campos
       }
 
       .campo {
