@@ -56,7 +56,7 @@ export const routes = [
       },    
       {
         exact: 'true',
-        path: '/purchases/list',
+        path: '/purchases-list',
         element: lazy(() => import('./views/purchases/PurchaseList'))
       },  
       {

@@ -58,6 +58,16 @@ const Purchases = () => {
     fetch(`http://localhost:5000/providers?name_like=${encodeURIComponent(query)}`)
       .then(response => response.json())
       .then(data => {
+        const uniqueNames = new Set(data.map(provider => provider.name));
+
+        // Agregar el nuevo proveedor solo si no existe
+        if (!uniqueNames.has(query)) {
+          uniqueNames.add(query);
+          data.push({
+            id: `${Date.now() + Math.random()}`,
+            name: `${query}`
+          });
+        }        
         setProviderOptions(data);
         setIsLoadingProviders(false);
       })
@@ -79,6 +89,16 @@ const Purchases = () => {
     fetch(`http://localhost:5000/products?name_like=${encodeURIComponent(query)}`)
       .then(response => response.json())
       .then(data => {
+        const uniqueNames = new Set(data.map(provider => provider.name));
+
+        // Agregar el nuevo proveedor solo si no existe
+        if (!uniqueNames.has(query)) {
+          uniqueNames.add(query);
+          data.push({
+            id: `${Date.now() + Math.random()}`,
+            name: `${query}`
+          });
+        }       
         setProductOptions(data);
         setIsLoadingProducts(false);
       })

@@ -52,6 +52,16 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
     fetch(`http://localhost:5000/providers?name_like=${encodeURIComponent(query)}`)
       .then(response => response.json())
       .then(data => {
+        const uniqueNames = new Set(data.map(provider => provider.name));
+
+        // Agregar el nuevo proveedor solo si no existe
+        if (!uniqueNames.has(query)) {
+          uniqueNames.add(query);
+          data.push({
+            id: `${Date.now() + Math.random()}`,
+            name: `${query}`
+          });
+        }
         setProviderOptions(data);
         setIsLoadingProviders(false);
       })
@@ -73,6 +83,16 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
     fetch(`http://localhost:5000/products?name_like=${encodeURIComponent(query)}`)
       .then(response => response.json())
       .then(data => {
+        const uniqueNames = new Set(data.map(provider => provider.name));
+
+        // Agregar el nuevo proveedor solo si no existe
+        if (!uniqueNames.has(query)) {
+          uniqueNames.add(query);
+          data.push({
+            id: `${Date.now() + Math.random()}`,
+            name: `${query}`
+          });
+        }
         setProductOptions(data);
         setIsLoadingProducts(false);
       })
@@ -133,29 +153,24 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       newErrors.proveedor = 'El proveedor es requerido.';
     }
 
-    if (!descripcion.trim()) {
-      valid = false;
-      newErrors.descripcion = 'La descripción es requerida.';
-    }
-
-    // productos.forEach((producto, index) => {
-    //   if (!producto.text.trim()) {
-    //     valid = false;
-    //     newErrors[`producto_${index}`] = 'El nombre del producto es requerido.';
-    //   }
-    //   if (!producto.precio || isNaN(producto.precio) || producto.precio <= 0) {
-    //     valid = false;
-    //     newErrors[`precio_${index}`] = 'El precio debe ser un número positivo.';
-    //   }
-    //   if (!producto.cantidad || isNaN(producto.cantidad) || producto.cantidad <= 0) {
-    //     valid = false;
-    //     newErrors[`cantidad_${index}`] = 'La cantidad debe ser un número positivo.';
-    //   }
-    //   if (!producto.unidad) {
-    //     valid = false;
-    //     newErrors[`unidad_${index}`] = 'Selecciona una unidad válida.';
-    //   }
-    // });
+    productos.forEach((producto, index) => {
+      if (!producto.text.trim()) {
+        valid = false;
+        newErrors[`producto_${index}`] = 'El nombre del producto es requerido.';
+      }
+      if (!producto.precio || isNaN(producto.precio) || producto.precio <= 0) {
+        valid = false;
+        newErrors[`precio_${index}`] = 'El precio debe ser un número positivo.';
+      }
+      if (!producto.cantidad || isNaN(producto.cantidad) || producto.cantidad <= 0) {
+        valid = false;
+        newErrors[`cantidad_${index}`] = 'La cantidad debe ser un número positivo.';
+      }
+      if (!producto.unidad) {
+        valid = false;
+        newErrors[`unidad_${index}`] = 'Selecciona una unidad válida.';
+      }
+    });
 
     setErrors(newErrors);
     return valid;
@@ -205,7 +220,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       alert('Hubo un problema al actualizar la compra. Por favor, inténtalo nuevamente.');
     }
   };
-  
+
   return (
     <Modal show={show} onHide={handleClose} size="lg" scrollable>
       <Modal.Header closeButton>
@@ -232,7 +247,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
             <Typeahead
               id="proveedor-typeahead-modal"
               labelKey="name"
-              onChange={(selected) => handleProvChange(selected)}
+              onChange={(selected) => setProveedor(selected)}
               onInputChange={handleProviderInputChange}
               options={providerOptions}
               placeholder="Escribe el proveedor"
