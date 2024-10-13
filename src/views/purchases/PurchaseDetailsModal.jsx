@@ -119,47 +119,47 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   };
 
   // Validar los campos antes de guardar
-  // const validate = () => {
-  //   let valid = true;
-  //   let newErrors = {};
+  const validate = () => {
+    let valid = true;
+    let newErrors = {};
 
-  //   if (!fecha) {
-  //     valid = false;
-  //     newErrors.fecha = 'La fecha es requerida.';
-  //   }
+    if (!fecha) {
+      valid = false;
+      newErrors.fecha = 'La fecha es requerida.';
+    }
 
-  //   if (proveedor.length === 0) {
-  //     valid = false;
-  //     newErrors.proveedor = 'El proveedor es requerido.';
-  //   }
+    if (proveedor.length === 0) {
+      valid = false;
+      newErrors.proveedor = 'El proveedor es requerido.';
+    }
 
-  //   if (!descripcion.trim()) {
-  //     valid = false;
-  //     newErrors.descripcion = 'La descripción es requerida.';
-  //   }
+    if (!descripcion.trim()) {
+      valid = false;
+      newErrors.descripcion = 'La descripción es requerida.';
+    }
 
-  //   // productos.forEach((producto, index) => {
-  //   //   if (!producto.text.trim()) {
-  //   //     valid = false;
-  //   //     newErrors[`producto_${index}`] = 'El nombre del producto es requerido.';
-  //   //   }
-  //   //   if (!producto.precio || isNaN(producto.precio) || producto.precio <= 0) {
-  //   //     valid = false;
-  //   //     newErrors[`precio_${index}`] = 'El precio debe ser un número positivo.';
-  //   //   }
-  //   //   if (!producto.cantidad || isNaN(producto.cantidad) || producto.cantidad <= 0) {
-  //   //     valid = false;
-  //   //     newErrors[`cantidad_${index}`] = 'La cantidad debe ser un número positivo.';
-  //   //   }
-  //   //   if (!producto.unidad) {
-  //   //     valid = false;
-  //   //     newErrors[`unidad_${index}`] = 'Selecciona una unidad válida.';
-  //   //   }
-  //   // });
+    // productos.forEach((producto, index) => {
+    //   if (!producto.text.trim()) {
+    //     valid = false;
+    //     newErrors[`producto_${index}`] = 'El nombre del producto es requerido.';
+    //   }
+    //   if (!producto.precio || isNaN(producto.precio) || producto.precio <= 0) {
+    //     valid = false;
+    //     newErrors[`precio_${index}`] = 'El precio debe ser un número positivo.';
+    //   }
+    //   if (!producto.cantidad || isNaN(producto.cantidad) || producto.cantidad <= 0) {
+    //     valid = false;
+    //     newErrors[`cantidad_${index}`] = 'La cantidad debe ser un número positivo.';
+    //   }
+    //   if (!producto.unidad) {
+    //     valid = false;
+    //     newErrors[`unidad_${index}`] = 'Selecciona una unidad válida.';
+    //   }
+    // });
 
-  //   setErrors(newErrors);
-  //   return valid;
-  // };
+    setErrors(newErrors);
+    return valid;
+  };
 
   // Manejar la actualización de la compra
   const handleUpdate = async () => {
@@ -205,32 +205,6 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       alert('Hubo un problema al actualizar la compra. Por favor, inténtalo nuevamente.');
     }
   };
-
-  const handleAddProvider = async (providerName) => {
-    const newProvider = { name: providerName, /* otros campos necesarios */ };
-  
-    try {
-      const response = await fetch('http://localhost:5000/providers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newProvider),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-  
-      const data = await response.json();
-      setProviderOptions([...providerOptions, data]); // Agregar el nuevo proveedor a las opciones
-      setProveedor([data]); // También agregarlo a la lista de proveedores
-    } catch (error) {
-      console.error('Error al agregar el proveedor:', error);
-      alert('Hubo un problema al agregar el proveedor. Por favor, inténtalo nuevamente.');
-    }
-  };
-  
 
   return (
     <Modal show={show} onHide={handleClose} size="lg" scrollable>

@@ -40,11 +40,7 @@ const PurchasesList = () => {
     setSelectedPurchase(null);
     setShowModal(false);
   };
-
-  const handleEdit = (id) => {
-    navigate(`/purchases/edit/${id}`);
-  };
-
+  
   // Función para manejar la actualización de una compra
   const handleUpdatePurchase = (updatedPurchase) => {
     const updatedPurchases = purchases.map(p => (p.id === updatedPurchase.id ? updatedPurchase : p));
@@ -88,14 +84,7 @@ const PurchasesList = () => {
                   className="me-2"
                 >
                   Ver Detalles
-                </Button>
-                <Button 
-                  variant="warning" 
-                  size="sm" 
-                  onClick={() => handleEdit(purchase.id)}
-                >
-                  Editar
-                </Button>
+                </Button>                
               </td>
             </tr>
           ))}

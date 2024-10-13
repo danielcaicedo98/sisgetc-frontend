@@ -8,6 +8,11 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   
+    .table-container {
+      max-height: 400px; /* Ajusta la altura según tus necesidades */
+      overflow-y: auto;
+    }
+    
     h2 {
       text-align: center;
       color: #4CAF50;
