@@ -13,7 +13,8 @@ const PurchasesList = () => {
   const navigate = useNavigate();
 
   // Fetch all purchases from the server
-  useEffect(() => {
+  const fetchPurchases = () => {
+    setLoading(true);
     fetch('http://localhost:5000/purchases')
       .then(response => response.json())
       .then(data => {
@@ -24,6 +25,10 @@ const PurchasesList = () => {
         console.error('Error fetching purchases:', error);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchPurchases();
   }, []);
 
   const handleViewDetails = (purchase) => {
@@ -37,7 +42,13 @@ const PurchasesList = () => {
   };
 
   const handleEdit = (id) => {
-    navigate(`/purchases`);
+    navigate(`/purchases/edit/${id}`);
+  };
+
+  // Función para manejar la actualización de una compra
+  const handleUpdatePurchase = (updatedPurchase) => {
+    const updatedPurchases = purchases.map(p => (p.id === updatedPurchase.id ? updatedPurchase : p));
+    setPurchases(updatedPurchases);
   };
 
   if (loading) {
@@ -91,12 +102,13 @@ const PurchasesList = () => {
         </tbody>
       </Table>
 
-      {/* Modal para ver detalles de la compra */}
+      {/* Modal para ver y editar detalles de la compra */}
       {selectedPurchase && (
         <PurchaseDetailsModal 
           show={showModal} 
           handleClose={handleCloseModal} 
           purchase={selectedPurchase} 
+          onUpdate={handleUpdatePurchase}
         />
       )}
     </div>
