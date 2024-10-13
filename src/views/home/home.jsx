@@ -1,65 +1,63 @@
 import React from 'react';
 
 // react-bootstrap
-import { Row, Col} from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 // project import
 import OrderCard from '../../components/Widgets/OrderCard';
+import '../../assets/scss/themes/_homecustom.scss';
 
 const DashAnalytics = () => {
   return (
+
     <React.Fragment>
+      <div className='card_home'>
+        <div class="card">
+          <div class="card-body">
+            <h5>Bienvenida de nuevo, Esperanza Quiñones!</h5>
+            <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+        </div>
+      </div>
       <Row>
-        {/* order cards */}
-        <Col md={6} xl={3}>
+        <Col md={6} xl={4}>
           <OrderCard
             params={{
-              title: 'Orders Received',
-              class: 'bg-c-blue',
-              icon: 'feather icon-shopping-cart',
-              primaryText: '486',
-              secondaryText: 'Completed Orders',
-              extraText: '351'
-            }}
-          />
-        </Col>
-        <Col md={6} xl={3}>
-          <OrderCard
-            params={{
-              title: 'Total Sales',
+              title: 'Gestión',
               class: 'bg-c-green',
               icon: 'feather icon-tag',
-              primaryText: '1641',
+              primaryText: 'Ventas',
               secondaryText: 'This Month',
-              extraText: '213'
+              extraText: '__'
             }}
           />
         </Col>
-        <Col md={6} xl={3}>
+        <Col md={6} xl={4}>
           <OrderCard
             params={{
-              title: 'Revenue',
+              title: 'Gestión',
               class: 'bg-c-yellow',
-              icon: 'feather icon-repeat',
-              primaryText: '$42,562',
+              icon: 'feather icon-shopping-cart',
+              primaryText: 'Compras',
               secondaryText: 'This Month',
-              extraText: '$5,032'
+              extraText: '$__'
             }}
           />
         </Col>
-        <Col md={6} xl={3}>
+        <Col md={6} xl={4}>
           <OrderCard
             params={{
-              title: 'Total Profit',
+              title: 'Gestión',
               class: 'bg-c-red',
-              icon: 'feather icon-award',
-              primaryText: '$9,562',
+              icon: 'feather icon-activity',
+              primaryText: 'Reportes',
               secondaryText: 'This Month',
-              extraText: '$542'
+              extraText: '$__'
             }}
           />
-        </Col>          
+        </Col>
       </Row>
+
     </React.Fragment>
   );
 };
