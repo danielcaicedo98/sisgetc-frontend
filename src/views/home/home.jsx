@@ -1,15 +1,12 @@
 import React from 'react';
-
-// react-bootstrap
 import { Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom'; // Importa Link para navegación
 
-// project import
 import OrderCard from '../../components/Widgets/OrderCard';
 import '../../assets/scss/themes/_homecustom.scss';
 
 const DashAnalytics = () => {
   return (
-
     <React.Fragment>
       <div className='card_home'>
         <div class="card">
@@ -21,43 +18,49 @@ const DashAnalytics = () => {
       </div>
       <Row>
         <Col md={6} xl={4}>
-          <OrderCard
-            params={{
-              title: 'Gestión',
-              class: 'bg-c-green',
-              icon: 'feather icon-tag',
-              primaryText: 'Ventas',
-              secondaryText: 'This Month',
-              extraText: '__'
-            }}
-          />
+          {/* Envolver OrderCard en un Link para navegar */}
+          <Link to="/sales" style={{ textDecoration: 'none' }}> {/* Ruta de destino */}
+            <OrderCard
+              params={{
+                title: 'Gestión',
+                class: 'bg-c-green',
+                icon: 'feather icon-tag',
+                primaryText: 'Ventas',
+                secondaryText: 'This Month',
+                extraText: '__'
+              }}
+            />
+          </Link>
         </Col>
         <Col md={6} xl={4}>
-          <OrderCard
-            params={{
-              title: 'Gestión',
-              class: 'bg-c-yellow',
-              icon: 'feather icon-shopping-cart',
-              primaryText: 'Compras',
-              secondaryText: 'This Month',
-              extraText: '$__'
-            }}
-          />
+          <Link to="/purchases" style={{ textDecoration: 'none' }}> {/* Otra ruta */}
+            <OrderCard
+              params={{
+                title: 'Gestión',
+                class: 'bg-c-yellow',
+                icon: 'feather icon-shopping-cart',
+                primaryText: 'Compras',
+                secondaryText: 'This Month',
+                extraText: '$__'
+              }}
+            />
+          </Link>
         </Col>
         <Col md={6} xl={4}>
-          <OrderCard
-            params={{
-              title: 'Gestión',
-              class: 'bg-c-red',
-              icon: 'feather icon-activity',
-              primaryText: 'Reportes',
-              secondaryText: 'This Month',
-              extraText: '$__'
-            }}
-          />
+          <Link to="/reports" style={{ textDecoration: 'none' }}> {/* Otra ruta */}
+            <OrderCard
+              params={{
+                title: 'Gestión',
+                class: 'bg-c-red',
+                icon: 'feather icon-activity',
+                primaryText: 'Reportes',
+                secondaryText: 'This Month',
+                extraText: '$__'
+              }}
+            />
+          </Link>
         </Col>
       </Row>
-
     </React.Fragment>
   );
 };
