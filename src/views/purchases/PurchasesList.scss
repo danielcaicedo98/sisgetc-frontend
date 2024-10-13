@@ -1,43 +1,45 @@
 // src/views/purchases/PurchasesList.scss
 
 .purchases-list-container {
-    max-width: 1000px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
-    .table-container {
-      max-height: 400px; /* Ajusta la altura según tus necesidades */
-      overflow-y: auto;
-    }
-    
-    h2 {
-      text-align: center;
-      color: #4CAF50;
-      margin-bottom: 20px;
-    }
-  
-    .loading-spinner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 50px;
-  
-      span {
-        margin-top: 10px;
-        font-size: 1.2em;
-        color: #555;
-      }
-    }
-  
-    .table {
-      margin-top: 20px;
-    }
-  
-    .btn-info {
-      margin-right: 5px;
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .table-container {
+    max-height: 400px;
+    /* Ajusta la altura según tus necesidades */
+    overflow-y: auto;
+  }
+
+  h2 {
+    text-align: center;
+    color: #4CAF50;
+    margin-bottom: 20px;
+  }
+
+  .loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+
+    span {
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #555;
     }
   }
-  
+
+  .table {
+    margin-top: 20px;
+  }
+
+  .btn-info {
+    margin-right: 5px;
+  }
+}
