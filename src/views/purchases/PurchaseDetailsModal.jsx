@@ -1,7 +1,8 @@
 // src/views/purchases/PurchaseDetailsModal.jsx
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Table, Form, Spinner } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { fetchWithToken } from '../../api/fetchHelpers'; 
 
 const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   const [fecha, setFecha] = useState('');
@@ -40,8 +41,8 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
     setTotal(newTotal);
   }, [productos]);
 
-  // Función para buscar proveedores
-  const searchProviders = (query) => {
+  
+  const searchProviders = async (query) => {
     if (!query) {
       setProviderOptions([]);
       return;
@@ -49,30 +50,32 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
 
     setIsLoadingProviders(true);
 
-    fetch(`http://localhost:5000/providers?name_like=${encodeURIComponent(query)}`)
-      .then(response => response.json())
-      .then(data => {
-        const uniqueNames = new Set(data.map(provider => provider.name));
+    try {
+      // Llamar a fetchWithToken para obtener los proveedores filtrados por el nombre
+      const data = await fetchWithToken(`providers?name_like=${encodeURIComponent(query)}`, null, 'GET');
 
-        // Agregar el nuevo proveedor solo si no existe
-        if (!uniqueNames.has(query)) {
-          uniqueNames.add(query);
-          data.push({
-            id: `${Date.now() + Math.random()}`,
-            name: `${query}`
-          });
-        }
-        setProviderOptions(data);
-        setIsLoadingProviders(false);
-      })
-      .catch(error => {
-        console.error('Error fetching providers:', error);
-        setIsLoadingProviders(false);
-      });
+      const uniqueNames = new Set(data.map(provider => provider.name));
+
+      // Agregar el nuevo proveedor solo si no existe
+      if (!uniqueNames.has(query)) {
+        uniqueNames.add(query);
+        data.push({
+          id: `${Date.now() + Math.random()}`,
+          name: `${query}`
+        });
+      }
+
+      setProviderOptions(data);
+    } catch (error) {
+      console.error('Error fetching providers:', error);
+    } finally {
+      setIsLoadingProviders(false);
+    }
   };
 
-  // Función para buscar productos
-  const searchProducts = (query) => {
+  // Función para buscar productos  
+
+  const searchProducts = async (query) => {
     if (!query) {
       setProductOptions([]);
       return;
@@ -80,27 +83,29 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
 
     setIsLoadingProducts(true);
 
-    fetch(`http://localhost:5000/products?name_like=${encodeURIComponent(query)}`)
-      .then(response => response.json())
-      .then(data => {
-        const uniqueNames = new Set(data.map(provider => provider.name));
+    try {
+      // Llamar a fetchWithToken para obtener los productos filtrados por el nombre
+      const data = await fetchWithToken(`products?name_like=${encodeURIComponent(query)}`, null, 'GET');
 
-        // Agregar el nuevo proveedor solo si no existe
-        if (!uniqueNames.has(query)) {
-          uniqueNames.add(query);
-          data.push({
-            id: `${Date.now() + Math.random()}`,
-            name: `${query}`
-          });
-        }
-        setProductOptions(data);
-        setIsLoadingProducts(false);
-      })
-      .catch(error => {
-        console.error('Error fetching products:', error);
-        setIsLoadingProducts(false);
-      });
+      const uniqueNames = new Set(data.map(product => product.name));
+
+      // Agregar el nuevo producto solo si no existe
+      if (!uniqueNames.has(query)) {
+        uniqueNames.add(query);
+        data.push({
+          id: `${Date.now() + Math.random()}`,
+          name: `${query}`
+        });
+      }
+
+      setProductOptions(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setIsLoadingProducts(false);
+    }
   };
+  
 
   // Manejar cambios en el proveedor con debounce
   const handleProviderInputChange = (query) => {
@@ -153,74 +158,48 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       newErrors.proveedor = 'El proveedor es requerido.';
     }
 
-    productos.forEach((producto, index) => {
-      if (!producto.text.trim()) {
-        valid = false;
-        newErrors[`producto_${index}`] = 'El nombre del producto es requerido.';
-      }
-      if (!producto.precio || isNaN(producto.precio) || producto.precio <= 0) {
-        valid = false;
-        newErrors[`precio_${index}`] = 'El precio debe ser un número positivo.';
-      }
-      if (!producto.cantidad || isNaN(producto.cantidad) || producto.cantidad <= 0) {
-        valid = false;
-        newErrors[`cantidad_${index}`] = 'La cantidad debe ser un número positivo.';
-      }
-      if (!producto.unidad) {
-        valid = false;
-        newErrors[`unidad_${index}`] = 'Selecciona una unidad válida.';
-      }
-    });
-
+    
     setErrors(newErrors);
     return valid;
-  };
+  }; 
 
-  // Manejar la actualización de la compra
-  const handleUpdate = async () => {
+  const handleUpdate = async (e) => {
+    e.preventDefault(); // Evita el comportamiento por defecto del formulario
+  
     if (!validate()) {
       alert('Por favor, corrige los errores en el formulario.');
       return;
     }
-
+  
     const updatedPurchase = {
-      ...purchase,
       fecha,
-      proveedor: proveedor[0],
+      proveedor: proveedor[0], // Asumiendo que solo se selecciona un proveedor
       descripcion,
       total,
-      productos,
+      productos: productos.map(p => ({
+        producto: p.productoObj, // Incluye el objeto completo del producto
+        cantidad: p.cantidad,
+        unidad: p.unidad,
+        precio: p.precio,
+      })),
     };
-
+  
     try {
-      const response = await fetch(`http://localhost:5000/purchases/${purchase.id}`, {
-        method: 'PUT', // O 'PATCH' si deseas actualizar solo algunos campos
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedPurchase),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log('Compra actualizada:', data);
+      const response = await fetchWithToken(`purchases/${purchase.id}`, updatedPurchase, 'PUT');       
       alert('Compra actualizada exitosamente.');
-
+  
       // Notificar al componente padre para actualizar la lista
       if (onUpdate) {
-        onUpdate(data);
+        onUpdate(response);
       }
-
+  
       handleClose();
     } catch (error) {
       console.error('Error al actualizar la compra:', error);
       alert('Hubo un problema al actualizar la compra. Por favor, inténtalo nuevamente.');
     }
   };
-
+  
   return (
     <Modal show={show} onHide={handleClose} size="lg" scrollable>
       <Modal.Header closeButton>

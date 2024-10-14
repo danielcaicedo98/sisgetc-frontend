@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Spinner, Form, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import PurchaseDetailsModal from './PurchaseDetailsModal';
-import './PurchasesList.scss';
+import '../../assets/scss/purchases/PurchasesList.scss';
+import { fetchWithToken } from '../../api/fetchHelpers';
 
 const PurchasesList = () => {
   const [purchases, setPurchases] = useState([]);
@@ -15,22 +16,21 @@ const PurchasesList = () => {
     provider: '',
     description: '',
   });
-
-  const navigate = useNavigate();
-
-  const fetchPurchases = () => {
+ 
+  const fetchPurchases = async () => {
     setLoading(true);
-    fetch('http://localhost:5000/purchases')
-      .then(response => response.json())
-      .then(data => {
-        setPurchases(data);
-        setLoading(false);
-      })
-      .catch(error => {
+    
+    try {
+        const data = await fetchWithToken('purchases', null, 'GET'); // Llamar a fetchWithToken
+
+        setPurchases(data); // Establecer los datos de las compras
+        console.log(data)
+    } catch (error) {
         console.error('Error fetching purchases:', error);
-        setLoading(false);
-      });
-  };
+    } finally {
+        setLoading(false); // Finalizar el loading independientemente de si hubo error o no
+    }
+};
 
   useEffect(() => {
     fetchPurchases();
