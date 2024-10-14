@@ -2,9 +2,31 @@ import React from 'react';
 import { Row, Col, Alert, Button } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { fetchWithoutToken } from '../../../api/fetchHelpers'; // Asegúrate de tener esta importación
 import '../../../assets/scss/themes/_homecustom.scss';
 
 const JWTLogin = () => {
+  const handleLogin = async (values, { setSubmitting, setErrors }) => {
+    try {
+      const response = await fetchWithoutToken('login', values, 'POST');
+  
+      // Comprobar si la respuesta tiene un token
+      if (response.token) {
+        // Guardar el token en localStorage
+        localStorage.setItem('token', response.token);
+        // Redirigir al usuario a otra página
+        window.location.href = '/dashboard'; // Cambia la ruta según sea necesario
+      } else {
+        setErrors({ submit: 'Credenciales incorrectas' }); // Mostrar error si no hay token
+      }
+    } catch (error) {
+      setErrors({ submit: 'Error en el servidor, intenta más tarde' }); // Manejo de errores de la red
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  
+
   return (
     <>
       <Formik
@@ -17,6 +39,7 @@ const JWTLogin = () => {
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
+        onSubmit={handleLogin} // Aquí se llama a la función de login
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>
@@ -58,7 +81,6 @@ const JWTLogin = () => {
               </Col>
             )}
 
-           
             <Row>
               <Col mt={2}>
                 <Button className="btn-block mb-4" disabled={isSubmitting} size="large" type="submit" variant="primary">
@@ -68,23 +90,7 @@ const JWTLogin = () => {
             </Row>
           </form>
         )}
-      </Formik> 
-      
-      {/* Para implementar como una tarea adicional algo extra, por el momento sólo dejar el botón ingresar*/}
-      {/* <Row>
-        <Col sm={12}>
-          <h5 className="my-3"> O </h5>
-        </Col>
-      </Row>
-        
-      <Row>
-        <Col sm={12}>
-          <Button variant="danger">
-            <i className="fa fa-lock" /> Ingresar con Google
-          </Button>
-        </Col>
-      </Row> */}
-
+      </Formik>
       <hr />
     </>
   );
