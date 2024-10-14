@@ -1,16 +1,178 @@
-/* nav slider */
+/*ESTILOS SISGETC  */
+
+.modal-dialog {
+  display: flex;
+  align-items: center;
+  max-height: 600px;
+  min-height: calc(100% - 1rem);
+}
+
+.modal {
+  z-index: 10050; /* Asegúrate de que sea mayor que otros elementos */
+}
+
 .pcoded-navbar:not(.theme-horizontal) .navbar-content {
   height: calc(100% - 56px);
 }
 
 .navbar-color {
-  background-color:#DD9933; 
+  background-color: #DD9933;
 }
 
-.logo-home {
-  width: 185px; /* Cambia el tamaño según necesites */
-  height: auto; /* Mantiene la proporción */
+
+$form-max-width: 600px;
+$primary-color: #4B4B4B;
+$secondary-color: #f1f1f1;
+$button-color: #fff;
+$error-color: #ff4d4f;
+
+.form-container {
+  max-width: $form-max-width;
+  margin: 10px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: $secondary-color;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  h1 {
+    text-align: center;
+    color: #4B4B4B;
+    margin-bottom: 20px;
+  }
+
+  form {
+    .producto-container {
+      margin-bottom: 10px;
+
+      .error-messages {
+        margin-top: 5px;
+
+        .error {
+          display: block;
+          color: $error-color;
+          font-size: 0.9em;
+        }
+      }
+    }
+
+    .producto {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+
+      @media (min-width: 600px) {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-right: 10px;
+        margin-bottom: 5px;
+        font-size: 1.1em;
+
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+        }
+      }
+
+
+
+      button {
+        padding: 10px 15px;
+        background-color: $primary-color;
+        color: $button-color;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+
+        @media (max-width: 599px) {
+          width: 100%;
+          margin-top: 10px;
+        }
+      }
+    }
+
+    .buttons-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      @media (min-width: 600px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .agregar-producto,
+      .clear-all,
+      .submit-button {
+        background-color: $primary-color;
+        color: $button-color;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-size: 1em;
+        flex: 1;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+
+        @media (min-width: 600px) {
+          width: auto;
+        }
+      }
+
+      .clear-all {
+        background-color: #f44336; // Color rojo para "Limpiar Todo"
+
+        &:hover {
+          background-color: darken(#f44336, 10%);
+        }
+      }
+
+      .submit-button {
+        background-color: #2196F3; // Color azul para "Guardar"
+
+        &:hover {
+          background-color: darken(#2196F3, 10%);
+        }
+      }
+    }
+  }
 }
+
+
+
+/* Tamaño del logo*/
+.logo-home {
+  width: 185px;
+  /* Cambia el tamaño según necesites */
+  height: auto;
+  /* Mantiene la proporción */
+}
+
+
+
+
+
+
+
+
+/*ESTILOS SISGETC  */
+
 
 /* search */
 .search-bar {
@@ -20,30 +182,36 @@
 /* menu */
 .pcoded-navbar {
   .pcoded-inner-navbar {
-    > li {
-      > a.active {
+    >li {
+      >a.active {
         background: rgba(202, 202, 202, 0.3);
+
         &:before {
           background: $primary-color;
         }
       }
     }
+
     li {
-      > a.active {
+      >a.active {
         font-weight: 600;
       }
-      .pcoded-submenu > li {
+
+      .pcoded-submenu>li {
+
         &.active,
         &:focus,
         &:hover {
-          > a,
-          > a.active {
+
+          >a,
+          >a.active {
             &:before {
               background: $primary-color;
             }
           }
         }
-        > a.active {
+
+        >a.active {
           &:before {
             background: $primary-color;
           }
@@ -51,7 +219,8 @@
       }
     }
 
-    > .pcoded-menu-caption {
+    >.pcoded-menu-caption {
+
       &.active,
       &.pcoded-trigger {
         &:after {
@@ -63,7 +232,7 @@
 }
 
 /* card header */
-.card .card-header + .collapse {
+.card .card-header+.collapse {
   .card-body {
     padding-top: 0;
   }
