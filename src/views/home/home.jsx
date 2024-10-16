@@ -14,11 +14,11 @@ const DashAnalytics = () => {
         <Col md={6} xl={3}>
           <OrderCard
             params={{
-              title: 'Orders Received',
+              title: 'Pedidos Recibidos',
               class: 'bg-c-blue',
               icon: 'feather icon-shopping-cart',
               primaryText: '486',
-              secondaryText: 'Completed Orders',
+              secondaryText: 'Pedidos Completados',
               extraText: '351'
             }}
           />
@@ -26,11 +26,11 @@ const DashAnalytics = () => {
         <Col md={6} xl={3}>
           <OrderCard
             params={{
-              title: 'Total Sales',
+              title: 'Ventas Totales',
               class: 'bg-c-green',
               icon: 'feather icon-tag',
               primaryText: '1641',
-              secondaryText: 'This Month',
+              secondaryText: 'Este Mes',
               extraText: '213'
             }}
           />
@@ -38,11 +38,11 @@ const DashAnalytics = () => {
         <Col md={6} xl={3}>
           <OrderCard
             params={{
-              title: 'Revenue',
+              title: 'Ingresos',
               class: 'bg-c-yellow',
-              icon: 'feather icon-repeat',
+              icon: 'feather icon-dollar-sign',
               primaryText: '$42,562',
-              secondaryText: 'This Month',
+              secondaryText: 'Este Mes',
               extraText: '$5,032'
             }}
           />
@@ -50,11 +50,11 @@ const DashAnalytics = () => {
         <Col md={6} xl={3}>
           <OrderCard
             params={{
-              title: 'Total Profit',
+              title: 'Ganancia Total',
               class: 'bg-c-red',
               icon: 'feather icon-award',
               primaryText: '$9,562',
-              secondaryText: 'This Month',
+              secondaryText: 'Este Mes',
               extraText: '$542'
             }}
           />
