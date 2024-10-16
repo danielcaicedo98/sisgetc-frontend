@@ -12,7 +12,7 @@
   "dependencies": {
     "@tanem/react-nprogress": "^5.0.51",
     "@vitejs/plugin-react": "^4.2.1",
-    "apexcharts": "^3.49.0",
+    "apexcharts": "^3.54.1",
     "bootstrap": "^5.3.3",
     "formik": "^2.4.6",
     "react": "18.2.0",
