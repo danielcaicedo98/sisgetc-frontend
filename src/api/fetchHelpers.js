@@ -20,7 +20,7 @@ export const fetchWithoutToken = async (endpoint, data, method = 'GET') => {
 };
 
 // Peticiones con token (por ejemplo, para acceder a rutas protegidas)
-export const fetchWithToken = async (endpoint, data, method = 'GET') => {
+export const fetchWithToken = async (endpoint, data, method ) => {
     const url = `${baseURL}/${endpoint}`;
     const token = localStorage.getItem('token') || '';
 

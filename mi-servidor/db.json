@@ -1,0 +1,210 @@
+{
+    "users": [
+      {
+        "email": "admin@example.com",
+        "password": "password123",
+        "name": "Administrador"
+      }    
+    ],
+    "providers": [
+      {
+        "id": "1",
+        "name": "Salsamentaria"
+      },
+      {
+        "id": "2",
+        "name": "Granero"
+      },
+      {
+        "id": "3",
+        "name": "Supermercado"
+      },
+      {
+        "id": "0e31"
+      }
+    ],
+    "products": [
+      {
+        "id": "1",
+        "name": "Harina"
+      },
+      {
+        "id": "2",
+        "name": "Huevos"
+      },
+      {
+        "id": "3",
+        "name": "Azúcar"
+      }
+    ],
+    "purchases": [
+      {
+        "id": "cb46",
+        "fecha": "2024-10-20",
+        "descripcion": "",
+        "total": 50000,
+        "proveedor": {
+          "id": "1728844232544.6748",
+          "name": "Tienda"
+        },
+        "productos": [
+          {
+            "producto": {
+              "id": "1728845240779.499",
+              "name": "Mantequilla"
+            },
+            "cantidad": "3",
+            "unidad": "Unidades",
+            "precio": 20000,
+            "text": "Mantequilla"
+          },
+          {
+            "producto": {
+              "id": "3",
+              "name": "Azúcas"
+            },
+            "cantidad": 1,
+            "unidad": "Gramos",
+            "precio": "30000",
+            "text": "Azúcas"
+          }
+        ]
+      },
+      {
+        "id": "42e1",
+        "fecha": "2024-10-14",
+        "proveedor": {
+          "id": "3",
+          "name": "Supermercado"
+        },
+        "descripcion": "",
+        "total": 50000,
+        "productos": [
+          {
+            "producto": {
+              "id": "2",
+              "name": "Huevos"
+            },
+            "cantidad": 3,
+            "unidad": "Unidades",
+            "precio": 50000
+          }
+        ]
+      },
+      {
+        "id": "5d81",
+        "fecha": "2024-10-20",
+        "proveedor": {
+          "id": "2",
+          "name": "Granero"
+        },
+        "descripcion": "",
+        "total": 36000,
+        "productos": [
+          {
+            "producto": {
+              "id": "3",
+              "name": "Azúcar"
+            },
+            "cantidad": 10,
+            "unidad": "Unidades",
+            "precio": "6000",
+            "text": "Azúcar"
+          },
+          {
+            "producto": {
+              "id": "1",
+              "name": "Harina"
+            },
+            "cantidad": 1,
+            "unidad": "Unidades",
+            "precio": "30000",
+            "text": "Harina"
+          }
+        ]
+      },
+      {
+        "id": "a276",
+        "fecha": "2024-10-14",
+        "proveedor": {
+          "id": "2",
+          "name": "Granero"
+        },
+        "descripcion": "",
+        "total": 30000,
+        "productos": [
+          {
+            "producto": {
+              "id": "2",
+              "name": "Huevos"
+            },
+            "cantidad": 10,
+            "unidad": "Unidades",
+            "precio": 30000
+          }
+        ]
+      },
+      {
+        "id": "624e",
+        "fecha": "2024-10-20",
+        "proveedor": {
+          "id": "1",
+          "name": "Salsamentaria"
+        },
+        "descripcion": "test",
+        "total": 60000,
+        "productos": [
+          {
+            "producto": {
+              "id": "2",
+              "name": "Huevos"
+            },
+            "cantidad": 3,
+            "unidad": "Unidades",
+            "precio": 10000
+          },
+          {
+            "producto": {
+              "id": "3",
+              "name": "Azúcar"
+            },
+            "cantidad": 2000,
+            "unidad": "Gramos",
+            "precio": 50000,
+            "text": "Azúcar"
+          }
+        ]
+      },
+      {
+        "id": "224e",
+        "fecha": "2024-10-20",
+        "proveedor": {
+          "id": "1",
+          "name": "Salsamentaria"
+        },
+        "descripcion": "test2",
+        "total": 60000,
+        "productos": [
+          {
+            "producto": {
+              "id": "2",
+              "name": "Huevos"
+            },
+            "cantidad": 3,
+            "unidad": "Unidades",
+            "precio": 10000
+          },
+          {
+            "producto": {
+              "id": "1",
+              "name": "Harina"
+            },
+            "cantidad": 2000,
+            "unidad": "Gramos",
+            "precio": 50000,
+            "text": "Harina"
+          }
+        ]
+      }
+    ]
+  }

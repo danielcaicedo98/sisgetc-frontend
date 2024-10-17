@@ -4,8 +4,9 @@ import { Card, Modal, Button } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import ProductItem from './ProductItem'; // Asegúrate de importar el componente actualizado
-import './Purchases.scss';
+import '../../assets/scss/purchases/Purchases.scss';
 import { useParams, useNavigate } from 'react-router-dom';
+import { fetchWithToken } from '../../api/fetchHelpers';
 
 const Purchases = () => {
   const { id } = useParams(); // Obtener el ID de la compra a editar, si existe
@@ -46,8 +47,8 @@ const Purchases = () => {
   const [providerDebounceTimer, setProviderDebounceTimer] = useState(null);
   const [productDebounceTimer, setProductDebounceTimer] = useState(null);
 
-  // Función para buscar proveedores
-  const searchProviders = (query) => {
+  
+  const searchProviders = async (query) => {
     if (!query) {
       setProviderOptions([]);
       return;
@@ -55,30 +56,32 @@ const Purchases = () => {
 
     setIsLoadingProviders(true);
 
-    fetch(`http://localhost:5000/providers?name_like=${encodeURIComponent(query)}`)
-      .then(response => response.json())
-      .then(data => {
-        const uniqueNames = new Set(data.map(provider => provider.name));
+    try {
+      // Llamar a fetchWithToken para obtener los proveedores filtrados por el nombre
+      const data = await fetchWithToken(`providers?name_like=${encodeURIComponent(query)}`, null, 'GET');
 
-        // Agregar el nuevo proveedor solo si no existe
-        if (!uniqueNames.has(query)) {
-          uniqueNames.add(query);
-          data.push({
-            id: `${Date.now() + Math.random()}`,
-            name: `${query}`
-          });
-        }        
-        setProviderOptions(data);
-        setIsLoadingProviders(false);
-      })
-      .catch(error => {
-        console.error('Error fetching providers:', error);
-        setIsLoadingProviders(false);
-      });
+      const uniqueNames = new Set(data.map(provider => provider.name));
+
+      // Agregar el nuevo proveedor solo si no existe
+      if (!uniqueNames.has(query)) {
+        uniqueNames.add(query);
+        data.push({
+          id: `${Date.now() + Math.random()}`,
+          name: `${query}`
+        });
+      }
+
+      setProviderOptions(data);
+    } catch (error) {
+      console.error('Error fetching providers:', error);
+    } finally {
+      setIsLoadingProviders(false);
+    }
   };
 
-  // Función para buscar productos
-  const searchProducts = (query) => {
+  // Función para buscar productos  
+
+  const searchProducts = async (query) => {
     if (!query) {
       setProductOptions([]);
       return;
@@ -86,27 +89,29 @@ const Purchases = () => {
 
     setIsLoadingProducts(true);
 
-    fetch(`http://localhost:5000/products?name_like=${encodeURIComponent(query)}`)
-      .then(response => response.json())
-      .then(data => {
-        const uniqueNames = new Set(data.map(provider => provider.name));
+    try {
+      // Llamar a fetchWithToken para obtener los productos filtrados por el nombre
+      const data = await fetchWithToken(`products?name_like=${encodeURIComponent(query)}`, null, 'GET');
 
-        // Agregar el nuevo proveedor solo si no existe
-        if (!uniqueNames.has(query)) {
-          uniqueNames.add(query);
-          data.push({
-            id: `${Date.now() + Math.random()}`,
-            name: `${query}`
-          });
-        }       
-        setProductOptions(data);
-        setIsLoadingProducts(false);
-      })
-      .catch(error => {
-        console.error('Error fetching products:', error);
-        setIsLoadingProducts(false);
-      });
+      const uniqueNames = new Set(data.map(product => product.name));
+
+      // Agregar el nuevo producto solo si no existe
+      if (!uniqueNames.has(query)) {
+        uniqueNames.add(query);
+        data.push({
+          id: `${Date.now() + Math.random()}`,
+          name: `${query}`
+        });
+      }
+
+      setProductOptions(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setIsLoadingProducts(false);
+    }
   };
+
 
   // Manejar cambios en el proveedor con debounce
   const handleProviderInputChange = (query) => {
@@ -187,8 +192,7 @@ const Purchases = () => {
     setShowConfirm(false);
     setProductToRemove(null);
   };
-
-  // Limpiar todos los productos
+  
   const clearAll = () => {
     if (window.confirm('¿Estás seguro de que deseas eliminar todos los productos?')) {
       setProductos([{ id: Date.now(), text: '', precio: '', cantidad: '', unidad: '', productoObj: null }]);
@@ -196,39 +200,41 @@ const Purchases = () => {
     }
   };
 
-  useEffect(() => {
-    if (id) {
-      // Obtener los datos de la compra a editar
-      fetch(`http://localhost:5000/purchases/${id}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Compra no encontrada');
-          }
-          return response.json();
-        })
-        .then(data => {
-          setFecha(data.fecha);
-          setProveedor([data.proveedor]);
-          setDescripcion(data.descripcion);
-          setTotal(data.total);
-          setProductos(data.productos.map(p => ({
-            id: Date.now() + Math.random(), // Generar un ID único para el formulario
-            text: p.producto.name,
-            precio: p.precio,
-            cantidad: p.cantidad,
-            unidad: p.unidad,
-            productoObj: p.producto
-          })));
-        })
-        .catch(error => {
-          console.error('Error fetching purchase:', error);
-          alert('No se encontró la compra que deseas editar.');
-          navigate('/purchases/list');
-        });
-    }
-  }, [id, navigate]);
+  // useEffect(() => {
+  //   if (id) {
+  //     // Obtener los datos de la compra a editar
+  //     fetch(`http://localhost:5000/purchases/${id}`)
+  //       .then(response => {
+  //         if (!response.ok) {
+  //           throw new Error('Compra no encontrada');
+  //         }
+  //         return response.json();
+  //       })
+  //       .then(data => {
+  //         setFecha(data.fecha);
+  //         setProveedor([data.proveedor]);
+  //         setDescripcion(data.descripcion);
+  //         setTotal(data.total);
+  //         setProductos(data.productos.map(p => ({
+  //           id: Date.now() + Math.random(), // Generar un ID único para el formulario
+  //           text: p.producto.name,
+  //           precio: p.precio,
+  //           cantidad: p.cantidad,
+  //           unidad: p.unidad,
+  //           productoObj: p.producto
+  //         })));
+  //       })
+  //       .catch(error => {
+  //         console.error('Error fetching purchase:', error);
+  //         alert('No se encontró la compra que deseas editar.');
+  //         navigate('/purchases/list');
+  //       });
+  //   }
+  // }, [id, navigate]);
 
   // Calcular el total cada vez que cambian los productos
+
+
   useEffect(() => {
     const newTotal = productos.reduce((acc, producto) => {
       const precio = parseFloat(producto.precio) || 0;
@@ -289,6 +295,7 @@ const Purchases = () => {
     return valid;
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
@@ -306,40 +313,14 @@ const Purchases = () => {
       };
 
       try {
-        let response;
-        if (id) {
-          // Editar una compra existente
-          response = await fetch(`http://localhost:5000/purchases/${id}`, {
-            method: 'PUT', // o 'PATCH' si solo actualizas algunos campos
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(compra)
-          });
-        } else {
-          // Crear una nueva compra
-          response = await fetch('http://localhost:5000/purchases', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(compra)
-          });
-        }
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log(id ? 'Compra actualizada:' : 'Compra guardada:', data);
-        alert(id ? 'Compra actualizada exitosamente.' : 'Compra guardada exitosamente.');
-
+        const response = await fetchWithToken('purchases', compra, 'POST'); // Llamar a fetchWithToken
+        console.log(response)        
+        alert('Compra guardada exitosamente.');
         // Redireccionar a la lista de compras después de guardar
-        navigate('/purchases/list');
+        navigate('/purchases-list');
       } catch (error) {
-        console.error(id ? 'Error al actualizar la compra:' : 'Error al guardar la compra:', error);
-        alert(`Hubo un problema al ${id ? 'actualizar' : 'guardar'} la compra. Por favor, inténtalo nuevamente.`);
+        console.error('Error al guardar la compra:', error);
+        alert('Hubo un problema al guardar la compra. Por favor, inténtalo nuevamente.');
       }
     } else {
       alert('Por favor, corrige los errores en el formulario.');

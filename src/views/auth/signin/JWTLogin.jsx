@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Alert, Button } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import { fetchWithoutToken } from '../../../api/fetchHelpers'; // Asegúrate de tener esta importación
+import { fetchWithoutToken } from '../../../api/fetchHelpers'; 
 import '../../../assets/scss/themes/_homecustom.scss';
 
 const JWTLogin = () => {
