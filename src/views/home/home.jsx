@@ -1,64 +1,67 @@
 import React from 'react';
+import { Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom'; // Importa Link para navegación
 
-// react-bootstrap
-import { Row, Col} from 'react-bootstrap';
-
-// project import
 import OrderCard from '../../components/Widgets/OrderCard';
+import '../../assets/scss/themes/_homecustom.scss';
 
 const DashAnalytics = () => {
   return (
     <React.Fragment>
+      <div className='card_home'>
+        <div class="card">
+          <div class="card-body">
+            <h5>Bienvenida de nuevo, Esperanza Quiñones!</h5>
+            <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+        </div>
+      </div>
       <Row>
-        {/* order cards */}
-        <Col md={6} xl={3}>
-          <OrderCard
-            params={{
-              title: 'Pedidos Recibidos',
-              class: 'bg-c-blue',
-              icon: 'feather icon-shopping-cart',
-              primaryText: '486',
-              secondaryText: 'Pedidos Completados',
-              extraText: '351'
-            }}
-          />
+
+        <Col md={6} xl={4}>
+          {/* Envolver OrderCard en un Link para navegar */}
+          <Link to="/sales" style={{ textDecoration: 'none' }}> {/* Ruta de destino */}
+            <OrderCard
+              params={{
+                title: 'Gestión',
+                class: 'bg-c-green',
+                icon: 'feather icon-tag',
+                primaryText: 'Ventas',
+                secondaryText: 'This Month',
+                extraText: '__'
+              }}
+            />
+          </Link>
         </Col>
-        <Col md={6} xl={3}>
-          <OrderCard
-            params={{
-              title: 'Ventas Totales',
-              class: 'bg-c-green',
-              icon: 'feather icon-tag',
-              primaryText: '1641',
-              secondaryText: 'Este Mes',
-              extraText: '213'
-            }}
-          />
+        <Col md={6} xl={4}>
+          <Link to="/purchases" style={{ textDecoration: 'none' }}> {/* Otra ruta */}
+            <OrderCard
+              params={{
+                title: 'Gestión',
+                class: 'bg-c-yellow',
+                icon: 'feather icon-shopping-cart',
+                primaryText: 'Compras',
+                secondaryText: 'This Month',
+                extraText: '$__'
+              }}
+            />
+          </Link>
         </Col>
-        <Col md={6} xl={3}>
-          <OrderCard
-            params={{
-              title: 'Ingresos',
-              class: 'bg-c-yellow',
-              icon: 'feather icon-dollar-sign',
-              primaryText: '$42,562',
-              secondaryText: 'Este Mes',
-              extraText: '$5,032'
-            }}
-          />
+        <Col md={6} xl={4}>
+          <Link to="/reports" style={{ textDecoration: 'none' }}> {/* Otra ruta */}
+            <OrderCard
+              params={{
+                title: 'Gestión',
+                class: 'bg-c-red',
+                icon: 'feather icon-activity',
+                primaryText: 'Reportes',
+                secondaryText: 'This Month',
+                extraText: '$__'
+              }}
+            />
+          </Link>
         </Col>
-        <Col md={6} xl={3}>
-          <OrderCard
-            params={{
-              title: 'Ganancia Total',
-              class: 'bg-c-red',
-              icon: 'feather icon-award',
-              primaryText: '$9,562',
-              secondaryText: 'Este Mes',
-              extraText: '$542'
-            }}
-          />
-        </Col>          
+
       </Row>
     </React.Fragment>
   );
