@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, Container, Row, Col, ListGroup} from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Card, Container, Row, Col, ListGroup, Form, Button } from 'react-bootstrap';
 
 import uniqueVisitorChart from './chart/analytics-unique-visitor-chart';
 import customerChart from './chart/analytics-cuatomer-chart';
@@ -12,7 +12,11 @@ import SocialCard from 'components/Widgets/SocialCard';
 import avatar1 from '../../assets/images/user/avatar-1.jpg'
 
 const Sales = () => {   
+  const [showForm, setShowForm] = useState(false);
 
+  const toggleFormVisibility = () => {
+    setShowForm(!showForm);
+  };
     
     return (
         <React.Fragment>
@@ -27,6 +31,77 @@ const Sales = () => {
                   </Card.Text>
               </Card.Body>
             </Row>
+
+            <Row>
+              <Col className="text-end mb-3">
+                <Button variant="primary" onClick={toggleFormVisibility}>
+                  {showForm ? 'Ocultar Formulario' : 'Registrar Venta'}
+                </Button>
+              </Col>
+            </Row>
+
+            {showForm && (
+              <Row>
+                <Col>
+                  <Card>
+                    <Card.Body>
+                      <h4>Registro de Venta</h4>
+                        <Form>
+                          <Form.Group className="mb-3" controlId="product">
+                            <Form.Label>Producto</Form.Label>
+                            <Form.Control type="text" placeholder="Ingrese el producto" />
+                          </Form.Group>
+
+                          <Form.Group className="mb-3" controlId="quantity">
+                            <Form.Label>Cantidad</Form.Label>
+                            <Form.Control type="number" placeholder="Ingrese la cantidad" />
+                          </Form.Group>
+
+                          <Form.Group className="mb-3" controlId="unitPrice">
+                            <Form.Label>Precio Unitario</Form.Label>
+                            <Form.Control type="number" placeholder="Ingrese el precio unitario" />
+                          </Form.Group>
+
+                          <Form.Group className="mb-3" controlId="totalSale">
+                            <Form.Label>Total de la Venta</Form.Label>
+                            <Form.Control type="number" placeholder="Ingrese el total de la venta" />
+                          </Form.Group>
+
+                          <Form.Group className="mb-3" controlId="taxes">
+                            <Form.Label>Impuestos</Form.Label>
+                            <Form.Control type="number" placeholder="Ingrese los impuestos aplicables" />
+                          </Form.Group>
+
+                          <Form.Group className="mb-3" controlId="paymentMethod">
+                            <Form.Label>Método de Pago</Form.Label>
+                            <Form.Control as="select">
+                              <option value="credit">Crédito</option>
+                              <option value="debit">Débito</option>
+                              <option value="cash">Efectivo</option>
+                              <option value="paypal">PayPal</option>
+                            </Form.Control>
+                          </Form.Group>
+
+                          <Form.Group className="mb-3" controlId="saleDate">
+                            <Form.Label>Fecha de la Venta</Form.Label>
+                            <Form.Control type="date" />
+                          </Form.Group>
+
+                          <Form.Group className="mb-3" controlId="customer">
+                            <Form.Label>Cliente</Form.Label>
+                            <Form.Control type="text" placeholder="Ingrese el nombre del cliente" />
+                          </Form.Group>
+
+                          <Button variant="success" type="submit">
+                            Guardar Venta
+                          </Button>
+                        </Form>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+        )}
+
             <Row>
               <Col md = {12} xl = {6}>
                 <Card>
