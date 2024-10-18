@@ -1,0 +1,15 @@
+// src/views/purchases/PurchaseDetailsModal.scss
+
+.modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .text-danger {
+    font-size: 0.875em;
+  }
+  

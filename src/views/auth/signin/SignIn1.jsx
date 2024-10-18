@@ -12,7 +12,8 @@ import Breadcrumb from '../../../layouts/AdminLayout/Breadcrumb';
 import AuthLogin from './JWTLogin';
 
 // assets
-import logoDark from '../../../assets/images/logo-dark.png';
+import logoSignIn from '../../../assets/images/Logo1.png';
+import '../../../assets/scss/themes/_homecustom.scss'; 
 
 // ==============================|| SIGN IN 1 ||============================== //
 
@@ -30,7 +31,7 @@ const Signin1 = () => {
           </div>
           <Card className="borderless text-center">
             <Card.Body>
-              <img src={logoDark} alt="" className="img-fluid mb-4" />
+              <img src={logoSignIn} alt="" className="img-fluid mb-4" /> 
               <AuthLogin />
               <p className="mb-2 text-muted">
                 Forgot password?{' '}
@@ -43,11 +44,7 @@ const Signin1 = () => {
                 <NavLink to="/auth/signup-1" className="f-w-400">
                   Signup
                 </NavLink>
-              </p>
-              <Alert variant="primary" className="text-start mt-3">
-                
-                <br />
-              </Alert>
+              </p>              
             </Card.Body>
           </Card>
         </div>

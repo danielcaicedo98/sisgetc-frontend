@@ -1,0 +1,260 @@
+// src/views/purchases/Purchases.scss
+
+$form-max-width: 900px;
+$primary-color: #4B4B4B;
+$secondary-color: #f1f1f1;
+$button-color: #fff;
+$error-color: #A52A2A;
+
+.form-container {
+  max-width: $form-max-width;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.233);
+  &:hover {
+      //background-color: #d24231;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.411), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+
+  h1 {
+    text-align: center;
+    color: $primary-color;
+    margin-bottom: 20px;
+  } 
+  
+  form {
+    .static-fields {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 10px;
+
+      @media (min-width: 800px) {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .left-column {
+        flex: 1; // Ajusta según sea necesario
+        margin-right: 20px; // Espacio entre las columnas
+      }
+    
+      .right-column {
+        flex: 2; // Ajusta para que ocupe más espacio
+      }
+    
+      .campo {
+        margin-bottom: 5px; // Espaciado entre los campos
+      }
+
+      .campo {
+        display: flex;
+        flex-direction: column;
+
+        label {
+          margin-bottom: 5px;
+          font-weight: bold;
+          color: #333;
+        }
+
+        input,
+        textarea,
+        select,
+        .rbt-input-main {
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 1em;
+
+          &:focus {
+            border-color: $primary-color;
+            outline: none;
+          }
+        }
+
+        textarea {
+          resize: vertical;
+          min-height: 80px;
+        }
+
+        select {
+          height: 40px;
+        }
+
+        .error {
+          color: $error-color;
+          font-size: 0.9em;
+          margin-top: 5px;
+        }
+      }
+    }
+
+    .producto-container {
+      margin-bottom: 20px;
+
+      .error-messages {
+        margin-top: 5px;
+
+        .error {
+          display: block;
+          color: $error-color;
+          font-size: 0.9em;
+        }
+      }
+    }
+
+    .producto {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+
+      @media (min-width: 800px) {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .rbt {
+        flex: 3;
+        margin-right: 10px;
+
+        @media (max-width: 799px) {
+          width: 100%;
+        }
+      }
+
+      input[type="number"],
+      select {
+        flex: 1;
+        width: 100%;
+        max-width: 150px;
+        margin-right: 10px;
+
+        @media (max-width: 799px) {
+          width: 100%;
+        }
+      }
+
+      button {
+        padding: 10px 15px;
+        //background-color: #C0001E;
+        background-image: linear-gradient(45deg, #f8516a, #b4021d);
+        color: $button-color;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          //background-color: #d24231;
+          background-image: linear-gradient(45deg, #f8516a, #f8516a);
+        }
+
+        @media (max-width: 799px) {
+          width: 100%;
+        }
+      }
+    }
+
+    .total-container {
+      text-align: right;
+      margin-bottom: 20px;
+
+      h3 {
+        color: $primary-color;
+      }
+    }
+
+    .buttons-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      @media (min-width: 800px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .agregar-producto,
+      .clear-all,
+      .submit-button {
+        // background-color: #6BBF5B;
+        color: $button-color;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-size: 1em;
+        flex: 1;
+
+        &:hover {
+          background-color: #6BBF5B;
+        }
+
+        @media (min-width: 800px) {
+          width: auto;
+        }
+      }
+      .agregar-producto{
+        background-image: linear-gradient(45deg, #7cf065, #05c40c);
+        &:hover {
+            background-image: linear-gradient(45deg, #7cf065, #7cf065);
+          }
+      }
+      
+
+      .clear-all {
+        //background-color: #C0001E; // Color rojo para "Limpiar Todo"
+        background-image: linear-gradient(45deg, #C0001E, #fc4964);
+
+        &:hover {
+          background-image: linear-gradient(45deg, #fc4964, #fc4964);
+        }
+      }
+
+      .submit-button {
+       // background-color: #003366; // Color azul para "Guardar"
+        background-image: linear-gradient(45deg, #0e7be9, #003366);
+
+        &:hover {
+          background-image: linear-gradient(45deg, #075cb1, #075cb1);
+        }
+      }
+    }
+
+    // Estilos para Typeahead
+    .rbt-input-main {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .rbt-menu {
+      width: 100%;
+    }
+  }
+}
+
+
+select {
+    padding: 10px;
+    border: 1px solid #f9f9f9;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+  
+  select:hover {
+    border-color: #f9f9f9;
+  }
+  
+  select:focus {
+    outline: none;
+    border-color: #007BFF; /* Color del borde al enfocar */
+  }

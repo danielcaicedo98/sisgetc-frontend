@@ -20,13 +20,6 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-briefcase',
           url: '/sales'
-        },        
-        {
-          id: 'purchases',
-          title: 'Compras',
-          type: 'item',
-          icon: 'feather icon-shopping-cart',
-          url: '/purchases'
         },
         {
           id: 'reports',
@@ -36,6 +29,29 @@ const menuItems = {
           url: '/reports'
         }
       ]
+    },
+    {
+      id: 'purchases',
+      title: 'Compras',
+      type: 'group',
+      icon: 'icon-navigation',
+      children: [              
+        {
+          id: 'register-purchases',
+          title: 'Registrar Compra',
+          type: 'item',
+          icon: 'feather icon-shopping-cart',
+          url: '/purchases'
+        },
+        {
+          id: 'purchases-tables',
+          title: 'Historial Compras',
+          type: 'item',
+          icon: 'feather icon-shopping-cart',
+          url: '/purchases-list'
+        }
+      ]
+
     }
   ]
 };
