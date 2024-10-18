@@ -16,21 +16,24 @@ const PurchasesList = () => {
     provider: '',
     description: '',
   });
- 
+
   const fetchPurchases = async () => {
     setLoading(true);
-    
-    try {
-        const data = await fetchWithToken('purchases', null, 'GET'); // Llamar a fetchWithToken
 
-        setPurchases(data); // Establecer los datos de las compras
-        console.log(data)
+    try {
+      const data = await fetchWithToken('purchases', null, 'GET'); // Llamar a fetchWithToken
+
+      setPurchases(data); // Establecer los datos de las compras
+      console.log(data)
+      /* setPurchases({
+        proveedor
+      }) */
     } catch (error) {
-        console.error('Error fetching purchases:', error);
+      console.error('Error fetching purchases:', error);
     } finally {
-        setLoading(false); // Finalizar el loading independientemente de si hubo error o no
+      setLoading(false); // Finalizar el loading independientemente de si hubo error o no
     }
-};
+  };
 
   useEffect(() => {
     fetchPurchases();
@@ -60,10 +63,17 @@ const PurchasesList = () => {
   };
 
   // Filtrar las compras según los criterios
+  /* const filteredPurchases = purchases.filter(purchase => {
+    const dateMatch = filters.date ? new Date(purchase.date).toLocaleDateString() === new Date(filters.date).toLocaleDateString() : true;
+    const providerMatch = purchase.supplier.name.toLowerCase().includes(filters.provider.toLowerCase());
+    const descriptionMatch = purchase.description.toLowerCase().includes(filters.description.toLowerCase());
+
+    return dateMatch && providerMatch && descriptionMatch;
+  }); */
   const filteredPurchases = purchases.filter(purchase => {
     const dateMatch = filters.date ? new Date(purchase.fecha).toLocaleDateString() === new Date(filters.date).toLocaleDateString() : true;
-    const providerMatch = purchase.proveedor.name.toLowerCase().includes(filters.provider.toLowerCase());
-    const descriptionMatch = purchase.descripcion.toLowerCase().includes(filters.description.toLowerCase());
+    const providerMatch = filters.provider ? purchase.supplier.name.toLowerCase().includes(filters.provider.toLowerCase()) : true;
+    const descriptionMatch = filters.description ? purchase.description.toLowerCase().includes(filters.description.toLowerCase()) : true;
 
     return dateMatch && providerMatch && descriptionMatch;
   });
@@ -84,41 +94,41 @@ const PurchasesList = () => {
   return (
     <div className="purchases-list-container">
       <h2>Lista de Compras</h2>
-      
+
       {/* Filtros */}
       <Row className="mb-3">
         <Col md={4}>
           <Form.Group controlId="filterDate">
             <Form.Label>Fecha:</Form.Label>
-            <Form.Control 
-              type="date" 
-              name="date" 
-              value={filters.date} 
-              onChange={handleFilterChange} 
+            <Form.Control
+              type="date"
+              name="date"
+              value={filters.date}
+              onChange={handleFilterChange}
             />
           </Form.Group>
         </Col>
         <Col md={4}>
           <Form.Group controlId="filterProvider">
             <Form.Label>Proveedor:</Form.Label>
-            <Form.Control 
-              type="text" 
-              name="provider" 
-              value={filters.provider} 
-              onChange={handleFilterChange} 
-              placeholder="Proveedor" 
+            <Form.Control
+              type="text"
+              name="provider"
+              value={filters.provider}
+              onChange={handleFilterChange}
+              placeholder="Proveedor"
             />
           </Form.Group>
         </Col>
         <Col md={4}>
           <Form.Group controlId="filterDescription">
             <Form.Label>Descripción:</Form.Label>
-            <Form.Control 
-              type="text" 
-              name="description" 
-              value={filters.description} 
-              onChange={handleFilterChange} 
-              placeholder="Descripción" 
+            <Form.Control
+              type="text"
+              name="description"
+              value={filters.description}
+              onChange={handleFilterChange}
+              placeholder="Descripción"
             />
           </Form.Group>
         </Col>
@@ -139,19 +149,20 @@ const PurchasesList = () => {
           <tbody>
             {filteredPurchases.map(purchase => (
               <tr key={purchase.id}>
-                <td>{convertirFecha(purchase.fecha)}</td>
-                <td>{purchase.proveedor.name}</td>
-                <td>{purchase.descripcion}</td>
+                <td>{convertirFecha(purchase.purchase_date)}</td>
+                {/* <td>{purchase.proveedor.name}</td> */}
+                <td>{purchase.supplier.name}</td>
+                <td>{purchase.description}</td>
                 <td>{purchase.total.toFixed(2)}</td>
                 <td>
-                  <Button 
-                    variant="info" 
-                    size="sm" 
+                  <Button
+                    variant="info"
+                    size="sm"
                     onClick={() => handleViewDetails(purchase)}
                     className="me-2"
                   >
                     Ver Detalles
-                  </Button>                
+                  </Button>
                 </td>
               </tr>
             ))}
@@ -161,10 +172,10 @@ const PurchasesList = () => {
 
       {/* Modal para ver y editar detalles de la compra */}
       {selectedPurchase && (
-        <PurchaseDetailsModal 
-          show={showModal} 
-          handleClose={handleCloseModal} 
-          purchase={selectedPurchase} 
+        <PurchaseDetailsModal
+          show={showModal}
+          handleClose={handleCloseModal}
+          purchase={selectedPurchase}
           onUpdate={handleUpdatePurchase}
         />
       )}

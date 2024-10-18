@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import { fetchWithToken } from '../../api/fetchHelpers'; 
+import { fetchWithToken } from '../../api/fetchHelpers';
 
 const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   const [fecha, setFecha] = useState('');
@@ -23,12 +23,12 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
 
   useEffect(() => {
     if (purchase) {
-      setFecha(purchase.fecha);
-      setProveedor([purchase.proveedor]);
-      setDescripcion(purchase.descripcion);
-      setProductos(purchase.productos);
+      setFecha(purchase.date);
+      setProveedor([purchase.supplier.name]);
+      setDescripcion(purchase.description);
+      setProductos(purchase.purchase_details);
       setTotal(purchase.total);
-      setEditingProductos(purchase.productos.map(p => ({ ...p, tempId: Date.now() + Math.random() })));
+      setEditingProductos(purchase.purchase_details.map(p => ({ ...p, tempId: Date.now() + Math.random() })));
     }
   }, [purchase]);
 
@@ -41,7 +41,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
     setTotal(newTotal);
   }, [productos]);
 
-  
+
   const searchProviders = async (query) => {
     if (!query) {
       setProviderOptions([]);
@@ -105,7 +105,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       setIsLoadingProducts(false);
     }
   };
-  
+
 
   // Manejar cambios en el proveedor con debounce
   const handleProviderInputChange = (query) => {
@@ -158,19 +158,19 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       newErrors.proveedor = 'El proveedor es requerido.';
     }
 
-    
+
     setErrors(newErrors);
     return valid;
-  }; 
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault(); // Evita el comportamiento por defecto del formulario
-  
+
     if (!validate()) {
       alert('Por favor, corrige los errores en el formulario.');
       return;
     }
-  
+
     const updatedPurchase = {
       fecha,
       proveedor: proveedor[0], // Asumiendo que solo se selecciona un proveedor
@@ -183,23 +183,23 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
         precio: p.precio,
       })),
     };
-  
+
     try {
-      const response = await fetchWithToken(`purchases/${purchase.id}`, updatedPurchase, 'PUT');       
+      const response = await fetchWithToken(`purchases/${purchase.id}`, updatedPurchase, 'PUT');
       alert('Compra actualizada exitosamente.');
-  
+
       // Notificar al componente padre para actualizar la lista
       if (onUpdate) {
         onUpdate(response);
       }
-  
+
       handleClose();
     } catch (error) {
       console.error('Error al actualizar la compra:', error);
       alert('Hubo un problema al actualizar la compra. Por favor, inténtalo nuevamente.');
     }
   };
-  
+
   return (
     <Modal show={show} onHide={handleClose} size="lg" scrollable>
       <Modal.Header closeButton>
