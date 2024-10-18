@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import { fetchWithToken } from '../../api/fetchHelpers'; 
+import { fetchWithToken } from '../../api/fetchHelpers';
 
 const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   const [fecha, setFecha] = useState('');
@@ -90,7 +90,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
 
     setErrors(newErrors);
     return valid;
-  }; 
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -99,34 +99,16 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       alert('Por favor, corrige los errores en el formulario.');
       return;
     }
-    console.log(proveedor)
-
-    /*{
-      "purchase_details": [
-        {
-          "quantity": 0,
-          "unit_price": 0,
-          "measurment_unit": "1",
-          "subtotal": 0,
-          "article": 0
-        }
-      ],
-      "payment_method": "1",
-      "description": "string",
-      "purchase_date": "2024-10-18",
-      "total": 0,
-      "is_active": true,
-      "supplier": 0
-    }*/
+    console.log(proveedor) 
 
     const updatedPurchase = {
       purchase_date: fecha, // Cambiar a `purchase_date`
       supplier: proveedor[0].id, // Cambiar a `supplier`
       description: descripcion,
       total,
-      purchase_details: productos.map(p => ({        
+      purchase_details: productos.map(p => ({
         quantity: p.quantity,
-        unit_price:  p.unit_price,
+        unit_price: p.unit_price,
         measurment_unit: "1",
         subtotal: p.quantity * p.unit_price,
         article: p.article.value
@@ -134,7 +116,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
     };
 
     try {
-      const response = await fetchWithToken(`purchases/${purchase.id}/`, updatedPurchase, 'PUT');       
+      const response = await fetchWithToken(`purchases/${purchase.id}/`, updatedPurchase, 'PUT');
       alert('Compra actualizada exitosamente.');
 
       if (onUpdate) {
