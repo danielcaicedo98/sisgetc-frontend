@@ -47,7 +47,7 @@ const Purchases = () => {
   const [providerDebounceTimer, setProviderDebounceTimer] = useState(null);
   const [productDebounceTimer, setProductDebounceTimer] = useState(null);
 
-  
+
   const searchProviders = async (query) => {
     if (!query) {
       setProviderOptions([]);
@@ -192,7 +192,7 @@ const Purchases = () => {
     setShowConfirm(false);
     setProductToRemove(null);
   };
-  
+
   const clearAll = () => {
     if (window.confirm('¿Estás seguro de que deseas eliminar todos los productos?')) {
       setProductos([{ id: Date.now(), text: '', precio: '', cantidad: '', unidad: '', productoObj: null }]);
@@ -295,7 +295,7 @@ const Purchases = () => {
     return valid;
   };
 
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
@@ -314,7 +314,7 @@ const Purchases = () => {
 
       try {
         const response = await fetchWithToken('purchases', compra, 'POST'); // Llamar a fetchWithToken
-        console.log(response)        
+        console.log(response)
         alert('Compra guardada exitosamente.');
         // Redireccionar a la lista de compras después de guardar
         navigate('/purchases-list');
