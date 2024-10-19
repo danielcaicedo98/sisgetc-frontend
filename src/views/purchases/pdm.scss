@@ -23,28 +23,23 @@ $breakpoint-lg: 992px;  // Escritorios pequeños
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem;
-  
+
     // Adaptación para tabletas y más grandes
     @media (min-width: $breakpoint-md) {
       flex-direction: row;
-      align-items: flex-start; // Alinea todos los elementos al inicio
+      align-items: center;
     }
-  
+
     .form-control,
     .form-select {
       width: 100%;
     }
-  
+
     .remove-button {
-      align-self: center; // Mantiene el botón centrado en dispositivos pequeños
-  
-      // Alineación correcta para dispositivos más grandes
-      @media (min-width: $breakpoint-md) {
-        align-self: flex-end; // Alinea el botón al final del contenedor para que coincida con el resto de la fila
-        margin-left: auto; // Empuja el botón a la derecha
-      }
+      align-self: flex-end;
     }
   }
+
   // Diseño para el contenedor de productos
   .product-container {
     margin-top: 1rem;

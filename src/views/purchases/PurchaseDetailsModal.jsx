@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { fetchWithToken } from '../../api/fetchHelpers';
+import '../../assets/scss/purchases/PurchaseDetailsModal.scss';
 
 const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   const [fecha, setFecha] = useState('');
@@ -19,7 +20,9 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
+
     if (purchase) {
+      console.log(purchase)
       setFecha(purchase.purchase_date); // Asegúrate de que sea `purchase_date`
       setProveedor([purchase.supplier]); // Cambiar a `supplier`
       setDescripcion(purchase.description || ''); // Manejar descripción nula
@@ -65,7 +68,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   };
 
   const addProduct = () => {
-    setProductos([...productos, { article: null, quantity: 1, unit_price: 0 }]);
+    setProductos([...productos, { article: null, quantity: 1, unit_price: 0, measurment_unit: { label: '' } }]);
   };
 
   const removeProduct = (index) => {
@@ -99,7 +102,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       alert('Por favor, corrige los errores en el formulario.');
       return;
     }
-    console.log(proveedor) 
+    console.log(proveedor)
 
     const updatedPurchase = {
       purchase_date: fecha, // Cambiar a `purchase_date`
@@ -131,7 +134,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg" scrollable>
+    <Modal show={show} onHide={handleClose} size="lg" scrollable className="purchase-details-modal">
       <Modal.Header closeButton>
         <Modal.Title>Editar Compra</Modal.Title>
       </Modal.Header>
@@ -208,9 +211,25 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
                     onChange={(e) => handleProductChange(index, 'quantity', e.target.value)}
                   />
                 </Form.Group>
+                <Form.Group className="mb-3 flex-fill" controlId={`formUnidad_${index}`}>
+                  <Form.Label>Unidad</Form.Label>
+                  <Form.Select
+                    value={producto.measurment_unit.label}
+                    onChange={(e) => handleProductChange(index, 'unidad', { label: e.target.value })}
+                    isInvalid={!!errors[`unidad_${index}`]}
+                  >
+                    <option value="">Selecciona unidad</option>
+                    <option value="Unidades">Unidades</option>
+                    <option value="Gramos">Gramos</option>
+                    <option value="Gramos">{"Kilo Gramo"}</option>
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">
+                    {errors[`unidad_${index}`]}
+                  </Form.Control.Feedback>
+                </Form.Group>
                 {/* Precio */}
                 <Form.Group className="mb-3 flex-fill" controlId={`formPrecio_${index}`}>
-                  <Form.Label>Precio ($)</Form.Label>
+                  <Form.Label>Precio</Form.Label>
                   <Form.Control
                     type="number"
                     step="0.01"
