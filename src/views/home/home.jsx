@@ -17,6 +17,7 @@ const DashAnalytics = () => {
         </div>
       </div>
       <Row>
+
         <Col md={6} xl={4}>
           {/* Envolver OrderCard en un Link para navegar */}
           <Link to="/sales" style={{ textDecoration: 'none' }}> {/* Ruta de destino */}
@@ -60,6 +61,7 @@ const DashAnalytics = () => {
             />
           </Link>
         </Col>
+
       </Row>
     </React.Fragment>
   );
