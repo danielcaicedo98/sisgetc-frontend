@@ -220,8 +220,8 @@ const Purchases = () => {
     const newTotal = productos.reduce((acc, producto) => {
       const precio = parseFloat(producto.precio) || 0;
       const cantidad = parseInt(producto.cantidad) || 0;
-      return acc + precio;
-      //return acc + (precio * cantidad);
+      // return acc + precio;
+      return acc + (precio * cantidad);
 
     }, 0);
     setTotal(newTotal);

@@ -1,6 +1,6 @@
 // src/views/purchases/Purchases.scss
 
-$form-max-width: 900px;
+$form-max-width: 1500px;
 $primary-color: #4B4B4B;
 $secondary-color: #f1f1f1;
 $button-color: #fff;
@@ -14,18 +14,20 @@ $error-color: #A52A2A;
   border-radius: 8px;
   background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.233);
+
   &:hover {
-      //background-color: #d24231;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.411), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
+    //background-color: #d24231;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.411), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
 
 
   h1 {
     text-align: center;
     color: $primary-color;
     margin-bottom: 20px;
-  } 
-  
+  }
+
   form {
     .static-fields {
       display: flex;
@@ -42,11 +44,11 @@ $error-color: #A52A2A;
         flex: 1; // Ajusta según sea necesario
         margin-right: 20px; // Espacio entre las columnas
       }
-    
+
       .right-column {
         flex: 2; // Ajusta para que ocupe más espacio
       }
-    
+
       .campo {
         margin-bottom: 5px; // Espaciado entre los campos
       }
@@ -69,6 +71,8 @@ $error-color: #A52A2A;
           border: 1px solid #ccc;
           border-radius: 4px;
           font-size: 1em;
+          width: 100%;
+          /* Asegura que el ancho se ajuste al contenedor */
 
           &:focus {
             border-color: $primary-color;
@@ -78,11 +82,10 @@ $error-color: #A52A2A;
 
         textarea {
           resize: vertical;
-          min-height: 80px;
-        }
-
-        select {
-          height: 40px;
+          /* Permite solo redimensionar verticalmente */
+          min-height: 115px;
+          max-width: 99%;
+          /* Se asegura de que el ancho máximo no exceda el contenedor */
         }
 
         .error {
@@ -91,40 +94,77 @@ $error-color: #A52A2A;
           margin-top: 5px;
         }
       }
+
     }
 
     .producto-container {
-      margin-bottom: 20px;
-
-      .error-messages {
-        margin-top: 5px;
-
-        .error {
-          display: block;
-          color: $error-color;
-          font-size: 0.9em;
-        }
-      }
-    }
-
-    .producto {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      /* Alinea todos los elementos en una fila */
+      align-items: center;
+      /* Centra verticalmente todos los elementos */
       gap: 10px;
-      margin-bottom: 15px;
+      /* Espacio entre los elementos */
+      margin-bottom: 10px;
 
-      @media (min-width: 800px) {
-        flex-direction: row;
-        align-items: center;
+      @media (max-width: 799px) {
+        flex-direction: column;        
+        /* Cambia a columna en pantallas pequeñas */
+      }
+
+      .producto {
+        display: flex;
+        flex-wrap: wrap;
+        /* Permite que los elementos se envuelvan si no caben en una línea */
+        gap: 10px;
+        /* Espacio entre los elementos */
+        padding: 15px 80px;
+        background-color: #f9f9f9;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        flex: 1;
+        /* Permite que el card ocupe todo el espacio disponible */
+
+        /* Asegura que cada grupo de formulario use flexbox */
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          /* Mantiene los labels y controles apilados dentro de cada grupo */
+          flex: 1;
+          /* Permite que cada grupo de formulario crezca igualmente */
+          min-width: 100px;
+          /* Evita que se reduzca demasiado en pantallas pequeñas */
+        }
+
+        .form-control {
+          width: 100%;
+          /* Ajusta el ancho al 100% del contenedor */
+        }
+
+        /* Para pantallas más pequeñas */
+        @media (max-width: 628px) {
+          flex-direction: column;
+          /* Cambia la dirección a columna en pantallas pequeñas */
+        }
+
+        .button-e {
+          background-image: linear-gradient(45deg, #C0001E, #fc4964);
+          margin-top: 1.5%;
+
+          &:hover {
+            background-image: linear-gradient(45deg, #fc4964, #fc4964);
+          }
+          @media (min-width: 800px) {
+            width: auto;
+          }
+        }
       }
 
       .rbt {
         flex: 3;
+        /* Ajuste del tamaño de los elementos de Typeahead */
         margin-right: 10px;
-
-        @media (max-width: 799px) {
-          width: 100%;
-        }
       }
 
       input[type="number"],
@@ -139,26 +179,10 @@ $error-color: #A52A2A;
         }
       }
 
-      button {
-        padding: 10px 15px;
-        //background-color: #C0001E;
-        background-image: linear-gradient(45deg, #f8516a, #b4021d);
-        color: $button-color;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
+      /* Ajuste del botón de eliminación para que esté alineado con el resto */
 
-        &:hover {
-          //background-color: #d24231;
-          background-image: linear-gradient(45deg, #f8516a, #f8516a);
-        }
-
-        @media (max-width: 799px) {
-          width: 100%;
-        }
-      }
     }
+
 
     .total-container {
       text-align: right;
@@ -201,13 +225,15 @@ $error-color: #A52A2A;
           width: auto;
         }
       }
-      .agregar-producto{
+
+      .agregar-producto {
         background-image: linear-gradient(45deg, #7cf065, #05c40c);
+
         &:hover {
-            background-image: linear-gradient(45deg, #7cf065, #7cf065);
-          }
+          background-image: linear-gradient(45deg, #7cf065, #7cf065);
+        }
       }
-      
+
 
       .clear-all {
         //background-color: #C0001E; // Color rojo para "Limpiar Todo"
@@ -219,7 +245,7 @@ $error-color: #A52A2A;
       }
 
       .submit-button {
-       // background-color: #003366; // Color azul para "Guardar"
+        // background-color: #003366; // Color azul para "Guardar"
         background-image: linear-gradient(45deg, #0e7be9, #003366);
 
         &:hover {
@@ -242,19 +268,20 @@ $error-color: #A52A2A;
 
 
 select {
-    padding: 10px;
-    border: 1px solid #f9f9f9;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    font-size: 16px;
-    transition: border-color 0.3s;
-  }
-  
-  select:hover {
-    border-color: #f9f9f9;
-  }
-  
-  select:focus {
-    outline: none;
-    border-color: #007BFF; /* Color del borde al enfocar */
-  }
+  padding: 10px;
+  border: 1px solid #f9f9f9;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+select:hover {
+  border-color: #f9f9f9;
+}
+
+select:focus {
+  outline: none;
+  border-color: #007BFF;
+  /* Color del borde al enfocar */
+}
