@@ -285,7 +285,7 @@ const Purchases = () => {
         purchase_date:fecha,
         // supplier: proveedor[0].id,
         supplier: 1,  // Asumiendo que solo se selecciona un proveedor
-        desctription:descripcion,
+        description:descripcion,
         total:total,
         is_active:true,
         payment_methon: 1,
