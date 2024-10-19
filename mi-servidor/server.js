@@ -11,8 +11,8 @@ const secretKey = 'mi_clave_secreta'; // Cambia esto por una clave más segura
 const data = {
   users: [
     {
-      email: 'admin@example.com',
-      password: 'password123',
+      email: 'admin@gmail.com',
+      password: 'admin1234',
       name: 'Administrador',
     },
   ],
@@ -237,12 +237,12 @@ app.get('/purchases', verifyToken, (req, res) => {
 });
 
 // Endpoint para login
-app.post('/login', (req, res) => {
+app.post('/users/login/', (req, res) => {
   const { email, password } = req.body;
   const user = data.users.find(u => u.email === email && u.password === password);
   if (user) {
     // Generar un token
-    const token = jwt.sign({ id: user.email }, secretKey, { expiresIn: '1h' });
+    const token = {"access": jwt.sign({ id: user.email }, secretKey, { expiresIn: '1h' })};
     res.json({ message: 'Login exitoso', token });
   } else {
     res.status(401).json({ message: 'Credenciales incorrectas' });

@@ -29,7 +29,17 @@ const ProductItem = React.memo(({
                     selected={producto.productoObj ? [producto.productoObj] : []}
                     isLoading={isLoadingProducts}
                     minLength={1}
-                    clearButton
+                    clearButton      
+                    clearButtonProps={{
+                        style: {
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            color: 'inherit', // O un color específico
+                            cursor: 'pointer',
+                            padding: 0, // Ajusta según sea necesario
+                            margin: 0 // Ajusta según sea necesario
+                        }     }}         
+                    
                 />
             </Form.Group>
             <Form.Group className="mb-3 flex-fill" >
@@ -64,7 +74,7 @@ const ProductItem = React.memo(({
                     placeholder="Escribe el precio"
                 />
             </Form.Group>
-            <button type="button" onClick={() => onRemove(producto.id)}>Eliminar</button>
+            <button type="button" className='button-e' onClick={() => onRemove(producto.id)}>Eliminar</button>
         </div >
     );
 });

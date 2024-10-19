@@ -16,21 +16,20 @@ const PurchasesList = () => {
     provider: '',
     description: '',
   });
- 
+
   const fetchPurchases = async () => {
     setLoading(true);
     
     try {
-        const data = await fetchWithToken('purchases', null, 'GET'); // Llamar a fetchWithToken
-
-        setPurchases(data); // Establecer los datos de las compras
-        console.log(data)
+      const data = await fetchWithToken('purchases', null, 'GET');
+      setPurchases(data);
+      console.log(data);
     } catch (error) {
-        console.error('Error fetching purchases:', error);
+      console.error('Error fetching purchases:', error);
     } finally {
-        setLoading(false); // Finalizar el loading independientemente de si hubo error o no
+      setLoading(false);
     }
-};
+  };
 
   useEffect(() => {
     fetchPurchases();
@@ -61,9 +60,9 @@ const PurchasesList = () => {
 
   // Filtrar las compras según los criterios
   const filteredPurchases = purchases.filter(purchase => {
-    const dateMatch = filters.date ? new Date(purchase.fecha).toLocaleDateString() === new Date(filters.date).toLocaleDateString() : true;
-    const providerMatch = purchase.proveedor.name.toLowerCase().includes(filters.provider.toLowerCase());
-    const descriptionMatch = purchase.descripcion.toLowerCase().includes(filters.description.toLowerCase());
+    const dateMatch = filters.date ? new Date(purchase.purchase_date).toLocaleDateString() === new Date(filters.date).toLocaleDateString() : true;
+    const providerMatch = purchase.supplier.name.toLowerCase().includes(filters.provider.toLowerCase());
+    const descriptionMatch = purchase.description ? purchase.description.toLowerCase().includes(filters.description.toLowerCase()) : true;
 
     return dateMatch && providerMatch && descriptionMatch;
   });
@@ -76,6 +75,7 @@ const PurchasesList = () => {
       </div>
     );
   }
+
   const convertirFecha = (fecha) => {
     const [año, mes, día] = fecha.split('-');
     return `${día}/${mes}/${año}`;
@@ -139,9 +139,9 @@ const PurchasesList = () => {
           <tbody>
             {filteredPurchases.map(purchase => (
               <tr key={purchase.id}>
-                <td>{convertirFecha(purchase.fecha)}</td>
-                <td>{purchase.proveedor.name}</td>
-                <td>{purchase.descripcion}</td>
+                <td>{convertirFecha(purchase.purchase_date)}</td>
+                <td>{purchase.supplier.name}</td>
+                <td>{purchase.description || 'Sin descripción'}</td>
                 <td>{purchase.total.toFixed(2)}</td>
                 <td>
                   <Button 

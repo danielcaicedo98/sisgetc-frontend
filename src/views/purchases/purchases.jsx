@@ -51,6 +51,7 @@ const Purchases = () => {
   const searchProviders = async (query) => {
     if (!query) {
       setProviderOptions([]);
+      console.log("no encontrado")
       return;
     }
 
@@ -72,8 +73,16 @@ const Purchases = () => {
       }
 
       setProviderOptions(data);
+      console.log(data)
     } catch (error) {
       console.error('Error fetching providers:', error);
+      setIsLoadingProviders(false);
+      setProviderOptions([{
+        id: `${Date.now() + Math.random()}`,
+        name: `${query}`
+      }])
+      
+      
     } finally {
       setIsLoadingProviders(false);
     }
@@ -84,6 +93,7 @@ const Purchases = () => {
   const searchProducts = async (query) => {
     if (!query) {
       setProductOptions([]);
+      console.log("no encontrado")
       return;
     }
 
@@ -106,6 +116,11 @@ const Purchases = () => {
 
       setProductOptions(data);
     } catch (error) {
+      setIsLoadingProviders(false);
+      setProductOptions([{
+        id: `${Date.now() + Math.random()}`,
+        name: `${query}`
+      }])
       console.error('Error fetching products:', error);
     } finally {
       setIsLoadingProducts(false);
@@ -200,40 +215,6 @@ const Purchases = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (id) {
-  //     // Obtener los datos de la compra a editar
-  //     fetch(`http://localhost:5000/purchases/${id}`)
-  //       .then(response => {
-  //         if (!response.ok) {
-  //           throw new Error('Compra no encontrada');
-  //         }
-  //         return response.json();
-  //       })
-  //       .then(data => {
-  //         setFecha(data.fecha);
-  //         setProveedor([data.proveedor]);
-  //         setDescripcion(data.descripcion);
-  //         setTotal(data.total);
-  //         setProductos(data.productos.map(p => ({
-  //           id: Date.now() + Math.random(), // Generar un ID único para el formulario
-  //           text: p.producto.name,
-  //           precio: p.precio,
-  //           cantidad: p.cantidad,
-  //           unidad: p.unidad,
-  //           productoObj: p.producto
-  //         })));
-  //       })
-  //       .catch(error => {
-  //         console.error('Error fetching purchase:', error);
-  //         alert('No se encontró la compra que deseas editar.');
-  //         navigate('/purchases/list');
-  //       });
-  //   }
-  // }, [id, navigate]);
-
-  // Calcular el total cada vez que cambian los productos
-
 
   useEffect(() => {
     const newTotal = productos.reduce((acc, producto) => {
@@ -268,28 +249,28 @@ const Purchases = () => {
     }
 
     // Validar productos
-    productos.forEach(producto => {
-      if (!producto.text.trim()) {
-        valid = false;
-        newErrors[producto.id] = { ...newErrors[producto.id], text: 'El nombre del producto es requerido.' };
-      }
-      if (producto.precio === '' || isNaN(producto.precio) || producto.precio <= 0) {
-        valid = false;
-        newErrors[producto.id] = { ...newErrors[producto.id], precio: 'El precio debe ser un número positivo.' };
-      }
-      if (!producto.productoObj) {
-        valid = false;
-        newErrors[producto.id] = { ...newErrors[producto.id], producto: 'Selecciona un producto válido.' };
-      }
-      if (producto.cantidad === '' || isNaN(producto.cantidad) || producto.cantidad <= 0) {
-        valid = false;
-        newErrors[producto.id] = { ...newErrors[producto.id], cantidad: 'La cantidad debe ser un número positivo.' };
-      }
-      if (!producto.unidad) {
-        valid = false;
-        newErrors[producto.id] = { ...newErrors[producto.id], unidad: 'Selecciona una unidad válida.' };
-      }
-    });
+    // productos.forEach(producto => {
+    //   if (!producto.text.trim()) {
+    //     valid = false;
+    //     newErrors[producto.id] = { ...newErrors[producto.id], text: 'El nombre del producto es requerido.' };
+    //   }
+    //   if (producto.precio === '' || isNaN(producto.precio) || producto.precio <= 0) {
+    //     valid = false;
+    //     newErrors[producto.id] = { ...newErrors[producto.id], precio: 'El precio debe ser un número positivo.' };
+    //   }
+    //   if (!producto.productoObj) {
+    //     valid = false;
+    //     newErrors[producto.id] = { ...newErrors[producto.id], producto: 'Selecciona un producto válido.' };
+    //   }
+    //   if (producto.cantidad === '' || isNaN(producto.cantidad) || producto.cantidad <= 0) {
+    //     valid = false;
+    //     newErrors[producto.id] = { ...newErrors[producto.id], cantidad: 'La cantidad debe ser un número positivo.' };
+    //   }
+    //   if (!producto.unidad) {
+    //     valid = false;
+    //     newErrors[producto.id] = { ...newErrors[producto.id], unidad: 'Selecciona una unidad válida.' };
+    //   }
+    // });
 
     setErrors(newErrors);
     return valid;
@@ -297,23 +278,30 @@ const Purchases = () => {
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    console.log(descripcion)
+    e.preventDefault();    
     if (validate()) {
       const compra = {
-        fecha,
-        proveedor: proveedor[0], // Asumiendo que solo se selecciona un proveedor
-        descripcion,
-        total,
-        productos: productos.map(p => ({
-          producto: p.productoObj, // Incluye el objeto completo del producto
-          cantidad: p.cantidad,
-          unidad: p.unidad,
-          precio: p.precio
+        purchase_date:fecha,
+        // supplier: proveedor[0].id,
+        supplier: 1,  // Asumiendo que solo se selecciona un proveedor
+        desctription:descripcion,
+        total:total,
+        is_active:true,
+        payment_methon: 1,
+        purchase_details: productos.map(p => ({
+          // article: p.productoObj.id, // Incluye el objeto completo del producto
+          article: 1,
+          quantity: p.cantidad,
+          // measurment_unit: p.unidad,
+          measurment_unit:2,
+          unit_price: p.precio,
+          subtotal: 1
         }))
       };
 
       try {
-        const response = await fetchWithToken('purchases', compra, 'POST'); // Llamar a fetchWithToken
+        const response = await fetchWithToken('purchases/', compra, 'POST'); // Llamar a fetchWithToken
         console.log(response)
         alert('Compra guardada exitosamente.');
         // Redireccionar a la lista de compras después de guardar
