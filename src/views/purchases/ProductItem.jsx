@@ -67,7 +67,7 @@ const ProductItem = React.memo(({
                 <Form.Label>Subtotal</Form.Label>
                 <h3>${producto.precio * producto.cantidad}</h3>
             </Form.Group>
-            <Form.Group className="mb-3 flex-fill">                
+            <Form.Group className="mb-3 flex-fill">
                 <Button type="button" className="button-e" onClick={() => onRemove(producto.id)}>Eliminar</Button>
             </Form.Group>
 
