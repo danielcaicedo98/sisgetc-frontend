@@ -1,11 +1,14 @@
 .product-list {
   width: 100%;
   margin-top: 20px;
-  
-  // Contenedor con desplazamiento para dispositivos pequeños
+
+  // Agregar contenedor para el scroll
   .table-container {
-    width: 100%;
-    overflow-x: auto;
+    overflow-x: auto;  // Scroll horizontal
+    overflow-y: auto;  // Scroll vertical
+    max-width: 100%;   // Para asegurarse de que no exceda el contenedor principal
+    border: 1px solid #ddd;  // Bordes opcionales para el contenedor
+    border-radius: 8px;  // Bordes redondeados
   }
 
   table {
@@ -14,7 +17,7 @@
 
     th, td {
       padding: 10px;
-      text-align: center;
+      text-align: left;
       border-bottom: 1px solid #ddd;
     }
 
@@ -69,7 +72,6 @@
     }
   }
 
-  // Modal styles
   .modal {
     display: flex;
     justify-content: center;
@@ -84,11 +86,12 @@
 
     .modal-content {
       position: relative;
+      align-items: center;
       padding: 20px;
       background: #fff;
       border-radius: 8px;
       box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
-      max-width: 60%;
+      max-width: 50%;
       max-height: 90%;
       overflow: hidden;
 
@@ -108,45 +111,10 @@
       }
 
       .large-image {
-        max-width: 100%;
-        max-height: 80vh;
+        // align-items: left;
+        max-width: 90%;
+        max-height: 60vh;
         border-radius: 8px;
-      }
-    }
-  }
-
-  // Responsive styling
-  @media (max-width: 768px) {
-    table,
-    thead,
-    tbody,
-    th,
-    td,
-    tr {
-      display: block;
-      width: 100%;
-    }
-
-    thead tr {
-      display: none;
-    }
-
-    tr {
-      margin-bottom: 15px;
-      border-bottom: 2px solid #f4f6f8;
-    }
-
-    td {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      text-align: center;
-
-      &:before {
-        content: attr(data-label);
-        font-weight: bold;
-        color: #333;
-        padding-right: 10px;
       }
     }
   }

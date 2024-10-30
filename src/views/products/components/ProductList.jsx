@@ -3,6 +3,7 @@ import './ProductList.scss';
 
 const ProductList = ({ products, onEdit, onDelete }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedDesctiption, setSelectedDescription] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
@@ -11,9 +12,12 @@ const ProductList = ({ products, onEdit, onDelete }) => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleImageClick = (imageSrc) => {
+  const handleImageClick = (imageSrc, descriptionSrc) => {
     setSelectedImage(imageSrc);
+    setSelectedDescription(descriptionSrc)
   };
+
+
 
   const closeModal = () => {
     setSelectedImage(null);
@@ -40,7 +44,6 @@ const ProductList = ({ products, onEdit, onDelete }) => {
               <th>Cantidad</th>
               <th>Unidad de Medida</th>
               <th>Precio</th>
-              <th>Descripción</th>
               <th>Categoría</th>
               <th>Acciones</th>
             </tr>
@@ -59,7 +62,7 @@ const ProductList = ({ products, onEdit, onDelete }) => {
                         src={product.photo}
                         alt={product.name}
                         className="thumbnail"
-                        onClick={() => handleImageClick(product.photo)}
+                        onClick={() => handleImageClick(product.photo, product.description)}
                       />
                     )}
                   </td>
@@ -67,10 +70,9 @@ const ProductList = ({ products, onEdit, onDelete }) => {
                   <td>{product.quantity}</td>
                   <td>{product.measurement_unit}</td>
                   <td>{product.price}</td>
-                  <td>{product.description}</td>
                   <td>{product.category}</td>
                   <td>
-                    <button onClick={() => onEdit(index)}>Editar</button>
+                    <button onClick={() => onEdit(product)}>Editar</button>
                     <button onClick={() => onDelete(index)}>Eliminar</button>
                   </td>
                 </tr>
@@ -83,11 +85,11 @@ const ProductList = ({ products, onEdit, onDelete }) => {
       {/* Paginación */}
       <div className="pagination">
         <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-          Anterior
+          { '<' }
         </button>
-        <span>Página {currentPage} de {totalPages}</span>
+        <span className='m-2'>{` Página ${currentPage} de ${totalPages} `}</span>
         <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-          Siguiente
+        { '>' }
         </button>
       </div>
 
@@ -99,6 +101,12 @@ const ProductList = ({ products, onEdit, onDelete }) => {
               &times;
             </span>
             <img src={selectedImage} alt="Imagen ampliada" className="large-image" />
+            <div className="card mt-1">
+              <div className="card-body">
+                <h5 className="card-title">Descripción</h5>
+                <p className="card-text">{selectedDesctiption}</p>
+              </div>
+            </div>
           </div>
         </div>
       )}

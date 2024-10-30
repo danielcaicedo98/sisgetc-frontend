@@ -6,86 +6,86 @@ import { fetchWithToken } from 'api/fetchHelpers';
 const ProductCrud = () => {
   const [products, setProducts] = useState([
     {
-      name: "Manzanas",
+      name: "Cupcake Amor",
       quantity: 10,
-      measurement_unit: "kg",
-      price: 2500,
-      description: "Manzanas frescas y jugosas",
-      category: "Frutas",
+      measurement_unit: "unidad",
+      price: 5500,
+      description: "Cupcake con bizcocho artesanal. Puedes disfrutarlo en sabores como: Coco, Maní, Vainilla, Chocolate, Maracuyá … etc",
+      category: "Cupakes",
       photo: "https://www.tortascrispan.com/wp-content/uploads/2022/09/IMG_20220916_200154-768x1024.jpg"
     },
     {
-      name: "Manzanas",
-      quantity: 10,
-      measurement_unit: "kg",
-      price: 2500,
-      description: "Manzanas frescas y jugosas",
-      category: "Frutas",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2022/09/IMG_20220916_200154-768x1024.jpg"
-    },
-    {
-      name: "Manzanas",
-      quantity: 10,
-      measurement_unit: "kg",
-      price: 2500,
-      description: "Manzanas frescas y jugosas",
-      category: "Frutas",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2022/09/IMG_20220916_200154-768x1024.jpg"
-    },
-    {
-      name: "Manzanas",
-      quantity: 10,
-      measurement_unit: "kg",
-      price: 2500,
-      description: "Manzanas frescas y jugosas",
-      category: "Frutas",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2022/09/IMG_20220916_200154-768x1024.jpg"
-    },
-    {
-      name: "Manzanas",
-      quantity: 10,
-      measurement_unit: "kg",
-      price: 2500,
-      description: "Manzanas frescas y jugosas",
-      category: "Frutas",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2022/09/IMG_20220916_200154-768x1024.jpg"
-    },
-    {
-      name: "Leche",
+      name: "DripCake REF01 1LB",
       quantity: 5,
-      measurement_unit: "litros",
-      price: 3500,
-      description: "Leche entera de alta calidad",
-      category: "Lácteos",
-      photo: "https://via.placeholder.com/150"
+      measurement_unit: "unidad",
+      price: 108000,
+      description: "Deliciosa torta alta con efecto chorreante y brillos.",
+      category: "DripCakes",
+      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/10/1633067145494-1-1-247x296.jpg"
     },
     {
-      name: "Harina de trigo",
-      quantity: 3,
-      measurement_unit: "kg",
-      price: 4000,
-      description: "Harina de trigo refinada",
-      category: "Cereales",
-      photo: "https://via.placeholder.com/150"
-    },
-    {
-      name: "Huevos",
-      quantity: 30,
-      measurement_unit: "unidades",
+      name: "Torta Gourmet Maracuya",
+      quantity: 10,
+      measurement_unit: "Kilo Gramo",
       price: 12000,
-      description: "Huevos frescos de granja",
-      category: "Proteínas",
-      photo: "https://via.placeholder.com/150"
+      description: "Torta finamente preparada con productos seleccionados y 100% naturales,  con un delicioso sabor y cubierta de maracuyá.",
+      category: "Tortas Gourmet",
+      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/08/tb_maracuya_02-600x616.jpg"
     },
     {
-      name: "Arroz",
-      quantity: 2,
+      name: "Cupcake Amor",
+      quantity: 10,
+      measurement_unit: "unidad",
+      price: 5500,
+      description: "Cupcake con bizcocho artesanal. Puedes disfrutarlo en sabores como: Coco, Maní, Vainilla, Chocolate, Maracuyá … etc",
+      category: "Cupakes",
+      photo: "https://www.tortascrispan.com/wp-content/uploads/2022/09/IMG_20220916_200154-768x1024.jpg"
+    },
+    {
+      name: "DripCake REF01 1LB",
+      quantity: 5,
+      measurement_unit: "unidad",
+      price: 108000,
+      description: "Deliciosa torta alta con efecto chorreante y brillos.",
+      category: "DripCakes",
+      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/10/1633067145494-1-1-247x296.jpg"
+    },
+    {
+      name: "Torta Gourmet Maracuya",
+      quantity: 10,
       measurement_unit: "kg",
-      price: 2000,
-      description: "Arroz blanco de alta calidad",
-      category: "Cereales",
-      photo: "https://via.placeholder.com/150"
-    }
+      price: 12000,
+      description: "Torta finamente preparada con productos seleccionados y 100% naturales,  con un delicioso sabor y cubierta de maracuyá.",
+      category: "Tortas Gourmet",
+      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/08/tb_maracuya_02-600x616.jpg"
+    },
+    {
+      name: "Cupcake Amor",
+      quantity: 10,
+      measurement_unit: "unidad",
+      price: 5500,
+      description: "Cupcake con bizcocho artesanal. Puedes disfrutarlo en sabores como: Coco, Maní, Vainilla, Chocolate, Maracuyá … etc",
+      category: "Cupakes",
+      photo: "https://www.tortascrispan.com/wp-content/uploads/2022/09/IMG_20220916_200154-768x1024.jpg"
+    },
+    {
+      name: "DripCake REF01 1LB",
+      quantity: 5,
+      measurement_unit: "unidad",
+      price: 108000,
+      description: "Deliciosa torta alta con efecto chorreante y brillos.",
+      category: "DripCakes",
+      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/10/1633067145494-1-1-247x296.jpg"
+    },
+    {
+      name: "Torta Gourmet Maracuya",
+      quantity: 10,
+      measurement_unit: "kg",
+      price: 12000,
+      description: "Torta finamente preparada con productos seleccionados y 100% naturales,  con un delicioso sabor y cubierta de maracuyá.",
+      category: "Tortas Gourmet",
+      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/08/tb_maracuya_02-600x616.jpg"
+    },
   ]);
   const [productToEdit, setProductToEdit] = useState(null);
 
@@ -121,6 +121,7 @@ const ProductCrud = () => {
 
   const handleEdit = (product) => {
     setProductToEdit(product);
+    console.log(product)
   };
 
   const handleSubmit = (product) => {

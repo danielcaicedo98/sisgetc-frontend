@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ProductForm.scss";
 
-const ProductForm = () => {
+const ProductForm = ({ productToEdit }) => {
   const [formData, setFormData] = useState({
     name: "",
     quantity: "",
@@ -10,7 +10,15 @@ const ProductForm = () => {
     description: "",
     category: "",
     photo: null,
-  });
+  });  
+
+  useEffect(() => {
+    if (productToEdit) {
+      setFormData(productToEdit);
+    }
+  }, [productToEdit]);
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,44 +43,45 @@ const ProductForm = () => {
   return (
     <form className="responsive-form" onSubmit={handleSubmit}>
       <label>
-        Name:
+        Nombre:
         <input type="text" name="name" value={formData.name} onChange={handleChange} />
       </label>
       <label>
-        Quantity:
+        Cantidad:
         <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} />
       </label>
       <label>
-        Measurement Unit:
+        Unidad de Medida:
         <select name="measurement_unit" value={formData.measurement_unit} onChange={handleChange}>
-          <option value="kg">Kg</option>
+          <option value="Kilo Gramo">Kilo Gramo</option>
           <option value="g">g</option>
           <option value="lb">lb</option>
+          <option value="unidad">unidad</option>
         </select>
       </label>
       <label>
-        Price:
+        Precio:
         <input type="number" name="price" value={formData.price} onChange={handleChange} />
-      </label>
+      </label>      
       <label>
-        Description:
-        <textarea name="description" value={formData.description} onChange={handleChange} />
-      </label>
-      <label>
-        Category:
+        Categoría:
         <select name="category" value={formData.category} onChange={handleChange}>
-          <option value="electronics">Electronics</option>
-          <option value="clothing">Clothing</option>
-          <option value="food">Food</option>
+          <option value="Cupcakes">Cupcakes</option>
+          <option value="DripCakes">DripCakes</option>
+          <option value="Tortas Gourmet">Tortas Gourmet</option>
         </select>
       </label>
       <label>
-        Photo:
+        Foto:
         <div className="" >
           <input type="file" name="photo" accept="image/*" onChange={handleFileChange} />
         </div>
       </label>
-      <button type="submit" className="save-button">Save</button>
+      <label>
+        Descripción:
+        <textarea name="description" value={formData.description} onChange={handleChange} className="text-area" />
+      </label>
+      <button type="submit" className="save-button">Guardar</button>
     </form>
   );
 };

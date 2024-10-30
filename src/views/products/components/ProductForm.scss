@@ -51,11 +51,17 @@ $button-text-color: #fff;
         resize: vertical;
         width: 100%;
     }
+    .text-area {
+        // grid-column: span 2;
+        width: 100%; /* O puedes especificar un valor en píxeles o porcentajes */
+        height: 100px; /* Ajusta la altura según sea necesario */
+    }
 
     .save-button {
-        grid-column: span 1;
-        margin-top: 30px;
-        margin-left: 10px;
+        align-self: center;
+        // grid-column: span 1;
+        margin-top: 70px;
+        margin-left: 120px;
         padding: 8px 16px;
         font-size: 1rem;
         font-weight: bold;
@@ -66,7 +72,8 @@ $button-text-color: #fff;
         cursor: pointer;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
         transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        width: 100%;
+        width: 50%;
+        height: 40%;
 
         &:hover {
             background-color: $hover-color;
@@ -81,7 +88,11 @@ $button-text-color: #fff;
 
         textarea,
         .save-button {
-            grid-column: span 1; // Asegura que textarea y botón ocupen solo una fila
+            grid-column: span 1; 
+            width:  100%;
+            height:  70%;// Asegura que textarea y botón ocupen solo una fila
+            margin-top: 10px;
+            margin-left: 10px;
         }
 
         .save-button {
