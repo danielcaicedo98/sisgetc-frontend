@@ -81,8 +81,8 @@ const Purchases = () => {
         id: `${Date.now() + Math.random()}`,
         name: `${query}`
       }])
-      
-      
+
+
     } finally {
       setIsLoadingProviders(false);
     }
@@ -220,8 +220,8 @@ const Purchases = () => {
     const newTotal = productos.reduce((acc, producto) => {
       const precio = parseFloat(producto.precio) || 0;
       const cantidad = parseInt(producto.cantidad) || 0;
-      return acc + precio;
-      //return acc + (precio * cantidad);
+      // return acc + precio;
+      return acc + (precio * cantidad);
 
     }, 0);
     setTotal(newTotal);
@@ -279,22 +279,22 @@ const Purchases = () => {
 
   const handleSubmit = async (e) => {
     console.log(descripcion)
-    e.preventDefault();    
+    e.preventDefault();
     if (validate()) {
       const compra = {
-        purchase_date:fecha,
+        purchase_date: fecha,
         // supplier: proveedor[0].id,
         supplier: 1,  // Asumiendo que solo se selecciona un proveedor
-        desctription:descripcion,
-        total:total,
-        is_active:true,
+        description: descripcion,
+        total: total,
+        is_active: true,
         payment_methon: 1,
         purchase_details: productos.map(p => ({
           // article: p.productoObj.id, // Incluye el objeto completo del producto
           article: 1,
           quantity: p.cantidad,
           // measurment_unit: p.unidad,
-          measurment_unit:2,
+          measurment_unit: 2,
           unit_price: p.precio,
           subtotal: 1
         }))

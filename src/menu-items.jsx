@@ -28,6 +28,14 @@ const menuItems = {
           icon: 'feather icon-clipboard',
           url: '/reports'
         }
+        ,
+        {
+          id: 'products',
+          title: 'Gestion Productos',
+          type: 'item',
+          icon: 'feather icon-clipboard',
+          url: '/products'
+        }
       ]
     },
     {

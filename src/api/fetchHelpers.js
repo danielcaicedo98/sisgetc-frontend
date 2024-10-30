@@ -24,7 +24,7 @@ export const fetchWithToken = async (endpoint, data, method ) => {
     const url = `${baseURL}/${endpoint}`;
     const token = localStorage.getItem('token') || '';
 
-    if (method === 'GET') {
+    if (method === 'GET' || method === 'DELETE') {
         const response = await fetch(url, {
             method,
             headers: {

@@ -1,0 +1,121 @@
+.product-list {
+  width: 100%;
+  margin-top: 20px;
+
+  // Agregar contenedor para el scroll
+  .table-container {
+    overflow-x: auto;  // Scroll horizontal
+    overflow-y: auto;  // Scroll vertical
+    max-width: 100%;   // Para asegurarse de que no exceda el contenedor principal
+    border: 1px solid #ddd;  // Bordes opcionales para el contenedor
+    border-radius: 8px;  // Bordes redondeados
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f4f6f8;
+      font-weight: 600;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+
+    .thumbnail {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      border-radius: 4px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    button {
+      padding: 6px 10px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background-color 0.3s;
+
+      &:first-child {
+        background-color: #007bff;
+        color: #fff;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+
+      &:last-child {
+        background-color: #dc3545;
+        color: #fff;
+
+        &:hover {
+          background-color: #b02a37;
+        }
+      }
+    }
+  }
+
+  .modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+
+    .modal-content {
+      position: relative;
+      align-items: center;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+      max-width: 50%;
+      max-height: 90%;
+      overflow: hidden;
+
+      .close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #555;
+        cursor: pointer;
+        transition: color 0.2s;
+
+        &:hover {
+          color: #000;
+        }
+      }
+
+      .large-image {
+        // align-items: left;
+        max-width: 90%;
+        max-height: 60vh;
+        border-radius: 8px;
+      }
+    }
+  }
+}
