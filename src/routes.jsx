@@ -34,7 +34,7 @@ const renderRoutes = (routes = []) => (
 );
 
 export const routes = [
-  
+
   {
     exact: 'true',
     path: '/auth/signin',
@@ -53,12 +53,12 @@ export const routes = [
         exact: 'true',
         path: '/purchases',
         element: lazy(() => import('./views/purchases/purchases'))
-      },    
+      },
       {
         exact: 'true',
         path: '/purchases-list',
         element: lazy(() => import('./views/purchases/PurchaseList'))
-      },  
+      },
       {
         exact: 'true',
         path: '/sales',
@@ -68,7 +68,17 @@ export const routes = [
         exact: 'true',
         path: '/reports',
         element: lazy(() => import('./views/reports/reports'))
-      },   
+      },
+      {
+        exact: 'true',
+        path: '/customer',
+        element: lazy(() => import('./views/customer/customer'))
+      },
+      {
+        exact: 'true',
+        path: '/customer-list',
+        element: lazy(() => import('./views/customer/customerList'))
+      },
       {
         path: '*',
         exact: 'true',

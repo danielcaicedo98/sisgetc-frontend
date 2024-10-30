@@ -35,7 +35,7 @@ const menuItems = {
       title: 'Compras',
       type: 'group',
       icon: 'icon-navigation',
-      children: [              
+      children: [
         {
           id: 'register-purchases',
           title: 'Registrar Compra',
@@ -50,6 +50,31 @@ const menuItems = {
           icon: 'feather icon-shopping-cart',
           url: '/purchases-list'
         }
+      ]
+
+    },
+    //bloque para la sección de clientes
+    {
+      id: 'customer',
+      title: 'Clientes',
+      type: 'group',
+      icon: 'icon-navigation',
+      children: [
+        {
+          id: 'register-customer',
+          title: 'Registrar Cliente',
+          type: 'item',
+          icon: 'feather icon-user',
+          url: '/customer'
+        },
+        {
+          id: 'customer-tables',
+          title: 'Buscar Cliente',
+          type: 'item',
+          icon: 'feather icon-user',
+          url: '/customer-list'
+        },
+
       ]
 
     }
