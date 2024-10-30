@@ -1,0 +1,92 @@
+$responsive-background: #f4f6f8;
+$input-border: #ced4da;
+$primary-color: #007bff;
+$hover-color: #0056b3;
+$label-color: #333;
+$button-color: #007bff;
+$button-text-color: #fff;
+
+.responsive-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; // Dos columnas en pantallas grandes
+    gap: 20px;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    margin: auto;
+    padding: 20px;
+    background: $responsive-background;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    label {
+        display: flex;
+        flex-direction: column;
+        font-size: 1rem;
+        color: $label-color;
+        font-weight: 500;
+
+        input,
+        select,
+        textarea {
+            margin-top: 8px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 1px solid $input-border;
+            border-radius: 8px;
+            background: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+            width: 100%;
+
+            &:focus {
+                border-color: $primary-color;
+                box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.2);
+            }
+        }
+    }
+
+    textarea {
+        grid-column: span 2;
+        resize: vertical;
+        width: 100%;
+    }
+
+    .save-button {
+        grid-column: span 1;
+        margin-top: 30px;
+        margin-left: 10px;
+        padding: 8px 16px;
+        font-size: 1rem;
+        font-weight: bold;
+        color: $button-text-color;
+        background-color: $button-color;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+
+        &:hover {
+            background-color: $hover-color;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+        }
+    }  
+
+    // Diseño responsivo: filas en pantallas pequeñas
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr; // Cambia a una sola columna
+        gap: 15px;
+
+        textarea,
+        .save-button {
+            grid-column: span 1; // Asegura que textarea y botón ocupen solo una fila
+        }
+
+        .save-button {
+            padding: 10px;
+            font-size: 0.95rem;
+        }
+    }
+}

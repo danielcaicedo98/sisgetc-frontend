@@ -1,52 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from "react";
+import "./ProductForm.scss";
 
-const ProductForm = ({ onSubmit, productToEdit }) => {
-  const [product, setProduct] = useState({ name: '', price: '' });
-
-  useEffect(() => {
-    if (productToEdit) {
-      setProduct(productToEdit);
-    }
-  }, [productToEdit]);
+const ProductForm = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    quantity: "",
+    measurement_unit: "",
+    price: "",
+    description: "",
+    category: "",
+    photo: null,
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      photo: e.target.files[0],
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(product);
-    setProduct({ name: '', price: '' }); // Reset form after submit
+    console.log(formData); // Aquí puedes manejar el envío del formulario
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="mb-3">
-        <label htmlFor="name" className="form-label">Product Name</label>
-        <input
-          type="text"
-          className="form-control"
-          id="name"
-          name="name"
-          value={product.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="price" className="form-label">Price</label>
-        <input
-          type="number"
-          className="form-control"
-          id="price"
-          name="price"
-          value={product.price}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <button type="submit" className="btn btn-success">Save</button>
+    <form className="responsive-form" onSubmit={handleSubmit}>
+      <label>
+        Name:
+        <input type="text" name="name" value={formData.name} onChange={handleChange} />
+      </label>
+      <label>
+        Quantity:
+        <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} />
+      </label>
+      <label>
+        Measurement Unit:
+        <select name="measurement_unit" value={formData.measurement_unit} onChange={handleChange}>
+          <option value="kg">Kg</option>
+          <option value="g">g</option>
+          <option value="lb">lb</option>
+        </select>
+      </label>
+      <label>
+        Price:
+        <input type="number" name="price" value={formData.price} onChange={handleChange} />
+      </label>
+      <label>
+        Description:
+        <textarea name="description" value={formData.description} onChange={handleChange} />
+      </label>
+      <label>
+        Category:
+        <select name="category" value={formData.category} onChange={handleChange}>
+          <option value="electronics">Electronics</option>
+          <option value="clothing">Clothing</option>
+          <option value="food">Food</option>
+        </select>
+      </label>
+      <label>
+        Photo:
+        <div className="" >
+          <input type="file" name="photo" accept="image/*" onChange={handleFileChange} />
+        </div>
+      </label>
+      <button type="submit" className="save-button">Save</button>
     </form>
   );
 };

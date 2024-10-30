@@ -23,9 +23,9 @@ const data = {
     { id: '0e31', name: 'Unknown' },
   ],
   products: [
-    { id: '1', name: 'Harina', price: '300' },
-    { id: '2', name: 'Huevos', price: '300'  },
-    { id: '3', name: 'Azúcar', price: '300'  },
+    { id: '1', name: 'Torta tres leches', price: '60000' },
+    { id: '2', name: 'Cupcake', price: '10000'  },
+    { id: '3', name: 'Galletas', price: '5000'  },
   ],
   "purchases": [
       {
