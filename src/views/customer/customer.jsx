@@ -19,7 +19,6 @@ const Customer = () => {
         city_id: '',
         is_active: false,
     });
-
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setCustomer({
@@ -38,7 +37,7 @@ const Customer = () => {
             cell_phone: customer.cell_phone,
             email: customer.email,
             birth_date: customer.birth_date,
-            residential_address: customer.residential_address,           
+            residential_address: customer.residential_address,
             city: customer.city_id
         }
         try {
@@ -48,7 +47,7 @@ const Customer = () => {
                 handleClear()
             } else {
                 alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
-            }            
+            }
         } catch (error) {
             console.error('Error al guardar la compra:', error);
             alert('Hubo un problema al guardar la compra. Por favor, inténtalo nuevamente.');
@@ -170,7 +169,6 @@ const Customer = () => {
                             />
                             <label htmlFor="is_active" className="switch"></label>
                         </div> */}
-
                         <div className="buttons-group">
                             <button type="button" className="clear-all" onClick={handleClear}>
                                 Limpiar Todo
@@ -178,9 +176,7 @@ const Customer = () => {
                             <button type="submit" className="submit-button">
                                 Guardar
                             </button>
-
                         </div>
-
                     </form>
                 </div>
             </Card.Body>

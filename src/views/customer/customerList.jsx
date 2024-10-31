@@ -17,6 +17,24 @@ const customerList = () => {
         customer: ''
     });
 
+    const fetchPurchases = async () => {
+        // setLoading(true);
+
+        try {
+            const data = await fetchWithToken('customers/', null, 'GET');
+            setCustomers(data);
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching purchases:', error);
+        } finally {
+            // setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchPurchases();
+    }, []);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentCustomer, setCurrentCustomer] = useState(null);
 
@@ -41,12 +59,43 @@ const customerList = () => {
         });
     };
 
+    const handleUpdateCustomer = (updatedCustomer) => {
+        console.log(updatedCustomer)
+        const updatedCustomers = customers.map(p => (p.id === updatedCustomer.id ? updatedCustomer : p));
+        setCustomers(updatedCustomers);
+    };
+
     // Función para manejar el envío del formulario en el modal
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Aquí puedes actualizar el cliente en la lista o enviarlo al backend
-        console.log('Cliente actualizado:', currentCustomer);
-        closeModal();
+    const handleSubmit = async () => {
+
+        const updateCustomer = {
+            name: currentCustomer.name,
+            identification_type: typeof currentCustomer.identification_type == "object" ? currentCustomer.identification_type.value : currentCustomer.identification_type,
+            identification_number: currentCustomer.identification_number,
+            cell_phone: currentCustomer.cell_phone,
+            email: currentCustomer.email,
+            birth_date: currentCustomer.birth_date,
+            residential_address: currentCustomer.residential_address,
+            is_active: currentCustomer.is_active,
+            city: typeof currentCustomer.city == 'object' ? currentCustomer.city.value : currentCustomer.city
+        }
+
+        try {
+            const response = await fetchWithToken(`customers/${currentCustomer.id}/`, updateCustomer, 'PUT');
+            // 
+            if (response.updated) {
+                alert('Cliente actualizado exitosamente.');
+                updateCustomer.id = currentCustomer.id
+                handleUpdateCustomer(updateCustomer)
+            } else {
+                alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
+            }
+
+            closeModal();
+        } catch (error) {
+            console.error('Error al actualizar la compra:', error);
+            // alert('Hubo un problema al actualizar la compra. Por favor, inténtalo nuevamente.');
+        }
     };
 
     // Función para manejar los cambios en los filtros
@@ -222,7 +271,7 @@ const customerList = () => {
                                     value={currentCustomer.city_id || ''}
                                     onChange={handleChange}
                                 >
-                                    <option value="1">Ciudad 1</option>
+                                    <option value="1">Cali</option>
                                     <option value="2">Ciudad 2</option>
                                     <option value="3">Ciudad 3</option>
                                 </Form.Control>
@@ -247,7 +296,7 @@ const customerList = () => {
                                 <Button variant="secondary" onClick={closeModal}>
                                     Cancelar
                                 </Button>
-                                <Button variant="primary" type="submit">
+                                <Button variant="primary" onClick={() => handleSubmit()}>
                                     Guardar
                                 </Button>
                             </div>
