@@ -28,10 +28,32 @@ const Customer = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Lógica para guardar el cliente
-        console.log(customer);
+        const cliente = {
+            name: customer.name,
+            identification_type: customer.identification_type,
+            identification_number: customer.identification_number,
+            cell_phone: customer.cell_phone,
+            email: customer.email,
+            birth_date: customer.birth_date,
+            residential_address: customer.residential_address,           
+            city: customer.city_id
+        }
+        try {
+            const response = await fetchWithToken('customers/', cliente, 'POST'); // Llamar a fetchWithToken
+            if (response.created) {
+                alert('Cliente guardado exitosamente.');
+                handleClear()
+            } else {
+                alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
+            }            
+        } catch (error) {
+            console.error('Error al guardar la compra:', error);
+            alert('Hubo un problema al guardar la compra. Por favor, inténtalo nuevamente.');
+        }
+        // console.log(customer);
     };
 
     const handleClear = () => {
@@ -129,16 +151,16 @@ const Customer = () => {
                                         onChange={handleChange}
                                     >
                                         <option value="">Selecciona la ciudad</option>
-                                        <option value="1">Ciudad 1</option>
-                                        <option value="2">Ciudad 2</option>
-                                        <option value="3">Ciudad 3</option>
+                                        <option value="1">Cali</option>
+                                        <option value="2">Alcala</option>
+                                        <option value="3">Andalucía</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-
+                        {/*
                         <label className="switch-label">Cliente Activo</label>
-                        <div className="switch-container">
+                         <div className="switch-container">
                             <input
                                 type="checkbox"
                                 name="is_active"
@@ -147,7 +169,7 @@ const Customer = () => {
                                 id="is_active"
                             />
                             <label htmlFor="is_active" className="switch"></label>
-                        </div>
+                        </div> */}
 
                         <div className="buttons-group">
                             <button type="button" className="clear-all" onClick={handleClear}>
