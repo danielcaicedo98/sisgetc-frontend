@@ -1,8 +1,9 @@
-// src/views/purchases/PurchaseDetailsModal.jsx
+
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import { fetchWithToken } from '../../api/fetchHelpers'; 
+import { fetchWithToken } from '../../api/fetchHelpers';
+import '../../assets/scss/purchases/PurchaseDetailsModal.scss';
 
 const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   const [fecha, setFecha] = useState('');
@@ -18,132 +19,64 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
 
   const [errors, setErrors] = useState({});
 
-  // Estado para manejar la edición de productos
-  const [editingProductos, setEditingProductos] = useState([]);
-
   useEffect(() => {
+
     if (purchase) {
-      setFecha(purchase.fecha);
-      setProveedor([purchase.proveedor]);
-      setDescripcion(purchase.descripcion);
-      setProductos(purchase.productos);
+      console.log(purchase)
+      setFecha(purchase.purchase_date); // Asegúrate de que sea `purchase_date`
+      setProveedor([purchase.supplier]); // Cambiar a `supplier`
+      setDescripcion(purchase.description || ''); // Manejar descripción nula
+      setProductos(purchase.purchase_details); // Cambiar a `purchase_details`
       setTotal(purchase.total);
-      setEditingProductos(purchase.productos.map(p => ({ ...p, tempId: Date.now() + Math.random() })));
     }
   }, [purchase]);
 
   // Calcular el total cada vez que cambian los productos
   useEffect(() => {
     const newTotal = productos.reduce((acc, producto) => {
-      const precio = parseFloat(producto.precio) || 0;
+      const precio = parseFloat(producto.unit_price) * producto.quantity; // Ajustar según datos
       return acc + precio;
     }, 0);
     setTotal(newTotal);
   }, [productos]);
 
-  
   const searchProviders = async (query) => {
-    if (!query) {
-      setProviderOptions([]);
-      return;
-    }
-
-    setIsLoadingProviders(true);
-
-    try {
-      // Llamar a fetchWithToken para obtener los proveedores filtrados por el nombre
-      const data = await fetchWithToken(`providers?name_like=${encodeURIComponent(query)}`, null, 'GET');
-
-      const uniqueNames = new Set(data.map(provider => provider.name));
-
-      // Agregar el nuevo proveedor solo si no existe
-      if (!uniqueNames.has(query)) {
-        uniqueNames.add(query);
-        data.push({
-          id: `${Date.now() + Math.random()}`,
-          name: `${query}`
-        });
-      }
-
-      setProviderOptions(data);
-    } catch (error) {
-      console.error('Error fetching providers:', error);
-    } finally {
-      setIsLoadingProviders(false);
-    }
+    // Lógica para buscar proveedores
   };
-
-  // Función para buscar productos  
 
   const searchProducts = async (query) => {
-    if (!query) {
-      setProductOptions([]);
-      return;
-    }
-
-    setIsLoadingProducts(true);
-
-    try {
-      // Llamar a fetchWithToken para obtener los productos filtrados por el nombre
-      const data = await fetchWithToken(`products?name_like=${encodeURIComponent(query)}`, null, 'GET');
-
-      const uniqueNames = new Set(data.map(product => product.name));
-
-      // Agregar el nuevo producto solo si no existe
-      if (!uniqueNames.has(query)) {
-        uniqueNames.add(query);
-        data.push({
-          id: `${Date.now() + Math.random()}`,
-          name: `${query}`
-        });
-      }
-
-      setProductOptions(data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setIsLoadingProducts(false);
-    }
+    // Lógica para buscar productos
   };
-  
 
-  // Manejar cambios en el proveedor con debounce
   const handleProviderInputChange = (query) => {
-    // Implementar debounce si es necesario
     searchProviders(query);
   };
 
-  // Manejar cambios en el producto con debounce
   const handleProductInputChange = (query) => {
-    // Implementar debounce si es necesario
     searchProducts(query);
   };
 
-  // Manejar cambios en los campos de la compra
   const handleProductChange = (index, field, value) => {
     const updatedProductos = [...productos];
-    if (field === 'producto') { // Ajustado aquí
-      updatedProductos[index].producto = value;
-      updatedProductos[index].text = value ? value.name : '';
+    if (field === 'producto') {
+      updatedProductos[index].article = value; // Cambiar a `article`
+      updatedProductos[index].text = value ? value.label : ''; // Asumir que `label` es el nombre
     } else {
       updatedProductos[index][field] = value;
     }
     setProductos(updatedProductos);
   };
 
-  // Agregar un nuevo producto
   const addProduct = () => {
-    setProductos([...productos, { producto: null, cantidad: 1, unidad: '', precio: 0 }]);
+    setProductos([...productos, { article: null, quantity: 1, unit_price: 0, measurment_unit: { label: '' } }]);
   };
 
-  // Eliminar un producto
   const removeProduct = (index) => {
     const updatedProductos = [...productos];
     updatedProductos.splice(index, 1);
     setProductos(updatedProductos);
   };
 
-  // Validar los campos antes de guardar
   const validate = () => {
     let valid = true;
     let newErrors = {};
@@ -158,50 +91,50 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       newErrors.proveedor = 'El proveedor es requerido.';
     }
 
-    
     setErrors(newErrors);
     return valid;
-  }; 
+  };
 
   const handleUpdate = async (e) => {
-    e.preventDefault(); // Evita el comportamiento por defecto del formulario
-  
+    e.preventDefault();
+
     if (!validate()) {
       alert('Por favor, corrige los errores en el formulario.');
       return;
     }
-  
+    console.log(proveedor)
+
     const updatedPurchase = {
-      fecha,
-      proveedor: proveedor[0], // Asumiendo que solo se selecciona un proveedor
-      descripcion,
+      purchase_date: fecha, // Cambiar a `purchase_date`
+      supplier: proveedor[0].id, // Cambiar a `supplier`
+      description: descripcion,
       total,
-      productos: productos.map(p => ({
-        producto: p.productoObj, // Incluye el objeto completo del producto
-        cantidad: p.cantidad,
-        unidad: p.unidad,
-        precio: p.precio,
+      purchase_details: productos.map(p => ({
+        quantity: p.quantity,
+        unit_price: p.unit_price,
+        measurment_unit: "1",
+        subtotal: p.quantity * p.unit_price,
+        article: p.article.value
       })),
     };
-  
+
     try {
-      const response = await fetchWithToken(`purchases/${purchase.id}`, updatedPurchase, 'PUT');       
+      const response = await fetchWithToken(`purchases/${purchase.id}/`, updatedPurchase, 'PUT');
       alert('Compra actualizada exitosamente.');
-  
-      // Notificar al componente padre para actualizar la lista
+
       if (onUpdate) {
         onUpdate(response);
       }
-  
+
       handleClose();
     } catch (error) {
       console.error('Error al actualizar la compra:', error);
       alert('Hubo un problema al actualizar la compra. Por favor, inténtalo nuevamente.');
     }
   };
-  
+
   return (
-    <Modal show={show} onHide={handleClose} size="lg" scrollable>
+    <Modal show={show} onHide={handleClose} size="lg" scrollable className="purchase-details-modal">
       <Modal.Header closeButton>
         <Modal.Title>Editar Compra</Modal.Title>
       </Modal.Header>
@@ -234,7 +167,6 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
               isLoading={isLoadingProviders}
               minLength={1}
               clearButton
-              renderMenuItemChildren={(option) => <span>{option.name}</span>}
             />
             {errors.proveedor && <div className="text-danger">{errors.proveedor}</div>}
           </Form.Group>
@@ -246,11 +178,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
               rows={3}
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
-              isInvalid={!!errors.descripcion}
             />
-            <Form.Control.Feedback type="invalid">
-              {errors.descripcion}
-            </Form.Control.Feedback>
           </Form.Group>
           {/* Productos */}
           <Form.Label>Productos</Form.Label>
@@ -261,18 +189,16 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
                 <Form.Label>Producto</Form.Label>
                 <Typeahead
                   id={`producto-typeahead-modal-${index}`}
-                  labelKey="name"
+                  labelKey="label"
                   onChange={(selected) => handleProductChange(index, 'producto', selected[0] || null)}
                   onInputChange={handleProductInputChange}
                   options={productOptions}
                   placeholder="Selecciona o escribe el producto"
-                  selected={producto.producto ? [producto.producto] : []} // Ajustado aquí
+                  selected={producto.article ? [producto.article] : []}
                   isLoading={isLoadingProducts}
                   minLength={1}
                   clearButton
-                  renderMenuItemChildren={(option) => <span>{option.name}</span>}
                 />
-                {errors[`producto_${index}`] && <div className="text-danger">{errors[`producto_${index}`]}</div>}
               </Form.Group>
               <div className="d-flex gap-3">
                 {/* Cantidad */}
@@ -281,25 +207,21 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
                   <Form.Control
                     type="number"
                     min="1"
-                    value={producto.cantidad}
-                    onChange={(e) => handleProductChange(index, 'cantidad', e.target.value)}
-                    isInvalid={!!errors[`cantidad_${index}`]}
+                    value={producto.quantity}
+                    onChange={(e) => handleProductChange(index, 'quantity', e.target.value)}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {errors[`cantidad_${index}`]}
-                  </Form.Control.Feedback>
                 </Form.Group>
-                {/* Unidad */}
                 <Form.Group className="mb-3 flex-fill" controlId={`formUnidad_${index}`}>
                   <Form.Label>Unidad</Form.Label>
                   <Form.Select
-                    value={producto.unidad}
-                    onChange={(e) => handleProductChange(index, 'unidad', e.target.value)}
+                    value={producto.measurment_unit.label}
+                    onChange={(e) => handleProductChange(index, 'unidad', { label: e.target.value })}
                     isInvalid={!!errors[`unidad_${index}`]}
                   >
                     <option value="">Selecciona unidad</option>
                     <option value="Unidades">Unidades</option>
                     <option value="Gramos">Gramos</option>
+                    <option value="Gramos">{"Kilo Gramo"}</option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
                     {errors[`unidad_${index}`]}
@@ -307,18 +229,14 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
                 </Form.Group>
                 {/* Precio */}
                 <Form.Group className="mb-3 flex-fill" controlId={`formPrecio_${index}`}>
-                  <Form.Label>Precio ($)</Form.Label>
+                  <Form.Label>Precio</Form.Label>
                   <Form.Control
                     type="number"
                     step="0.01"
                     min="0"
-                    value={producto.precio}
-                    onChange={(e) => handleProductChange(index, 'precio', e.target.value)}
-                    isInvalid={!!errors[`precio_${index}`]}
+                    value={producto.unit_price}
+                    onChange={(e) => handleProductChange(index, 'unit_price', e.target.value)}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {errors[`precio_${index}`]}
-                  </Form.Control.Feedback>
                 </Form.Group>
                 {/* Botón para eliminar producto */}
                 <div className="d-flex align-items-end">

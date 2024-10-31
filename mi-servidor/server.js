@@ -11,8 +11,8 @@ const secretKey = 'mi_clave_secreta'; // Cambia esto por una clave más segura
 const data = {
   users: [
     {
-      email: 'admin@example.com',
-      password: 'password123',
+      email: 'admin@gmail.com',
+      password: 'admin1234',
       name: 'Administrador',
     },
   ],
@@ -23,9 +23,9 @@ const data = {
     { id: '0e31', name: 'Unknown' },
   ],
   products: [
-    { id: '1', name: 'Harina' },
-    { id: '2', name: 'Huevos' },
-    { id: '3', name: 'Azúcar' },
+    { id: '1', name: 'Torta tres leches', price: '60000' },
+    { id: '2', name: 'Cupcake', price: '10000'  },
+    { id: '3', name: 'Galletas', price: '5000'  },
   ],
   "purchases": [
       {
@@ -237,12 +237,12 @@ app.get('/purchases', verifyToken, (req, res) => {
 });
 
 // Endpoint para login
-app.post('/login', (req, res) => {
+app.post('/users/login/', (req, res) => {
   const { email, password } = req.body;
   const user = data.users.find(u => u.email === email && u.password === password);
   if (user) {
     // Generar un token
-    const token = jwt.sign({ id: user.email }, secretKey, { expiresIn: '1h' });
+    const token = {"access": jwt.sign({ id: user.email }, secretKey, { expiresIn: '1h' })};
     res.json({ message: 'Login exitoso', token });
   } else {
     res.status(401).json({ message: 'Credenciales incorrectas' });
@@ -280,6 +280,65 @@ app.put('/purchases/:id', verifyToken, (req, res) => {
     // Actualizar los datos de la compra
     data.purchases[index] = { ...data.purchases[index], ...updatedPurchase };
     res.json(data.purchases[index]); // Responder con la compra actualizada
+});
+
+
+// Obtener todos los productos (protegido)
+app.get('/products', verifyToken, (req, res) => {
+  res.status(200).json(data.products);
+});
+
+// Obtener un producto por ID (protegido)
+app.get('/products/:id', verifyToken, (req, res) => {
+  const productId = parseInt(req.params.id, 10);
+  const product = data.products.find(p => p.id === productId);
+
+  if (product) {
+    res.status(200).json(product);
+  } else {
+    res.status(404).json({ message: 'Producto no encontrado' });
+  }
+});
+
+// Crear un nuevo producto (protegiendo la ruta)
+app.post('/products', verifyToken, (req, res) => {
+  const { name, price } = req.body;
+  const newProduct = {
+    id: data.products.length + 1,
+    name,
+    price,
+  };
+
+  data.products.push(newProduct);
+  res.status(201).json(newProduct);
+});
+
+// Actualizar un producto existente (protegiendo la ruta)
+app.put('/products/:id', verifyToken, (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+  const product = products.find((p) => p.id === parseInt(id));
+
+  if (product) {
+    product.name = name || product.name;
+    product.price = price || product.price;
+    res.json(product);
+  } else {
+    res.status(404).json({ message: 'Producto no encontrado' });
+  }
+});
+
+// Eliminar un producto (protegiendo la ruta)
+app.delete('/products/:id', verifyToken, (req, res) => {
+  const { id } = req.params;
+  const productIndex = products.findIndex((p) => p.id === parseInt(id));
+
+  if (productIndex !== -1) {
+    products.splice(productIndex, 1);
+    res.json({ message: 'Producto eliminado con éxito' });
+  } else {
+    res.status(404).json({ message: 'Producto no encontrado' });
+  }
 });
 
 
