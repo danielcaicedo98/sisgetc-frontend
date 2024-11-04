@@ -68,12 +68,12 @@ const ProductList = ({ products, onEdit, onDelete }) => {
                   </td>
                   <td>{product.name}</td>
                   <td>{product.quantity}</td>
-                  <td>{product.measurement_unit}</td>
+                  <td>{product.measurement_unit.label}</td>
                   <td>{product.price}</td>
-                  <td>{product.category}</td>
+                  <td>{product.category.label}</td>
                   <td>
                     <button onClick={() => onEdit(product)}>Editar</button>
-                    <button onClick={() => onDelete(index)}>Eliminar</button>
+                    <button onClick={() => onDelete(product.id)}>Eliminar</button>
                   </td>
                 </tr>
               ))

@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from "react";
 import "./ProductForm.scss";
+import { fetchWithToken } from "api/fetchHelpers";
 
-const ProductForm = ({ productToEdit }) => {
+const ProductForm = ({ productToEdit, isEdit }) => {
   const [formData, setFormData] = useState({
     name: "",
     quantity: "",
-    measurement_unit: "",
+    measurement_unit: "1",
     price: "",
     description: "",
-    category: "",
+    category: "1",
     photo: null,
-  });  
+  });
+
+  const [isEditF, setIsEditF] = useState(false)
 
   useEffect(() => {
     if (productToEdit) {
+      setIsEditF(isEdit)
       setFormData(productToEdit);
     }
   }, [productToEdit]);
-
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,6 +28,7 @@ const ProductForm = ({ productToEdit }) => {
       ...prevData,
       [name]: value,
     }));
+    console.log(name,value)
   };
 
   const handleFileChange = (e) => {
@@ -35,13 +38,49 @@ const ProductForm = ({ productToEdit }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    console.log(formData); // Aquí puedes manejar el envío del formulario
+
+    if (isEditF) {
+      const updatedProduct = {
+        id: formData.id,
+        name: formData.name,
+        quantity: formData.quantity,
+        measurement_unit: formData.measurement_unit.value,
+        price: formData.price,
+        description: formData.description,
+        category: typeof formData.category == 'object' ? formData.category.value : formData.category
+      }
+
+      const response = await fetchWithToken(`products/${updatedProduct.id}/`, updatedProduct, 'PUT');
+      if (response.updated) {
+        alert('Producto actualizado exitosamente.');
+        window.location.reload();        
+      } else {
+        alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
+      }
+    } else if(!isEditF) {
+      const addProduct = {       
+        name: formData.name,
+        quantity: formData.quantity,
+        measurement_unit: formData.measurement_unit.value,
+        price: formData.price,
+        description: formData.description,
+        category: formData.category
+      }
+
+      const response = await fetchWithToken('products/', addProduct, 'POST');
+      if (response.updated) {
+        alert('Producto agregado exitosamente.');
+        setFormData([...formData, addProduct]);
+      } else {
+        alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
+      }      
+    }
   };
 
   return (
-    <form className="responsive-form" onSubmit={handleSubmit}>
+    <form className="responsive-form">
       <label>
         Nombre:
         <input type="text" name="name" value={formData.name} onChange={handleChange} />
@@ -52,23 +91,23 @@ const ProductForm = ({ productToEdit }) => {
       </label>
       <label>
         Unidad de Medida:
-        <select name="measurement_unit" value={formData.measurement_unit} onChange={handleChange}>
+        <select name="measurement_unit" value={formData.measurement_unit.label} onChange={handleChange}>
           <option value="Kilo Gramo">Kilo Gramo</option>
           <option value="g">g</option>
           <option value="lb">lb</option>
-          <option value="unidad">unidad</option>
+          <option value="Unidad">Unidad</option>
         </select>
       </label>
       <label>
         Precio:
         <input type="number" name="price" value={formData.price} onChange={handleChange} />
-      </label>      
+      </label>
       <label>
         Categoría:
-        <select name="category" value={formData.category} onChange={handleChange}>
-          <option value="Cupcakes">Cupcakes</option>
-          <option value="DripCakes">DripCakes</option>
-          <option value="Tortas Gourmet">Tortas Gourmet</option>
+        <select name="category" value={formData.category.value} onChange={handleChange}>
+          <option value="1">TORTAS</option>
+          <option value="2">GALLETAS</option>
+          <option value="3">MUFFINS</option>
         </select>
       </label>
       <label>
@@ -81,7 +120,7 @@ const ProductForm = ({ productToEdit }) => {
         Descripción:
         <textarea name="description" value={formData.description} onChange={handleChange} className="text-area" />
       </label>
-      <button type="submit" className="save-button">Guardar</button>
+      {isEdit ? <button onClick={handleUpdate} className="edit-button">Editar</button> : <button onClick={handleUpdate} className="save-button">Guardar</button>}
     </form>
   );
 };
