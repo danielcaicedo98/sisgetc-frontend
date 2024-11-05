@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Container, Row, Col, ListGroup, Form, Button, Alert } from 'react-bootstrap';
+import { Card, Container, Row, Col, ListGroup, Form, Button, Alert, InputGroup } from 'react-bootstrap';
 import ProductCrud from 'views/products/ProductCrud';
 
-import SocialCard from 'components/Widgets/SocialCard';
-import avatar1 from '../../assets/images/user/avatar-1.jpg'
-
 const Sales = () => {   
-  const [showForm, setShowForm] = useState(true);
   const [product, setProduct] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [unitPrice, setUnitPrice] = useState(0);
@@ -14,7 +10,11 @@ const Sales = () => {
   const [cart, setCart] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [error, setError] = useState('');
-  const [products, setProducts]  = useState([]);
+  const [products, setProducts] = useState([]);
+  const [client, setClient] = useState('');
+  const [saleDate, setSaleDate] = useState('');
+  const [description, setDescription] = useState('');
+  const [saleStatus, setSaleStatus] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -34,18 +34,19 @@ const Sales = () => {
   };
 
   const handleProductChange = (e) => {
-    const selectedProductId = e.target.value;
-    const selectedProduct = products.find(p => p.id === selectedProductId);
-    
+    const inputValue = e.target.value;
+    setProduct(inputValue);
+
+    const selectedProduct = products.find(p => p.name === inputValue);
     if (selectedProduct) {
-      setProduct(selectedProduct.name);
-      setUnitPrice(selectedProduct.price); 
+      setUnitPrice(selectedProduct.price);
       calculateTotalSale();
     }
   };
 
-  const handleQuantityChange = (e) => {
-    setQuantity(Number(e.target.value));
+  const handleQuantityChange = (amount) => {
+    const newQuantity = Math.max(0, quantity + amount);
+    setQuantity(newQuantity);
     calculateTotalSale();
   };
 
@@ -79,6 +80,21 @@ const Sales = () => {
     setError('');
   };
 
+  const handleEditProduct = (index) => {
+    const item = cart[index];
+    setProduct(item.product);
+    setQuantity(item.quantity);
+    setUnitPrice(item.unitPrice);
+
+    const updatedCart = cart.filter((_, i) => i !== index);
+    setCart(updatedCart);
+  };
+
+  const handleDeleteProduct = (index) => {
+    const updatedCart = cart.filter((_, i) => i !== index);
+    setCart(updatedCart);
+  };
+
   const handleCheckout = () => {
     if (!paymentMethod) {
       setError('Por favor, seleccione un método de pago.');
@@ -93,63 +109,93 @@ const Sales = () => {
 
   const totalCartAmount = cart.reduce((acc, item) => acc + item.total, 0);
 
+  return (
+    <React.Fragment>
+      <Container fluid>
+        <Row className='mt-1 mb-4'>
+          <Card.Body>
+            <h1>VENTAS</h1>
 
-  const toggleFormVisibility = () => {
-    setShowForm(!showForm);
-  };
-    
-    return (
-        <React.Fragment>
-          <Container fluid>
-            <Row className='mt-1 mb-4'>
-              <Card.Body>
-                <h1>VENTAS</h1>
-                  <Card.Text className="">
-                    Aquí podrá visualizar el estado de las ventas más recientes realizadas por Tortas Crispan y registrar una nueva venta.
-                  </Card.Text>
-              </Card.Body>
-            </Row>
+            <Form className="mb-3">
+              <Row>
+                <Col md={4}>
+                  <Form.Group controlId="saleStatus">
+                    <Form.Label>Estado de la Venta</Form.Label>
+                    <Form.Control 
+                      type="text" 
+                      placeholder="Ingrese el estado de la venta" 
+                      value={saleStatus}
+                      onChange={(e) => setSaleStatus(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
 
-            <Row>
-              <Col className="text-end mb-3">
-                <Button variant="primary" onClick={toggleFormVisibility}>
-                  {showForm ? 'Ocultar Formulario' : 'Registrar Venta'}
-                </Button>
-              </Col>
-            </Row>
+                <Col md={4}>
+                  <Form.Group controlId="client">
+                    <Form.Label>Cliente</Form.Label>
+                    <Form.Control 
+                      type="text" 
+                      placeholder="Ingrese el nombre del cliente" 
+                      value={client}
+                      onChange={(e) => setClient(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
 
-            {showForm && (
+                <Col md={4}>
+                  <Form.Group controlId="saleDate">
+                    <Form.Label>Fecha de Venta</Form.Label>
+                    <Form.Control 
+                      type="date" 
+                      value={saleDate}
+                      onChange={(e) => setSaleDate(e.target.value)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form>
+          </Card.Body>
+        </Row>
+
         <Row>
-          <Col>
+          <Col md={6}>
             <Card>
               <Card.Body>
                 <h4>Registro de Venta</h4>
                 {error && <Alert variant="danger">{error}</Alert>}
+                
                 <Form>
                   <Form.Group className="mb-3" controlId="product">
                     <Form.Label>Producto</Form.Label>
                     <Form.Control 
-                      as="select" 
+                      type="text" 
+                      placeholder="Escriba o seleccione un producto..." 
                       value={product} 
                       onChange={handleProductChange} 
-                    >
-                      <option value="">Seleccione un producto...</option>
+                      list="productList"
+                    />
+                    <datalist id="productList">
                       {products.map((prod) => (
-                        <option key={prod.id} value={prod.id}>
+                        <option key={prod.id} value={prod.name}>
                           {prod.name}
                         </option>
                       ))}
-                    </Form.Control>
+                    </datalist>
                   </Form.Group>
 
+                  {/* Botones para aumentar/reducir cantidad */}
                   <Form.Group className="mb-3" controlId="quantity">
                     <Form.Label>Cantidad</Form.Label>
-                    <Form.Control 
-                      type="number" 
-                      placeholder="Ingrese la cantidad" 
-                      value={quantity} 
-                      onChange={handleQuantityChange} 
-                    />
+                    <InputGroup>
+                      <Button variant="outline-secondary" onClick={() => handleQuantityChange(-1)}>-</Button>
+                      <Form.Control 
+                        type="number" 
+                        placeholder="Ingrese la cantidad" 
+                        value={quantity} 
+                        readOnly 
+                      />
+                      <Button variant="outline-secondary" onClick={() => handleQuantityChange(1)}>+</Button>
+                    </InputGroup>
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="unitPrice">
@@ -166,9 +212,20 @@ const Sales = () => {
                     <Form.Label>Total de la Venta</Form.Label>
                     <Form.Control 
                       type="number" 
-                      placeholder="Ingrese el total de la venta" 
+                      placeholder="Total de la venta" 
                       value={totalSale} 
                       readOnly 
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="description">
+                    <Form.Label>Descripción</Form.Label>
+                    <Form.Control 
+                      as="textarea" 
+                      rows={3}
+                      placeholder="Descripción de la venta"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
                     />
                   </Form.Group>
 
@@ -176,19 +233,41 @@ const Sales = () => {
                     Agregar al Carrito
                   </Button>
                 </Form>
+              </Card.Body>
+            </Card>
+          </Col>
 
-                {cart.length > 0 && (
+          <Col md={6}>
+            <Card>
+              <Card.Body>
+                <h4>Carrito de Ventas</h4>
+                {cart.length > 0 ? (
                   <>
-                    <h5 className="mt-4">Carrito de Ventas</h5>
                     <ListGroup className="mb-3">
                       {cart.map((item, index) => (
-                        <ListGroup.Item key={index}>
+                        <ListGroup.Item key={index} style={{ color: '#6c757d' }}>
                           <strong>Producto:</strong> {item.product} - <strong>Cantidad:</strong> {item.quantity} - <strong>Precio Unitario:</strong> ${item.unitPrice} - <strong>Total:</strong> ${item.total}
+                          <Button 
+                            variant="warning" 
+                            size="sm" 
+                            className="ms-2" 
+                            onClick={() => handleEditProduct(index)}
+                          >
+                            Editar
+                          </Button>
+                          <Button 
+                            variant="danger" 
+                            size="sm" 
+                            className="ms-2" 
+                            onClick={() => handleDeleteProduct(index)}
+                          >
+                            Eliminar
+                          </Button>
                         </ListGroup.Item>
                       ))}
                     </ListGroup>
 
-                    <h6>Total de la venta: ${totalCartAmount}</h6>
+                    <h6>Total del Carrito: ${totalCartAmount}</h6>
 
                     <Form.Group className="mb-3" controlId="paymentMethod">
                       <Form.Label>Método de Pago</Form.Label>
@@ -205,71 +284,20 @@ const Sales = () => {
                     </Form.Group>
 
                     <Button variant="success" onClick={handleCheckout}>
-                      Enviar Venta
+                      Finalizar Venta
                     </Button>
                   </>
+                ) : (
+                  <p>El carrito está vacío.</p>
                 )}
               </Card.Body>
             </Card>
           </Col>
         </Row>
-      )}
-          <Row>
-            <Col lg={4} md={12}>
-              <SocialCard
-                params={{
-                  icon: 'fa fa-envelope-open',
-                  class: 'red',
-                  variant: 'primary',
-                  primaryTitle: '8.62k',
-                  primaryText: 'Suscriptores',
-                  secondaryText: 'Tu lista de clientes crece',
-                  label: 'Gestionar Lista'
-                }}
-              />
-              <SocialCard 
-                params={{
-                  icon: 'fab fa-instagram',
-                  class: 'red',
-                  variant: 'success',
-                  primaryTitle: '+40',
-                  primaryText: 'Seguidores',
-                  secondaryText: 'Tu base de seguidores crece',
-                  label: 'Ver Seguidores',
-                  href: 'https://www.instagram.com/tortas.crispan?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=='
-                }}
-              />
-            </Col>
-            <Col lg={8} md={12}>
-              <Card>
-                <Card.Header>
-                  <h5>Últimas Actividades</h5>
-                </Card.Header>
-                <Card.Body className="card-body pt-4">
-                  <ListGroup as="ul" bsPrefix=" " className="feed-blog ps-0">
-                    <ListGroup.Item as="li" bsPrefix=" " className="active-feed">
-                      <div className="feed-user-img">
-                        <img src={avatar1} className="img-radius " alt="User-Profile" />
-                      </div>
-                      <h6>
-                        <span className="badge bg-danger">Pedido</span> Eddie subió nuevos pedidos:{' '}
-                        <small className="text-muted">Hace 2 horas</small>
-                      </h6>
-                      <p className="m-b-15 m-t-15">
-                        Pedido especial para <b> @todos</b>. Detalles del pedido: Lorem Ipsum es simplemente un texto ficticio de la industria de la impresión.
-                      </p>
-                    </ListGroup.Item>
-                  </ListGroup>
-                </Card.Body>
-              </Card>
-            </Col>
-
-                  
-          </Row>
-
-        </Container>
-      </React.Fragment>
+      </Container>
+    </React.Fragment>
   );
-}
+};
 
 export default Sales;
+
