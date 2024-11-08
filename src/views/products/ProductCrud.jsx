@@ -88,6 +88,7 @@ const ProductCrud = () => {
     },
   ]);
   const [productToEdit, setProductToEdit] = useState(null);
+  const [isEdit,setIsEdit] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -115,11 +116,14 @@ const ProductCrud = () => {
   };
 
   const deleteProduct = async (id) => {
+    console.log(id)
     const response = await fetchWithToken(`products/${id}/`, null, 'DELETE');
+    console.log(response)
     setProducts(products.filter((p) => p.id !== id));
   };
 
   const handleEdit = (product) => {
+    setIsEdit(true)
     setProductToEdit(product);
     console.log(product)
   };
@@ -135,7 +139,7 @@ const ProductCrud = () => {
   return (
     <div className="container mt-4">
       <h1>Gestiona tus Productos</h1>
-      <ProductForm onSubmit={handleSubmit} productToEdit={productToEdit} />
+      <ProductForm onSubmit={handleSubmit} productToEdit={productToEdit} isEdit={isEdit} />
       <ProductList products={products} onEdit={handleEdit} onDelete={deleteProduct} />
     </div>
   );
