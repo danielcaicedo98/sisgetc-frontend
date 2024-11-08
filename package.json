@@ -17,7 +17,7 @@
     "formik": "^2.4.6",
     "react": "18.2.0",
     "react-apexcharts": "^1.4.1",
-    "react-bootstrap": "^2.10.2",
+    "react-bootstrap": "^2.10.5",
     "react-bootstrap-typeahead": "^6.3.2",
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "18.2.0",
