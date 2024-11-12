@@ -2,8 +2,20 @@
     max-width: 800px;
     margin: auto;
     padding: 20px;
-    background-color: #f9f9f9;
+   
     border-radius: 8px;
+    
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.233);
+    
+        &:hover {
+            //background-color: #d24231;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.411), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
 
     h2 {
         text-align: center;

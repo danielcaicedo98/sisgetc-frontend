@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { Card } from 'react-bootstrap';
 import '../../../assets/scss/purchases/reportPurchase.scss';
+import '../../../assets/scss/purchases/Purchases.scss';
 
 const articles = [
     { article_id: '001', name: 'Artículo A', description: 'Descripción del Artículo A', supplier: 'Proveedor A' },
@@ -34,62 +36,68 @@ const PurchaseReport = () => {
     };
 
     return (
-        <div className="purchase-report">
-            <h2>Informe de Compras</h2>
-            <div className="filters">
-                <label>Fecha:</label>
-                <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
 
-                <label>Tipo de Informe:</label>
-                <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
-                    <option value="">Seleccionar</option>
-                    <option value="daily">Diario</option>
-                    <option value="weekly">Semanal</option>
-                    <option value="monthly">Mensual</option>
-                </select>
+        <React.Fragment>
+            <Card.Body>
+                <div className="purchase-report">
+                    <h2>Informe de Compras</h2>
+                    <div className="filters">
+                        <label>Fecha:</label>
+                        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
 
-                <button onClick={handleGenerateReport}>Generar Informe</button>
-            </div>
+                        <label>Tipo de Informe:</label>
+                        <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
+                            <option value="">Seleccionar</option>
+                            <option value="daily">Diario</option>
+                            <option value="weekly">Semanal</option>
+                            <option value="monthly">Mensual</option>
+                        </select>
 
-            {alert && <div className="alert">{alert}</div>}
+                        <button onClick={handleGenerateReport}>Generar Informe</button>
+                    </div>
 
-            {reports.length > 0 && (
-                <table className="report-table">
-                    <thead>
-                        <tr>
-                            <th>Article ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Proveedor</th>
-                            <th>Cantidad</th>
-                            <th>Valor Unitario</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {reports.map((report, index) => {
-                            const articleDetails = getArticleDetails(report.article_id);
-                            return (
-                                <tr key={index}>
-                                    <td>{report.article_id}</td>
-                                    <td>{articleDetails.name}</td>
-                                    <td>{articleDetails.description}</td>
-                                    <td>{articleDetails.supplier}</td>
-                                    <td>{report.quantity}</td>
-                                    <td>{report.unit_value}</td>
-                                    <td>{report.subtotal}</td>
+                    {alert && <div className="alert">{alert}</div>}
+
+                    {reports.length > 0 && (
+                        <table className="report-table">
+                            <thead>
+                                <tr>
+                                    <th>Article ID</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Proveedor</th>
+                                    <th>Cantidad</th>
+                                    <th>Valor Unitario</th>
+                                    <th>Subtotal</th>
                                 </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            )}
+                            </thead>
+                            <tbody>
+                                {reports.map((report, index) => {
+                                    const articleDetails = getArticleDetails(report.article_id);
+                                    return (
+                                        <tr key={index}>
+                                            <td>{report.article_id}</td>
+                                            <td>{articleDetails.name}</td>
+                                            <td>{articleDetails.description}</td>
+                                            <td>{articleDetails.supplier}</td>
+                                            <td>{report.quantity}</td>
+                                            <td>{report.unit_value}</td>
+                                            <td>{report.subtotal}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    )}
 
-            <div className="export-buttons">
-                <button>Exportar a PDF</button>
-                <button>Exportar a Excel</button>
-            </div>
-        </div>
+                    <div className="export-buttons">
+                        <button>Exportar a PDF</button>
+                        <button>Exportar a Excel</button>
+                    </div>
+                </div>
+
+            </Card.Body>
+        </React.Fragment>
     );
 };
 
