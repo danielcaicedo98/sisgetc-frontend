@@ -105,7 +105,7 @@ const menuItems = {
           title: 'Informe Ventas',
           type: 'item',
           icon: 'feather icon-shopping-cart',
-          url: '/reportSales'
+          url: '/salesReport'
         }
       ]
 
