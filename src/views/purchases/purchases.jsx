@@ -90,27 +90,13 @@ const Purchases = () => {
         id: item.value,   // Cambiar "value" por "id"
         name: item.label  // Cambiar "label" por "name"
       }));
-
-      // const uniqueNames = new Set(data.map(provider => provider.name));
-
-      // // Agregar el nuevo proveedor solo si no existe
-      // if (!uniqueNames.has(query)) {
-      //   uniqueNames.add(query);
-      //   data.push({
-      //     id: `${Date.now() + Math.random()}`,
-      //     name: `${query}`
-      //   });
-      // }
+      
 
       setProviderOptions(data);
       console.log(data)
     } catch (error) {
       console.error('Error fetching providers:', error);
-      setIsLoadingProviders(false);
-      // setProviderOptions([{
-      //   id: `${Date.now() + Math.random()}`,
-      //   name: `${query}`
-      // }])
+      setIsLoadingProviders(false);     
 
 
     } finally {
