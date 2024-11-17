@@ -223,7 +223,7 @@ const Sales = () => {
                     <Form.Control
                       type="number"
                       placeholder="Total de la venta"
-                      value={totalSale}
+                      value={totalSale === 0 ? "" : totalSale} //mostrar vacío si es 0
                       readOnly
                     />
                   </Form.Group>
