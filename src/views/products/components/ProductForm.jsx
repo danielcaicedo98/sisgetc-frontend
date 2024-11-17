@@ -14,9 +14,37 @@ const ProductForm = ({ productToEdit, isEdit }) => {
   });
 
   const [isEditF, setIsEditF] = useState(false)
+  const [select_measurements, setSelectMeasurements] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fillMeasurement();
+  }, []);
+
+  const fillMeasurement = async () => {
+    setLoading(true); // Indicamos que la carga está en proceso
+    try {
+      const res = await fetchWithToken('basics/measurement_units/', null, 'GET');
+
+      // Aquí suponemos que la respuesta es un array directo. Si es un objeto con una propiedad que contiene el array, ajusta esto.
+      if (Array.isArray(res)) {
+        setSelectMeasurements(res); // Guardamos el array de unidades en el estado
+      } else {
+        // Si la respuesta es un objeto con una clave (ejemplo: { data: [...] })
+        setSelectMeasurements(res.data || []); // Ajusta según la estructura de la respuesta
+      }
+      setLoading(false);
+    } catch (error) {
+      setError('Error fetching measurements');
+      setLoading(false);
+      console.error('Error fetching measurements:', error);
+    }
+  };
 
   useEffect(() => {
     if (productToEdit) {
+      console.log(productToEdit)
       setIsEditF(isEdit)
       setFormData(productToEdit);
     }
@@ -28,7 +56,7 @@ const ProductForm = ({ productToEdit, isEdit }) => {
       ...prevData,
       [name]: value,
     }));
-    console.log(name,value)
+    console.log(name, value)
   };
 
   const handleFileChange = (e) => {
@@ -40,13 +68,13 @@ const ProductForm = ({ productToEdit, isEdit }) => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-
+    console.log(formData)
     if (isEditF) {
       const updatedProduct = {
         id: formData.id,
         name: formData.name,
         quantity: formData.quantity,
-        measurement_unit: formData.measurement_unit.value,
+        measurement_unit: typeof formData.measurement_unit == "object" ? formData.measurement_unit.value : formData.measurement_unit,
         price: formData.price,
         description: formData.description,
         category: typeof formData.category == 'object' ? formData.category.value : formData.category
@@ -55,15 +83,15 @@ const ProductForm = ({ productToEdit, isEdit }) => {
       const response = await fetchWithToken(`products/${updatedProduct.id}/`, updatedProduct, 'PUT');
       if (response.updated) {
         alert('Producto actualizado exitosamente.');
-        window.location.reload();        
+        window.location.reload();
       } else {
         alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
       }
-    } else if(!isEditF) {
-      const addProduct = {       
+    } else if (!isEditF) {
+      const addProduct = {
         name: formData.name,
         quantity: formData.quantity,
-        measurement_unit: formData.measurement_unit.value,
+        measurement_unit: typeof formData.measurement_unit == "object" ? formData.measurement_unit.value : formData.measurement_unit,
         price: formData.price,
         description: formData.description,
         category: formData.category
@@ -75,7 +103,7 @@ const ProductForm = ({ productToEdit, isEdit }) => {
         setFormData([...formData, addProduct]);
       } else {
         alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
-      }      
+      }
     }
   };
 
@@ -91,11 +119,13 @@ const ProductForm = ({ productToEdit, isEdit }) => {
       </label>
       <label>
         Unidad de Medida:
-        <select name="measurement_unit" value={formData.measurement_unit.label} onChange={handleChange}>
-          <option value="Kilo Gramo">Kilo Gramo</option>
-          <option value="g">g</option>
-          <option value="lb">lb</option>
-          <option value="Unidad">Unidad</option>
+        <select name="measurement_unit" value={formData.measurement_unit.value} onChange={handleChange}>
+          <option value="">Selecciona unidad</option>
+          {select_measurements.map(item => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
         </select>
       </label>
       <label>

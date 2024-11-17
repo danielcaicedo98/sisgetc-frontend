@@ -18,21 +18,6 @@ const ProductItem = (
     }
 ) => {
 
-    // const [select_measurements, setSelectMeasurements] = useState([]);
-
-    // useEffect(() => {
-    //     fillMeasurement()
-    // }, []);
-
-    // const fillMeasurement = async () => {
-    //     try {
-    //         const res = await fetchWithToken(`/basics/measurement_units/`, null, 'GET');
-    //         setSelectMeasurements(res); // Guardamos la respuesta en el estado
-    //         console.log(res)
-    //     } catch (error) {
-    //         console.error('Error fetching measurements:', error);
-    //     }
-    // }
     const [select_measurements, setSelectMeasurements] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -44,7 +29,7 @@ const ProductItem = (
     const fillMeasurement = async () => {
         setLoading(true); // Indicamos que la carga está en proceso
         try {
-            const res = await fetchWithToken('/basics/measurement_units/', null, 'GET');
+            const res = await fetchWithToken('basics/measurement_units/', null, 'GET');
             console.log(res)
 
             // Aquí suponemos que la respuesta es un array directo. Si es un objeto con una propiedad que contiene el array, ajusta esto.
@@ -100,8 +85,6 @@ const ProductItem = (
                             {item.label}
                         </option>
                     ))}
-
-
                 </Form.Select>
             </Form.Group>
             <Form.Group className="mb-4 flex-fill">

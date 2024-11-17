@@ -88,14 +88,14 @@ const ProductCrud = () => {
     },
   ]);
   const [productToEdit, setProductToEdit] = useState(null);
-  const [isEdit,setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);  
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
-    const response = await fetchWithToken('products', null, 'GET');
+    const response = await fetchWithToken('products/', null, 'GET');
     // const data = await response.json();
     console.log(response)
     setProducts(response);
@@ -103,7 +103,7 @@ const ProductCrud = () => {
 
   const addProduct = async (product) => {
 
-    const response = await fetchWithToken('products', product, 'POST');
+    const response = await fetchWithToken('products/', product, 'POST');
     const newProduct = await response.json();
     setProducts([...products, product]);
   };
@@ -123,6 +123,7 @@ const ProductCrud = () => {
   };
 
   const handleEdit = (product) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setIsEdit(true)
     setProductToEdit(product);
     console.log(product)

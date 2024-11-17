@@ -20,6 +20,7 @@ const Purchases = () => {
     unidad: 'Unidades',
     productoObj: null
   }]);
+
   const [errors, setErrors] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
   const [productToRemove, setProductToRemove] = useState(null);
@@ -191,7 +192,6 @@ const Purchases = () => {
     }
   };
 
-
   useEffect(() => {
     const newTotal = productos.reduce((acc, producto) => {
       const precio = parseFloat(producto.precio) || 0;
@@ -259,7 +259,6 @@ const Purchases = () => {
     if (validate()) {
       const compra = {
         purchase_date: fecha,
-        // supplier: proveedor[0].id,
         supplier: proveedor[0].id,  // Asumiendo que solo se selecciona un proveedor
         description: descripcion,
         total: total,
@@ -267,9 +266,7 @@ const Purchases = () => {
         payment_methon: 1,
         purchase_details: productos.map(p => ({
           article: p.productoObj.id, // Incluye el objeto completo del producto
-          // article: 1,
           quantity: p.cantidad,
-          // measurment_unit: p.unidad,
           measurment_unit: p.unidad,
           unit_price: p.precio,
           subtotal: (p.unidad * p.precio)
@@ -286,9 +283,6 @@ const Purchases = () => {
         else {
           alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
         }
-        // alert('Compra guardada exitosamente.');
-        // Redireccionar a la lista de compras después de guardar
-        // navigate('/purchases-list');
       } catch (error) {
         console.error('Error al guardar la compra:', error);
         alert('Hubo un problema al guardar la compra. Por favor, inténtalo nuevamente.');
@@ -297,6 +291,7 @@ const Purchases = () => {
       alert('Por favor, corrige los errores en el formulario.');
     }
   };
+
   return (
     <React.Fragment>
       <Card.Body>
@@ -405,6 +400,7 @@ const Purchases = () => {
       </Modal>
     </React.Fragment>
   );
+  
 };
 
 export default Purchases;
