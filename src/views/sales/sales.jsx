@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, Container, Row, Col, ListGroup, Form, Button, Alert, InputGroup } from 'react-bootstrap';
 import ProductCrud from 'views/products/ProductCrud';
 
-const Sales = () => {   
+const Sales = () => {
   const [product, setProduct] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [unitPrice, setUnitPrice] = useState(0);
@@ -51,8 +51,18 @@ const Sales = () => {
   };
 
   const handleUnitPriceChange = (e) => {
-    setUnitPrice(Number(e.target.value));
-    calculateTotalSale();
+    const inputValue = e.target.value;
+
+    // Permitir el valor vacío temporalmente
+    if (inputValue === "") {
+      setUnitPrice("");
+    } else {
+      // Convertir a número si no está vacío
+      const parsedValue = parseFloat(inputValue);
+      if (!isNaN(parsedValue)) {
+        setUnitPrice(parsedValue);
+      }
+    }
   };
 
   const handlePaymentMethodChange = (e) => {
@@ -121,9 +131,9 @@ const Sales = () => {
                 <Col md={4}>
                   <Form.Group controlId="saleStatus">
                     <Form.Label>Estado de la Venta</Form.Label>
-                    <Form.Control 
-                      type="text" 
-                      placeholder="Ingrese el estado de la venta" 
+                    <Form.Control
+                      type="text"
+                      placeholder="Ingrese el estado de la venta"
                       value={saleStatus}
                       onChange={(e) => setSaleStatus(e.target.value)}
                     />
@@ -133,9 +143,9 @@ const Sales = () => {
                 <Col md={4}>
                   <Form.Group controlId="client">
                     <Form.Label>Cliente</Form.Label>
-                    <Form.Control 
-                      type="text" 
-                      placeholder="Ingrese el nombre del cliente" 
+                    <Form.Control
+                      type="text"
+                      placeholder="Ingrese el nombre del cliente"
                       value={client}
                       onChange={(e) => setClient(e.target.value)}
                     />
@@ -145,8 +155,8 @@ const Sales = () => {
                 <Col md={4}>
                   <Form.Group controlId="saleDate">
                     <Form.Label>Fecha de Venta</Form.Label>
-                    <Form.Control 
-                      type="date" 
+                    <Form.Control
+                      type="date"
                       value={saleDate}
                       onChange={(e) => setSaleDate(e.target.value)}
                     />
@@ -163,15 +173,15 @@ const Sales = () => {
               <Card.Body>
                 <h4>Registro de Venta</h4>
                 {error && <Alert variant="danger">{error}</Alert>}
-                
+
                 <Form>
                   <Form.Group className="mb-3" controlId="product">
                     <Form.Label>Producto</Form.Label>
-                    <Form.Control 
-                      type="text" 
-                      placeholder="Escriba o seleccione un producto..." 
-                      value={product} 
-                      onChange={handleProductChange} 
+                    <Form.Control
+                      type="text"
+                      placeholder="Escriba o seleccione un producto..."
+                      value={product}
+                      onChange={handleProductChange}
                       list="productList"
                     />
                     <datalist id="productList">
@@ -188,11 +198,11 @@ const Sales = () => {
                     <Form.Label>Cantidad</Form.Label>
                     <InputGroup>
                       <Button variant="outline-secondary" onClick={() => handleQuantityChange(-1)}>-</Button>
-                      <Form.Control 
-                        type="number" 
-                        placeholder="Ingrese la cantidad" 
-                        value={quantity} 
-                        readOnly 
+                      <Form.Control
+                        type="number"
+                        placeholder="Ingrese la cantidad"
+                        value={quantity}
+                        readOnly
                       />
                       <Button variant="outline-secondary" onClick={() => handleQuantityChange(1)}>+</Button>
                     </InputGroup>
@@ -200,28 +210,28 @@ const Sales = () => {
 
                   <Form.Group className="mb-3" controlId="unitPrice">
                     <Form.Label>Precio Unitario</Form.Label>
-                    <Form.Control 
-                      type="number" 
-                      placeholder="Ingrese el precio unitario" 
-                      value={unitPrice} 
-                      onChange={handleUnitPriceChange} 
+                    <Form.Control
+                      type="number"
+                      placeholder="Ingrese el precio unitario"
+                      value={unitPrice === 0 ? "" : unitPrice} //mostrar vacío si es 0
+                      onChange={handleUnitPriceChange}
                     />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="totalSale">
                     <Form.Label>Total de la Venta</Form.Label>
-                    <Form.Control 
-                      type="number" 
-                      placeholder="Total de la venta" 
-                      value={totalSale} 
-                      readOnly 
+                    <Form.Control
+                      type="number"
+                      placeholder="Total de la venta"
+                      value={totalSale}
+                      readOnly
                     />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="description">
                     <Form.Label>Descripción</Form.Label>
-                    <Form.Control 
-                      as="textarea" 
+                    <Form.Control
+                      as="textarea"
                       rows={3}
                       placeholder="Descripción de la venta"
                       value={description}
@@ -247,18 +257,18 @@ const Sales = () => {
                       {cart.map((item, index) => (
                         <ListGroup.Item key={index} style={{ color: '#6c757d' }}>
                           <strong>Producto:</strong> {item.product} - <strong>Cantidad:</strong> {item.quantity} - <strong>Precio Unitario:</strong> ${item.unitPrice} - <strong>Total:</strong> ${item.total}
-                          <Button 
-                            variant="warning" 
-                            size="sm" 
-                            className="ms-2" 
+                          <Button
+                            variant="warning"
+                            size="sm"
+                            className="ms-2"
                             onClick={() => handleEditProduct(index)}
                           >
                             Editar
                           </Button>
-                          <Button 
-                            variant="danger" 
-                            size="sm" 
-                            className="ms-2" 
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            className="ms-2"
                             onClick={() => handleDeleteProduct(index)}
                           >
                             Eliminar
@@ -271,9 +281,9 @@ const Sales = () => {
 
                     <Form.Group className="mb-3" controlId="paymentMethod">
                       <Form.Label>Método de Pago</Form.Label>
-                      <Form.Control 
-                        as="select" 
-                        value={paymentMethod} 
+                      <Form.Control
+                        as="select"
+                        value={paymentMethod}
                         onChange={handlePaymentMethodChange}
                       >
                         <option value="">Seleccione...</option>
