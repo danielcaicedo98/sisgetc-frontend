@@ -137,18 +137,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       updatedProductos[index][field] = value;
     }
     setProductos(updatedProductos);
-  };
-
-  // const handleProductChange = (index, field, value) => {
-  //   const updatedProductos = [...productos];
-  //   if (field === 'producto') {
-  //     updatedProductos[index].article = value; // Cambiar a `article`
-  //     updatedProductos[index].text = value ? value.label : ''; // Asumir que `label` es el nombre
-  //   } else {
-  //     updatedProductos[index][field] = value;
-  //   }
-  //   setProductos(updatedProductos);
-  // };
+  };  
 
   const addProduct = () => {
     setProductos([...productos, { article: null, quantity: 1, unit_price: 0, measurment_unit: { label: '' } }]);
@@ -185,8 +174,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       alert('Por favor, corrige los errores en el formulario.');
       return;
     }
-    // console.log(uni)
-
+    
     const updatedPurchase = {
       purchase_date: fecha, // Cambiar a `purchase_date`
       supplier: proveedor[0].id, // Cambiar a `supplier`

@@ -1,4 +1,7 @@
-const baseURL = 'http://localhost:8000';
+// const baseURL = 'http://localhost:8000';
+
+const baseURL = 'https://sisgetc-api.onrender.com';
+
 
 // Peticiones sin token (por ejemplo, para login o endpoints públicos)
 export const fetchWithoutToken = async (endpoint, data, method = 'GET') => {    

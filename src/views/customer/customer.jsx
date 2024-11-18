@@ -27,6 +27,56 @@ const Customer = () => {
         });
     };
 
+    const [select_identification, setSelecIdentification] = useState([]);
+    const [select_city, setSelectCity] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fillIdentification();
+        fillCity();
+    }, []);
+
+    const fillIdentification = async () => {
+        setLoading(true); // Indicamos que la carga está en proceso
+        try {
+            const res = await fetchWithToken('basics/identification_types/', null, 'GET');
+
+            // Aquí suponemos que la respuesta es un array directo. Si es un objeto con una propiedad que contiene el array, ajusta esto.
+            if (Array.isArray(res)) {
+                setSelecIdentification(res); // Guardamos el array de unidades en el estado
+            } else {
+                // Si la respuesta es un objeto con una clave (ejemplo: { data: [...] })
+                setSelectMeasurements(res.data || []); // Ajusta según la estructura de la respuesta
+            }
+            setLoading(false);
+        } catch (error) {
+            setError('Error fetching measurements');
+            setLoading(false);
+            console.error('Error fetching measurements:', error);
+        }
+    };
+
+    const fillCity = async () => {
+        setLoading(true); // Indicamos que la carga está en proceso
+        try {
+            const res = await fetchWithToken('basics/cities/', null, 'GET');
+
+            // Aquí suponemos que la respuesta es un array directo. Si es un objeto con una propiedad que contiene el array, ajusta esto.
+            if (Array.isArray(res)) {
+                setSelectCity(res); // Guardamos el array de unidades en el estado
+            } else {
+                // Si la respuesta es un objeto con una clave (ejemplo: { data: [...] })
+                setSelectCity(res.data || []); // Ajusta según la estructura de la respuesta
+            }
+
+        } catch (error) {
+            setError('Error fetching cities');
+
+            console.error('Error fetching cities:', error);
+        }
+    }; 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Lógica para guardar el cliente
@@ -94,9 +144,11 @@ const Customer = () => {
                                         onChange={handleChange}
                                     >
                                         <option value="">Selecciona el tipo</option>
-                                        <option value="CC">Cédula</option>
-                                        <option value="TI">Tarjeta de Identidad</option>
-                                        <option value="CE">Cédula de Extranjería</option>
+                                        {select_identification.map(item => (
+                                            <option key={item.value} value={item.value}>
+                                                {item.label}
+                                            </option>
+                                        ))}
                                     </select>
 
                                     <label>Número de Identificación</label>
@@ -150,9 +202,11 @@ const Customer = () => {
                                         onChange={handleChange}
                                     >
                                         <option value="">Selecciona la ciudad</option>
-                                        <option value="1">Cali</option>
-                                        <option value="2">Alcala</option>
-                                        <option value="3">Andalucía</option>
+                                        {select_city.map(item => (
+                                            <option key={item.value} value={item.value}>
+                                                {item.label}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>

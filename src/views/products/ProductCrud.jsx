@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProductList from './components/ProductList';
 import ProductForm from './components/ProductForm';
 import { fetchWithToken } from 'api/fetchHelpers';
+import DeleteProductModal from './components/DeleteProductModal';
 
 const ProductCrud = () => {
   const [products, setProducts] = useState([
@@ -88,7 +89,7 @@ const ProductCrud = () => {
     },
   ]);
   const [productToEdit, setProductToEdit] = useState(null);
-  const [isEdit, setIsEdit] = useState(false);  
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -96,7 +97,6 @@ const ProductCrud = () => {
 
   const fetchProducts = async () => {
     const response = await fetchWithToken('products/', null, 'GET');
-    // const data = await response.json();
     console.log(response)
     setProducts(response);
   };
@@ -114,19 +114,46 @@ const ProductCrud = () => {
     setProducts(products.map((p) => (p.id === product.id ? product : p)));
     setProductToEdit(null);
   };
+  
+  const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
+  const [productToDelete, setProductToDelete] = useState(null); // Producto seleccionado para eliminar
+  const [confirmationMessage, setConfirmationMessage] = useState(''); // Mensaje de confirmación
 
+  // Función para eliminar el producto
   const deleteProduct = async (id) => {
-    console.log(id)
-    const response = await fetchWithToken(`products/${id}/`, null, 'DELETE');
-    console.log(response)
-    setProducts(products.filter((p) => p.id !== id));
+    setShowModal(false);
+    const response = await fetchWithToken(`products/${id}/`, null, 'DELETE');   
+  };
+
+  // Función para abrir el modal
+  const handleShowModal = (id) => {
+    setProductToDelete(id); // Guardar el id del producto a eliminar
+    setShowModal(true); // Mostrar el modal
+  };
+
+  // Función para cerrar el modal sin hacer nada
+  const handleCloseModal = () => {
+    setShowModal(false); // Cerrar el modal
+    setProductToDelete(null); // Resetear el id del producto
+  };
+
+  // Función para confirmar la eliminación
+  const handleConfirmDeletion = () => {
+    if (productToDelete !== null) {
+      deleteProduct(productToDelete); // Eliminar el producto
+      setTimeout(() => {
+        alert('Producto Eliminado');
+        window.location.reload(); // Recargar la página
+      }, 500);
+    }
+    // Cerrar el modal
+    setProductToDelete(null); // Resetear el id del producto
   };
 
   const handleEdit = (product) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setIsEdit(true)
     setProductToEdit(product);
-    console.log(product)
   };
 
   const handleSubmit = (product) => {
@@ -140,8 +167,13 @@ const ProductCrud = () => {
   return (
     <div className="container mt-4">
       <h1>Gestiona tus Productos</h1>
+      <DeleteProductModal
+        showModal={showModal}
+        handleClose={handleCloseModal}
+        handleConfirm={handleConfirmDeletion}
+      />
       <ProductForm onSubmit={handleSubmit} productToEdit={productToEdit} isEdit={isEdit} />
-      <ProductList products={products} onEdit={handleEdit} onDelete={deleteProduct} />
+      <ProductList products={products} onEdit={handleEdit} onDelete={handleShowModal} />
     </div>
   );
 };

@@ -15,11 +15,13 @@ const ProductForm = ({ productToEdit, isEdit }) => {
 
   const [isEditF, setIsEditF] = useState(false)
   const [select_measurements, setSelectMeasurements] = useState([]);
+  const [select_categories, setSelectCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fillMeasurement();
+    fillCategory()
   }, []);
 
   const fillMeasurement = async () => {
@@ -33,6 +35,25 @@ const ProductForm = ({ productToEdit, isEdit }) => {
       } else {
         // Si la respuesta es un objeto con una clave (ejemplo: { data: [...] })
         setSelectMeasurements(res.data || []); // Ajusta según la estructura de la respuesta
+      }
+      setLoading(false);
+    } catch (error) {
+      setError('Error fetching measurements');
+      setLoading(false);
+      console.error('Error fetching measurements:', error);
+    }
+  };
+
+  const fillCategory = async () => {
+    setLoading(true); // Indicamos que la carga está en proceso
+    try {
+      const res = await fetchWithToken('basics/categories/', null, 'GET');
+      // Aquí suponemos que la respuesta es un array directo. Si es un objeto con una propiedad que contiene el array, ajusta esto.
+      if (Array.isArray(res)) {
+        setSelectCategories(res); // Guardamos el array de unidades en el estado
+      } else {
+        // Si la respuesta es un objeto con una clave (ejemplo: { data: [...] })
+        setSelectCategories(res.data || []); // Ajusta según la estructura de la respuesta
       }
       setLoading(false);
     } catch (error) {
@@ -97,9 +118,12 @@ const ProductForm = ({ productToEdit, isEdit }) => {
         category: formData.category
       }
 
-      const response = await fetchWithToken('products/', addProduct, 'POST');
+      const response = await fetchWithToken('products/', addProduct, 'POST');      
       if (response.updated) {
         alert('Producto agregado exitosamente.');
+        setTimeout(() => {          
+          window.location.reload(); // Recargar la página
+        }, 500);
         setFormData([...formData, addProduct]);
       } else {
         alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
@@ -135,9 +159,12 @@ const ProductForm = ({ productToEdit, isEdit }) => {
       <label>
         Categoría:
         <select name="category" value={formData.category.value} onChange={handleChange}>
-          <option value="1">TORTAS</option>
-          <option value="2">GALLETAS</option>
-          <option value="3">MUFFINS</option>
+        <option value="">Selecciona categoria</option>
+          {select_categories.map(item => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
         </select>
       </label>
       <label>
