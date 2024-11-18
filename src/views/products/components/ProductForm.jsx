@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ProductForm.scss";
-import { fetchWithToken } from "api/fetchHelpers";
+import { fetchWithToken, fetchWithTokenForm } from "api/fetchHelpers";
 
 const ProductForm = ({ productToEdit, isEdit }) => {
   const [formData, setFormData] = useState({
@@ -65,7 +65,6 @@ const ProductForm = ({ productToEdit, isEdit }) => {
 
   useEffect(() => {
     if (productToEdit) {
-      console.log(productToEdit)
       setIsEditF(isEdit)
       setFormData(productToEdit);
     }
@@ -89,47 +88,117 @@ const ProductForm = ({ productToEdit, isEdit }) => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    console.log(formData)
+
     if (isEditF) {
+     
+      const setAddProduct = new FormData();
+
+      // Desestructuración de formData para mayor claridad y limpieza
+      const { id, name, quantity, measurement_unit, price, description, category, photo } = formData;
+
+      // Construcción del objeto updatedProduct
       const updatedProduct = {
-        id: formData.id,
-        name: formData.name,
-        quantity: formData.quantity,
-        measurement_unit: typeof formData.measurement_unit == "object" ? formData.measurement_unit.value : formData.measurement_unit,
-        price: formData.price,
-        description: formData.description,
-        category: typeof formData.category == 'object' ? formData.category.value : formData.category
+        id,
+        name,
+        quantity,
+        measurement_unit: typeof measurement_unit === "object" ? measurement_unit.value : measurement_unit,
+        price,
+        description,
+        category: typeof category === 'object' ? category.value : category,
+        is_active: true
+      };
+
+      // Agregar los datos al FormData
+      Object.entries(updatedProduct).forEach(([key, value]) => {
+        if (key === 'photo' && value instanceof File) {
+          // Si es un archivo, agregarlo directamente
+          setAddProduct.append(key, value);
+        } else {
+          // Si no es un archivo, agregar el valor normal
+          setAddProduct.append(key, value);
+        }
+      });
+
+      // Si photo es un objeto, lo agregamos también
+      if (photo instanceof File) {
+        setAddProduct.append("photo", photo);
       }
 
-      const response = await fetchWithToken(`products/${updatedProduct.id}/`, updatedProduct, 'PUT');
+      // Enviar la solicitud PUT para actualizar el producto
+      const response = await fetchWithTokenForm(`products/${updatedProduct.id}/`, setAddProduct, 'PUT');
+
+      // Manejar la respuesta
       if (response.updated) {
         alert('Producto actualizado exitosamente.');
-        window.location.reload();
+        window.location.reload(); 
       } else {
-        alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
+        // Si la respuesta contiene errores, formatear la alerta
+        const errorFields = Object.keys(response);
+        const errorDescription = Object.values(response).flat()[0];
+        alert(`Error en campos: ${errorFields.join(', ')}\nDescripción: ${errorDescription}`);
       }
-    } else if (!isEditF) {
-      const addProduct = {
-        name: formData.name,
-        quantity: formData.quantity,
-        measurement_unit: typeof formData.measurement_unit == "object" ? formData.measurement_unit.value : formData.measurement_unit,
-        price: formData.price,
-        description: formData.description,
-        category: formData.category
+    } else if (!isEditF) {     
+      const addProduct = new FormData();
+      for (let key in formData) {
+        if (key === 'photo' && formData[key] instanceof File) {
+          // Verifica si el campo es un archivo
+          addProduct.append(key, formData[key]);
+        } else {
+          // Si no es un archivo, agrega el dato normalmente
+          addProduct.append(key, formData[key]);
+        }
       }
-
-      const response = await fetchWithToken('products/', addProduct, 'POST');      
+      addProduct.append("is_active", true)
+      const response = await fetchWithTokenForm('products/', addProduct, 'POST');
       if (response.updated) {
         alert('Producto agregado exitosamente.');
-        setTimeout(() => {          
-          window.location.reload(); // Recargar la página
-        }, 500);
+        window.location.reload(); // Recargar la página
         setFormData([...formData, addProduct]);
       } else {
         alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
       }
     }
   };
+
+
+  // const handleUpdate = async (e) => {
+  //   e.preventDefault();
+
+  //   // Crear un objeto FormData para enviar los datos
+  //   const formDataToSend = new FormData();
+  //   formDataToSend.append("name", formData.name);
+  //   formDataToSend.append("quantity", formData.quantity);
+  //   formDataToSend.append("measurement_unit",
+  //     typeof formData.measurement_unit === "object"
+  //       ? formData.measurement_unit.value
+  //       : formData.measurement_unit
+  //   );
+  //   formDataToSend.append("price", formData.price);
+  //   formDataToSend.append("description", formData.description);
+  //   formDataToSend.append("category",
+  //     typeof formData.category === "object"
+  //       ? formData.category.value
+  //       : formData.category
+  //   );
+  //   if (formData.photo) {
+  //     formDataToSend.append("photo", formData.photo);
+  //   }
+
+  //   // Editar o agregar producto
+  //   const endpoint = isEditF ? `products/${formData.id}/` : "products/";
+  //   const method = isEditF ? "PUT" : "POST";
+
+  //   console.log(formDataToSend)
+
+  //   const response = await fetchWithTokenForm(endpoint, formDataToSend, method);
+
+  //   if (response.updated) {
+  //     alert(`${isEditF ? "Producto actualizado" : "Producto agregado"} exitosamente.`);
+  //     // window.location.reload();
+  //   } else {
+  //     alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
+  //   }
+  // };
 
   return (
     <form className="responsive-form">
@@ -159,7 +228,7 @@ const ProductForm = ({ productToEdit, isEdit }) => {
       <label>
         Categoría:
         <select name="category" value={formData.category.value} onChange={handleChange}>
-        <option value="">Selecciona categoria</option>
+          <option value="">Selecciona categoria</option>
           {select_categories.map(item => (
             <option key={item.value} value={item.value}>
               {item.label}
