@@ -1,65 +1,87 @@
-import React, { useState } from 'react';
-import { Card } from 'react-bootstrap';
-import '../../../assets/scss/purchases/reportPurchase.scss';
-import '../../../assets/scss/purchases/Purchases.scss';
+import React, { useState } from "react";
+import { Form, Button, Container, Row, Col, Card, Table } from "react-bootstrap";
 
 const articles = [
-    { article_id: '001', name: 'Artículo A', description: 'Descripción del Artículo A', supplier: 'Proveedor A' },
-    { article_id: '002', name: 'Artículo B', description: 'Descripción del Artículo B', supplier: 'Proveedor B' },
+    { article_id: "001", name: "Artículo A", description: "Descripción del Artículo A", supplier: "Proveedor A" },
+    { article_id: "002", name: "Artículo B", description: "Descripción del Artículo B", supplier: "Proveedor B" },
     // Agrega más artículos según sea necesario
 ];
 
 const PurchaseReport = () => {
-    const [reportType, setReportType] = useState('');
-    const [date, setDate] = useState('');
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const [reports, setReports] = useState([]);
-    const [alert, setAlert] = useState('');
+    const [alert, setAlert] = useState("");
 
     const handleGenerateReport = () => {
-        if (!reportType || !date) {
-            setAlert('Por favor, selecciona el tipo de informe y la fecha.');
+        if (!startDate || !endDate) {
+            setAlert("Por favor, selecciona ambas fechas.");
             return;
         }
 
         // Simula generación de informe con referencia a artículos
         const newReports = [
-            { article_id: '001', quantity: 10, unit_value: 5.0, subtotal: 50.0 },
-            { article_id: '002', quantity: 5, unit_value: 20.0, subtotal: 100.0 },
+            { article_id: "001", quantity: 10, unit_value: 5.0, subtotal: 50.0 },
+            { article_id: "002", quantity: 5, unit_value: 20.0, subtotal: 100.0 },
         ];
         setReports(newReports);
-        setAlert('Informe generado correctamente.');
+        setAlert("Informe generado correctamente.");
+    };
+
+    const handleExportPDF = () => {
+        console.log("Generando reporte en PDF...");
+    };
+
+    const handleExportExcel = () => {
+        console.log("Generando reporte en Excel...");
     };
 
     // Función para obtener detalles del artículo a partir de article_id
     const getArticleDetails = (article_id) => {
-        return articles.find(article => article.article_id === article_id) || {};
+        return articles.find((article) => article.article_id === article_id) || {};
     };
 
     return (
-
-        <React.Fragment>
-            <Card.Body>
-                <div className="purchase-report">
+        <Container>
+            <Card className="mt-4">
+                <Card.Body>
                     <h2>Informe de Compras</h2>
-                    <div className="filters">
-                        <label>Fecha:</label>
-                        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+                    <Form>
+                        <Row className="mb-3">
+                            <Col>
+                                <Form.Group controlId="startDate">
+                                    <Form.Label>Fecha de inicio</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group controlId="endDate">
+                                    <Form.Label>Fecha de fin</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        value={endDate}
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Button
+                            className="mb-3"
+                            variant="primary"
+                            onClick={handleGenerateReport}
+                        >
+                            Generar Informe
+                        </Button>
+                    </Form>
 
-                        <label>Tipo de Informe:</label>
-                        <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
-                            <option value="">Seleccionar</option>
-                            <option value="daily">Diario</option>
-                            <option value="weekly">Semanal</option>
-                            <option value="monthly">Mensual</option>
-                        </select>
-
-                        <button onClick={handleGenerateReport}>Generar Informe</button>
-                    </div>
-
-                    {alert && <div className="alert">{alert}</div>}
+                    {alert && <div className="alert alert-warning">{alert}</div>}
 
                     {reports.length > 0 && (
-                        <table className="report-table">
+                        <Table striped bordered hover>
                             <thead>
                                 <tr>
                                     <th>Article ID</th>
@@ -87,17 +109,20 @@ const PurchaseReport = () => {
                                     );
                                 })}
                             </tbody>
-                        </table>
+                        </Table>
                     )}
 
-                    <div className="export-buttons">
-                        <button>Exportar a PDF</button>
-                        <button>Exportar a Excel</button>
+                    <div className="d-flex justify-content-center mt-3">
+                        <Button variant="success" onClick={handleExportPDF} className="me-2">
+                            Exportar a PDF
+                        </Button>
+                        <Button variant="info" onClick={handleExportExcel}>
+                            Exportar a Excel
+                        </Button>
                     </div>
-                </div>
-
-            </Card.Body>
-        </React.Fragment>
+                </Card.Body>
+            </Card>
+        </Container>
     );
 };
 
