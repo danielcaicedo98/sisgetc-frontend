@@ -27,9 +27,37 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       setProveedor([purchase.supplier]); // Cambiar a `supplier`
       setDescripcion(purchase.description || ''); // Manejar descripción nula
       setProductos(purchase.purchase_details); // Cambiar a `purchase_details`
-      setTotal(purchase.total);
+      setTotal(purchase.total);      
     }
   }, [purchase]);
+  const [select_measurements, setSelectMeasurements] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fillMeasurement();
+  }, []);
+
+  const fillMeasurement = async () => {
+    setLoading(true); // Indicamos que la carga está en proceso
+    try {
+      const res = await fetchWithToken('/basics/measurement_units/', null, 'GET');
+      console.log(res)
+
+      // Aquí suponemos que la respuesta es un array directo. Si es un objeto con una propiedad que contiene el array, ajusta esto.
+      if (Array.isArray(res)) {
+        setSelectMeasurements(res); // Guardamos el array de unidades en el estado
+      } else {
+        // Si la respuesta es un objeto con una clave (ejemplo: { data: [...] })
+        setSelectMeasurements(res.data || []); // Ajusta según la estructura de la respuesta
+      }
+      setLoading(false);
+    } catch (error) {
+      setError('Error fetching measurements');
+      setLoading(false);
+      console.error('Error fetching measurements:', error);
+    }
+  };
 
   // Calcular el total cada vez que cambian los productos
   useEffect(() => {
@@ -40,12 +68,55 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
     setTotal(newTotal);
   }, [productos]);
 
-  const searchProviders = async (query) => {
-    // Lógica para buscar proveedores
+  const searchProducts = async (query) => {
+    if (!query) {
+      setProductOptions([]);
+      console.log("no encontrado")
+      return;
+    }
+    setIsLoadingProducts(true);
+
+    try {
+      // Llamar a fetchWithToken para obtener los productos filtrados por el nombre
+      const res = await fetchWithToken(`basics/articles/?name_like=${encodeURIComponent(query)}`, null, 'GET');
+      setProductOptions(res);
+
+    } catch (error) {
+      setIsLoadingProviders(false);
+      console.error('Error fetching products:', error);
+
+    } finally {
+      setIsLoadingProducts(false);
+
+    }
   };
 
-  const searchProducts = async (query) => {
-    // Lógica para buscar productos
+  const searchProviders = async (query) => {
+    if (!query) {
+      setProviderOptions([]);
+      console.log("no encontrado")
+      return;
+    }
+
+    setIsLoadingProviders(true);
+
+    try {
+      // Llamar a fetchWithToken para obtener los proveedores filtrados por el nombre
+      const res = await fetchWithToken(`/basics/suppliers/?name_like=${encodeURIComponent(query)}`, null, 'GET');
+      const data = res.map(item => ({
+        id: item.value,   // Cambiar "value" por "id"
+        name: item.label  // Cambiar "label" por "name"
+      }));
+
+      setProviderOptions(data);
+      console.log(data)
+    } catch (error) {
+      console.error('Error fetching providers:', error);
+      setIsLoadingProviders(false);
+
+    } finally {
+      setIsLoadingProviders(false);
+    }
   };
 
   const handleProviderInputChange = (query) => {
@@ -59,13 +130,14 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   const handleProductChange = (index, field, value) => {
     const updatedProductos = [...productos];
     if (field === 'producto') {
-      updatedProductos[index].article = value; // Cambiar a `article`
-      updatedProductos[index].text = value ? value.label : ''; // Asumir que `label` es el nombre
+      updatedProductos[index].article = value;
+    } else if (field === 'unidad') {
+      updatedProductos[index].measurment_unit = value; // Cambiar para usar el objeto completo
     } else {
       updatedProductos[index][field] = value;
     }
     setProductos(updatedProductos);
-  };
+  };  
 
   const addProduct = () => {
     setProductos([...productos, { article: null, quantity: 1, unit_price: 0, measurment_unit: { label: '' } }]);
@@ -102,8 +174,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       alert('Por favor, corrige los errores en el formulario.');
       return;
     }
-    console.log(proveedor)
-
+    
     const updatedPurchase = {
       purchase_date: fecha, // Cambiar a `purchase_date`
       supplier: proveedor[0].id, // Cambiar a `supplier`
@@ -112,7 +183,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
       purchase_details: productos.map(p => ({
         quantity: p.quantity,
         unit_price: p.unit_price,
-        measurment_unit: "1",
+        measurment_unit: p.measurment_unit.value,
         subtotal: p.quantity * p.unit_price,
         article: p.article.value
       })),
@@ -214,14 +285,16 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
                 <Form.Group className="mb-3 flex-fill" controlId={`formUnidad_${index}`}>
                   <Form.Label>Unidad</Form.Label>
                   <Form.Select
-                    value={producto.measurment_unit.label}
-                    onChange={(e) => handleProductChange(index, 'unidad', { label: e.target.value })}
+                    value={producto.measurment_unit.value}
+                    onChange={(e) => handleProductChange(index, 'unidad', { label: e.target.selectedOptions[0].text, value: e.target.value })}
                     isInvalid={!!errors[`unidad_${index}`]}
                   >
-                    <option value="">Selecciona unidad</option>
-                    <option value="Unidades">Unidades</option>
-                    <option value="Gramos">Gramos</option>
-                    <option value="Gramos">{"Kilo Gramo"}</option>
+                    {/* <option value="">Selecciona unidad</option> */}
+                    {select_measurements.map(item => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
                     {errors[`unidad_${index}`]}

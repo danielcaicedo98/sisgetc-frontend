@@ -21,7 +21,7 @@ const PurchasesList = () => {
     setLoading(true);
     
     try {
-      const data = await fetchWithToken('purchases', null, 'GET');
+      const data = await fetchWithToken('purchases/', null, 'GET');
       setPurchases(data);
       console.log(data);
     } catch (error) {

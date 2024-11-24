@@ -20,6 +20,7 @@ const Purchases = () => {
     unidad: 'Unidades',
     productoObj: null
   }]);
+
   const [errors, setErrors] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
   const [productToRemove, setProductToRemove] = useState(null);
@@ -47,6 +48,32 @@ const Purchases = () => {
   const [providerDebounceTimer, setProviderDebounceTimer] = useState(null);
   const [productDebounceTimer, setProductDebounceTimer] = useState(null);
 
+  const searchProducts = async (query) => {
+    if (!query) {
+      setProductOptions([]);
+      console.log("no encontrado")
+      return;
+    }
+
+    setIsLoadingProducts(true);
+
+    try {
+      // Llamar a fetchWithToken para obtener los productos filtrados por el nombre
+      // const res = await fetchWithToken(`products?name_like=${encodeURIComponent(query)}`, null, 'GET');
+      const res = await fetchWithToken(`basics/articles/?name_like=${encodeURIComponent(query)}`, null, 'GET');
+      const data = res.map(item => ({
+        id: item.value,   // Cambiar "value" por "id"
+        name: item.label  // Cambiar "label" por "name"
+      }));
+
+      setProductOptions(data);
+    } catch (error) {
+      setIsLoadingProviders(false);
+      console.error('Error fetching products:', error);
+    } finally {
+      setIsLoadingProducts(false);
+    }
+  };
 
   const searchProviders = async (query) => {
     if (!query) {
@@ -59,74 +86,24 @@ const Purchases = () => {
 
     try {
       // Llamar a fetchWithToken para obtener los proveedores filtrados por el nombre
-      const data = await fetchWithToken(`providers?name_like=${encodeURIComponent(query)}`, null, 'GET');
-
-      const uniqueNames = new Set(data.map(provider => provider.name));
-
-      // Agregar el nuevo proveedor solo si no existe
-      if (!uniqueNames.has(query)) {
-        uniqueNames.add(query);
-        data.push({
-          id: `${Date.now() + Math.random()}`,
-          name: `${query}`
-        });
-      }
+      const res = await fetchWithToken(`/basics/suppliers/?name_like=${encodeURIComponent(query)}`, null, 'GET');
+      const data = res.map(item => ({
+        id: item.value,   // Cambiar "value" por "id"
+        name: item.label  // Cambiar "label" por "name"
+      }));
+      
 
       setProviderOptions(data);
       console.log(data)
     } catch (error) {
       console.error('Error fetching providers:', error);
-      setIsLoadingProviders(false);
-      setProviderOptions([{
-        id: `${Date.now() + Math.random()}`,
-        name: `${query}`
-      }])
+      setIsLoadingProviders(false);     
 
 
     } finally {
       setIsLoadingProviders(false);
     }
   };
-
-  // Función para buscar productos  
-
-  const searchProducts = async (query) => {
-    if (!query) {
-      setProductOptions([]);
-      console.log("no encontrado")
-      return;
-    }
-
-    setIsLoadingProducts(true);
-
-    try {
-      // Llamar a fetchWithToken para obtener los productos filtrados por el nombre
-      const data = await fetchWithToken(`products?name_like=${encodeURIComponent(query)}`, null, 'GET');
-
-      const uniqueNames = new Set(data.map(product => product.name));
-
-      // Agregar el nuevo producto solo si no existe
-      if (!uniqueNames.has(query)) {
-        uniqueNames.add(query);
-        data.push({
-          id: `${Date.now() + Math.random()}`,
-          name: `${query}`
-        });
-      }
-
-      setProductOptions(data);
-    } catch (error) {
-      setIsLoadingProviders(false);
-      setProductOptions([{
-        id: `${Date.now() + Math.random()}`,
-        name: `${query}`
-      }])
-      console.error('Error fetching products:', error);
-    } finally {
-      setIsLoadingProducts(false);
-    }
-  };
-
 
   // Manejar cambios en el proveedor con debounce
   const handleProviderInputChange = (query) => {
@@ -215,7 +192,6 @@ const Purchases = () => {
     }
   };
 
-
   useEffect(() => {
     const newTotal = productos.reduce((acc, producto) => {
       const precio = parseFloat(producto.precio) || 0;
@@ -278,34 +254,35 @@ const Purchases = () => {
 
 
   const handleSubmit = async (e) => {
-    console.log(descripcion)
+    console.log(productos)
     e.preventDefault();
     if (validate()) {
       const compra = {
         purchase_date: fecha,
-        // supplier: proveedor[0].id,
-        supplier: 1,  // Asumiendo que solo se selecciona un proveedor
+        supplier: proveedor[0].id,  // Asumiendo que solo se selecciona un proveedor
         description: descripcion,
         total: total,
         is_active: true,
         payment_methon: 1,
         purchase_details: productos.map(p => ({
-          // article: p.productoObj.id, // Incluye el objeto completo del producto
-          article: 1,
+          article: p.productoObj.id, // Incluye el objeto completo del producto
           quantity: p.cantidad,
-          // measurment_unit: p.unidad,
-          measurment_unit: 2,
+          measurment_unit: p.unidad,
           unit_price: p.precio,
-          subtotal: 1
+          subtotal: (p.unidad * p.precio)
         }))
       };
 
       try {
         const response = await fetchWithToken('purchases/', compra, 'POST'); // Llamar a fetchWithToken
-        console.log(response)
-        alert('Compra guardada exitosamente.');
-        // Redireccionar a la lista de compras después de guardar
-        navigate('/purchases-list');
+        console.log(response.created)
+        if (response.created) {
+          alert('Compra guardada exitosamente.');
+          navigate('/purchases-list');
+        }
+        else {
+          alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
+        }
       } catch (error) {
         console.error('Error al guardar la compra:', error);
         alert('Hubo un problema al guardar la compra. Por favor, inténtalo nuevamente.');
@@ -314,6 +291,7 @@ const Purchases = () => {
       alert('Por favor, corrige los errores en el formulario.');
     }
   };
+
   return (
     <React.Fragment>
       <Card.Body>
@@ -422,6 +400,7 @@ const Purchases = () => {
       </Modal>
     </React.Fragment>
   );
+  
 };
 
 export default Purchases;

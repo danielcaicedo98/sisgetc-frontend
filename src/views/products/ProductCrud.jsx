@@ -2,108 +2,26 @@ import React, { useState, useEffect } from 'react';
 import ProductList from './components/ProductList';
 import ProductForm from './components/ProductForm';
 import { fetchWithToken } from 'api/fetchHelpers';
+import DeleteProductModal from './components/DeleteProductModal';
 
 const ProductCrud = () => {
-  const [products, setProducts] = useState([
-    {
-      name: "Cupcake Amor",
-      quantity: 10,
-      measurement_unit: "unidad",
-      price: 5500,
-      description: "Cupcake con bizcocho artesanal. Puedes disfrutarlo en sabores como: Coco, Maní, Vainilla, Chocolate, Maracuyá … etc",
-      category: "Cupakes",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2022/09/IMG_20220916_200154-768x1024.jpg"
-    },
-    {
-      name: "DripCake REF01 1LB",
-      quantity: 5,
-      measurement_unit: "unidad",
-      price: 108000,
-      description: "Deliciosa torta alta con efecto chorreante y brillos.",
-      category: "DripCakes",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/10/1633067145494-1-1-247x296.jpg"
-    },
-    {
-      name: "Torta Gourmet Maracuya",
-      quantity: 10,
-      measurement_unit: "Kilo Gramo",
-      price: 12000,
-      description: "Torta finamente preparada con productos seleccionados y 100% naturales,  con un delicioso sabor y cubierta de maracuyá.",
-      category: "Tortas Gourmet",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/08/tb_maracuya_02-600x616.jpg"
-    },
-    {
-      name: "Cupcake Amor",
-      quantity: 10,
-      measurement_unit: "unidad",
-      price: 5500,
-      description: "Cupcake con bizcocho artesanal. Puedes disfrutarlo en sabores como: Coco, Maní, Vainilla, Chocolate, Maracuyá … etc",
-      category: "Cupakes",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2022/09/IMG_20220916_200154-768x1024.jpg"
-    },
-    {
-      name: "DripCake REF01 1LB",
-      quantity: 5,
-      measurement_unit: "unidad",
-      price: 108000,
-      description: "Deliciosa torta alta con efecto chorreante y brillos.",
-      category: "DripCakes",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/10/1633067145494-1-1-247x296.jpg"
-    },
-    {
-      name: "Torta Gourmet Maracuya",
-      quantity: 10,
-      measurement_unit: "kg",
-      price: 12000,
-      description: "Torta finamente preparada con productos seleccionados y 100% naturales,  con un delicioso sabor y cubierta de maracuyá.",
-      category: "Tortas Gourmet",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/08/tb_maracuya_02-600x616.jpg"
-    },
-    {
-      name: "Cupcake Amor",
-      quantity: 10,
-      measurement_unit: "unidad",
-      price: 5500,
-      description: "Cupcake con bizcocho artesanal. Puedes disfrutarlo en sabores como: Coco, Maní, Vainilla, Chocolate, Maracuyá … etc",
-      category: "Cupakes",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2022/09/IMG_20220916_200154-768x1024.jpg"
-    },
-    {
-      name: "DripCake REF01 1LB",
-      quantity: 5,
-      measurement_unit: "unidad",
-      price: 108000,
-      description: "Deliciosa torta alta con efecto chorreante y brillos.",
-      category: "DripCakes",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/10/1633067145494-1-1-247x296.jpg"
-    },
-    {
-      name: "Torta Gourmet Maracuya",
-      quantity: 10,
-      measurement_unit: "kg",
-      price: 12000,
-      description: "Torta finamente preparada con productos seleccionados y 100% naturales,  con un delicioso sabor y cubierta de maracuyá.",
-      category: "Tortas Gourmet",
-      photo: "https://www.tortascrispan.com/wp-content/uploads/2021/08/tb_maracuya_02-600x616.jpg"
-    },
-  ]);
+  const [products, setProducts] = useState([]);
   const [productToEdit, setProductToEdit] = useState(null);
-  const [isEdit,setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
-    const response = await fetchWithToken('products', null, 'GET');
-    // const data = await response.json();
+    const response = await fetchWithToken('products/', null, 'GET');
     console.log(response)
     setProducts(response);
   };
 
   const addProduct = async (product) => {
 
-    const response = await fetchWithToken('products', product, 'POST');
+    const response = await fetchWithToken('products/', product, 'POST');
     const newProduct = await response.json();
     setProducts([...products, product]);
   };
@@ -114,18 +32,46 @@ const ProductCrud = () => {
     setProducts(products.map((p) => (p.id === product.id ? product : p)));
     setProductToEdit(null);
   };
+  
+  const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
+  const [productToDelete, setProductToDelete] = useState(null); // Producto seleccionado para eliminar
+  const [confirmationMessage, setConfirmationMessage] = useState(''); // Mensaje de confirmación
 
+  // Función para eliminar el producto
   const deleteProduct = async (id) => {
-    console.log(id)
-    const response = await fetchWithToken(`products/${id}/`, null, 'DELETE');
-    console.log(response)
-    setProducts(products.filter((p) => p.id !== id));
+    setShowModal(false);
+    const response = await fetchWithToken(`products/${id}/`, null, 'DELETE');   
+  };
+
+  // Función para abrir el modal
+  const handleShowModal = (id) => {
+    setProductToDelete(id); // Guardar el id del producto a eliminar
+    setShowModal(true); // Mostrar el modal
+  };
+
+  // Función para cerrar el modal sin hacer nada
+  const handleCloseModal = () => {
+    setShowModal(false); // Cerrar el modal
+    setProductToDelete(null); // Resetear el id del producto
+  };
+
+  // Función para confirmar la eliminación
+  const handleConfirmDeletion = () => {
+    if (productToDelete !== null) {
+      deleteProduct(productToDelete); // Eliminar el producto
+      setTimeout(() => {
+        alert('Producto Eliminado');
+        window.location.reload(); // Recargar la página
+      }, 500);
+    }
+    // Cerrar el modal
+    setProductToDelete(null); // Resetear el id del producto
   };
 
   const handleEdit = (product) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setIsEdit(true)
     setProductToEdit(product);
-    console.log(product)
   };
 
   const handleSubmit = (product) => {
@@ -139,8 +85,13 @@ const ProductCrud = () => {
   return (
     <div className="container mt-4">
       <h1>Gestiona tus Productos</h1>
+      <DeleteProductModal
+        showModal={showModal}
+        handleClose={handleCloseModal}
+        handleConfirm={handleConfirmDeletion}
+      />
       <ProductForm onSubmit={handleSubmit} productToEdit={productToEdit} isEdit={isEdit} />
-      <ProductList products={products} onEdit={handleEdit} onDelete={deleteProduct} />
+      <ProductList products={products} onEdit={handleEdit} onDelete={handleShowModal} />
     </div>
   );
 };
