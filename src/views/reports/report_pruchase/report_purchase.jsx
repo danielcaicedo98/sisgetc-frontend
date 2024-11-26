@@ -45,7 +45,7 @@ const PurchaseReport = () => {
         <Container>
             <Card className="mt-4">
                 <Card.Body>
-                    <h2>Informe de Compras</h2>
+                    <h2>Reporte de Compras</h2>
                     <Form>
                         <Row className="mb-3">
                             <Col>
