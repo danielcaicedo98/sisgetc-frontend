@@ -215,7 +215,7 @@ const PurchasesList = () => {
 
     return (
         <div>
-            <h1 className="text-center">Lista de Compras</h1>
+            <h1 className="text-center">Lista de Ventas</h1>
             <Table striped bordered hover>
                 <thead>
                     <tr>

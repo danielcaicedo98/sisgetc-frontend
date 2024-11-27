@@ -6,10 +6,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import { useNavigate } from 'react-router-dom';
 
 const Sales = () => {
-  const [product, setProduct] = useState([{
-    name: "",
-    id: ""
-  }]);
+  const [product, setProduct] = useState([]);
   const [article, setArticle] = useState([]);
   const [quantity, setQuantity] = useState(0);
   const [unitPrice, setUnitPrice] = useState('');
@@ -106,7 +103,6 @@ const Sales = () => {
         name: item.label  // Cambiar "label" por "name"
       }));
 
-
       setProviderOptions(data);
       console.log(data)
     } catch (error) {
@@ -164,29 +160,34 @@ const Sales = () => {
   };
 
   const addToCart = () => {
-    if (!product) {
-      setError('Por favor, ingrese un producto.');
-      return;
-    }
     console.log(product)
+    // try {
+      if (!product) {
+        setError('Por favor, ingrese un producto.');
+        return;
+      }
 
-    const price = parseFloat(unitPrice) || 0;
-    const newProduct = {
-      product: product,
-      quantity,
-      unitPrice: price,
-      total: quantity * price,
-    };
+      const price = parseFloat(unitPrice) || 0;
+      const newProduct = {
+        product: product,
+        quantity,
+        unitPrice: price,
+        total: quantity * price,
+      };
 
-    setCart([...cart, newProduct]);
-    setProduct([{
-      name: "",
-      id: ""
-    }]);
-    setQuantity(0);
-    setUnitPrice('');
-    setTotalSale(0);
-    setError('');
+      setCart([...cart, newProduct]);
+      setProduct([{
+        name: "",
+        id: ""
+      }]);
+      setQuantity(0);
+      setUnitPrice('');
+      setTotalSale(0);
+      setError('');
+    // }catch (error) {
+    //   alert("Por favor diligencia todos los datos")
+    // }
+    
   };
 
   const handleEditProduct = (index) => {
@@ -205,18 +206,11 @@ const Sales = () => {
   };
 
   const handleCheckout = async () => {
-    console.log("Venta enviada:", cart);
-    console.log("Método de pago:", paymentMethod);
-    console.log(proveedor)
+
     if (!paymentMethod) {
       setError('Por favor, seleccione un método de pago.');
       return;
     }
-
-    // console.log("Venta enviada:", cart);
-    // console.log("Método de pago:", paymentMethod);
-    // setCart([]);
-    // setPaymentMethod('');
 
     const addVenta = {
       sale_details: cart.map(p => ({
@@ -231,7 +225,6 @@ const Sales = () => {
       customer: proveedor[0].id,
       sale_status: 1
     }
-    console.log(addVenta)
 
     try {
       const response = await fetchWithToken('sales/', addVenta, 'POST'); // Llamar a fetchWithToken
@@ -303,18 +296,6 @@ const Sales = () => {
                     minLength={1}
                     clearButton
                   />
-                </Form.Group>
-                <Form.Group controlId="saleStatus">
-                  <Form.Label className="fw-bold">Estado de la Venta</Form.Label>
-                  <Form.Control
-                    as="select"
-                    value={saleStatus}
-                    onChange={(e) => setSaleStatus(e.target.value)}
-                  >
-                    <option value="">Seleccione...</option>
-                    <option value="Pagado">Pagado</option>
-                    <option value="Pendiente">Pendiente</option>
-                  </Form.Control>
                 </Form.Group>
                 <Row className="mt-3">
                   <Col>
@@ -394,6 +375,18 @@ const Sales = () => {
                           {item.label}
                         </option>
                       ))}
+                    </Form.Control>
+                  </Form.Group>
+                  <Form.Group controlId="saleStatus">
+                    <Form.Label className="fw-bold">Estado de la Venta</Form.Label>
+                    <Form.Control
+                      as="select"
+                      value={saleStatus}
+                      onChange={(e) => setSaleStatus(e.target.value)}
+                    >
+                      <option value="">Seleccione...</option>
+                      <option value="Pagado">Pagado</option>
+                      <option value="Pendiente">Pendiente</option>
                     </Form.Control>
                   </Form.Group>
                   <Button style={{ backgroundImage: 'linear-gradient(to left, #29b1ef, #0675a8)' }} className="mt-3" onClick={handleCheckout}>

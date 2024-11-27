@@ -70,44 +70,35 @@ export const fetchWithTokenForm = async (endpoint, body, method) => {
     const response = await fetch(`${baseURL}/${endpoint}`, options);
     return response.json();
   };
-  
-// export const fetchWithTokenForm = async (endpoint, data, method) => {
-//     const url = `${baseURL}/${endpoint}`;
-//     const token = localStorage.getItem('token') || '';
 
-//     const headers = {
-//         'Authorization': `Bearer ${token}`,
-//     };
 
-//     // Verificar si estamos enviando un 'GET' o 'DELETE' (sin cuerpo)
-//     if (method === 'GET' || method === 'DELETE') {
-//         const response = await fetch(url, {
-//             method,
-//             headers,
-//         });
-//         return response.json();
-//     } else {
-//         // Crear FormData
-//         const formData = new FormData();
+  export const fetchWithTokenBlob = async (endpoint, data, method) => {
+    const url = `${baseURL}/${endpoint}`;
+    const token = localStorage.getItem('token') || '';
 
-//         // Agregar datos a FormData
-//         for (let key in data) {
-//             if (key === 'photo' && data[key] instanceof File) {
-//                 // Verifica si el campo es un archivo
-//                 formData.append(key, data[key]);
-//             } else {
-//                 // Si no es un archivo, agrega el dato normalmente
-//                 formData.append(key, data[key]);
-//             }
-//         }
+    if (method === 'GET') {
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
 
-//         // Realizar la solicitud con FormData (sin especificar Content-Type)
-//         const response = await fetch(url, {
-//             method,
-//             headers,
-//             body: formData, // Usar FormData en lugar de JSON.stringify
-//         });
+        // Verifica si la respuesta es exitosa
+        if (response.ok) {
+            // Si se trata de un archivo, retorna el blob
+            const contentType = response.headers.get('Content-Type');
+            if (contentType && contentType.startsWith('application/ms-excel')) {
+                const blob = await response.blob();
+                // Aquí puedes hacer lo que necesites con el archivo (ej. descargarlo)
+                return blob;
+            }
 
-//         return response.json();
-//     }
-// };
+            // Si no es un archivo, regresa la respuesta como JSON
+            return response.json();
+        } else {
+            // Si la respuesta no es exitosa, lanzar un error
+            throw new Error(`Error en la solicitud: ${response.statusText}`);
+        }
+    }
+} 
