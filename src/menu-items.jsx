@@ -22,11 +22,11 @@ const menuItems = {
           url: '/sales'
         },
         {
-          id: 'reports',
-          title: 'Reportes',
+          id: 'saleslist',
+          title: 'Historial de Ventas',
           type: 'item',
           icon: 'feather icon-clipboard',
-          url: '/reports'
+          url: '/saleslist'
         }
         ,
         {
@@ -85,7 +85,31 @@ const menuItems = {
 
       ]
 
-    }
+    },
+    //Bloque de informes
+    {
+      id: 'reports',
+      title: 'Informes',
+      type: 'group',
+      icon: 'icon-navigation',
+      children: [
+        {
+          id: 'report_purchases',
+          title: 'Informe Compra',
+          type: 'item',
+          icon: 'feather icon-shopping-cart',
+          url: '/reportPurchases'
+        },
+        {
+          id: 'report_sales',
+          title: 'Informe Ventas',
+          type: 'item',
+          icon: 'feather icon-shopping-cart',
+          url: '/salesReport'
+        }
+      ]
+
+    },
   ]
 };
 

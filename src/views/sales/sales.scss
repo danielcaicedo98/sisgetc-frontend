@@ -1,0 +1,28 @@
+.custom-modal .modal-dialog {
+    max-width: 80%; /* Establece el tamaño original del modal a 200% */
+  }
+  
+  @media (max-width: 1200px) {
+    .custom-modal .modal-dialog {
+      max-width: 80%; /* Reduce el tamaño a un 90% en pantallas grandes */
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .custom-modal .modal-dialog {
+      max-width: 80%; /* Reduce el tamaño a un 80% en pantallas medianas */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .custom-modal .modal-dialog {
+      max-width: 100%; /* El modal ocupa el 100% en pantallas pequeñas */
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .custom-modal .modal-dialog {
+      max-width: 100%; /* Asegura que el modal ocupe el 100% en dispositivos móviles */
+    }
+  }
+  

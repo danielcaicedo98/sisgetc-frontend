@@ -13,13 +13,62 @@ const customerList = () => {
 
     // Estado para los filtros
     const [filters, setFilters] = useState({
-        date: '',
+        month: '',
         customer: ''
     });
 
-    const fetchPurchases = async () => {
-        // setLoading(true);
+    const [select_identification, setSelecIdentification] = useState([]);
+    const [select_city, setSelectCity] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
+    useEffect(() => {
+        fillIdentification();
+        fillCity();
+    }, []);
+
+    const fillIdentification = async () => {
+        setLoading(true); // Indicamos que la carga está en proceso
+        try {
+            const res = await fetchWithToken('basics/identification_types/', null, 'GET');
+
+            // Aquí suponemos que la respuesta es un array directo. Si es un objeto con una propiedad que contiene el array, ajusta esto.
+            if (Array.isArray(res)) {
+                setSelecIdentification(res); // Guardamos el array de unidades en el estado
+            } else {
+                // Si la respuesta es un objeto con una clave (ejemplo: { data: [...] })
+                setSelectMeasurements(res.data || []); // Ajusta según la estructura de la respuesta
+            }
+            setLoading(false);
+        } catch (error) {
+            setError('Error fetching measurements');
+            setLoading(false);
+            console.error('Error fetching measurements:', error);
+        }
+    };
+
+    const fillCity = async () => {
+        setLoading(true); // Indicamos que la carga está en proceso
+        try {
+            const res = await fetchWithToken('basics/cities/', null, 'GET');
+
+            // Aquí suponemos que la respuesta es un array directo. Si es un objeto con una propiedad que contiene el array, ajusta esto.
+            if (Array.isArray(res)) {
+                setSelectCity(res); // Guardamos el array de unidades en el estado
+            } else {
+                // Si la respuesta es un objeto con una clave (ejemplo: { data: [...] })
+                setSelectCity(res.data || []); // Ajusta según la estructura de la respuesta
+            }
+
+        } catch (error) {
+            setError('Error fetching cities');
+
+            console.error('Error fetching cities:', error);
+        }
+    };
+
+    const fetchPurchases = async () => {
+        
         try {
             const data = await fetchWithToken('customers/', null, 'GET');
             setCustomers(data);
@@ -48,15 +97,24 @@ const customerList = () => {
     const closeModal = () => {
         setIsModalOpen(false);
         setCurrentCustomer(null);
-    };
+    };    
 
-    // Función para manejar el cambio en los campos del modal
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setCurrentCustomer({
-            ...currentCustomer,
-            [name]: value,
-        });
+        const { name, value, type } = e.target;
+
+        // Si el campo es un select (y está manejando objetos con `value` y `label`),
+        // debemos actualizar el estado con el valor completo, no solo el valor simple
+        if (type === 'select-one') {
+            setCurrentCustomer({
+                ...currentCustomer,
+                [name]: { value, label: e.target.selectedOptions[0].text } // Guardamos tanto `value` como `label`
+            });
+        } else {
+            setCurrentCustomer({
+                ...currentCustomer,
+                [name]: value
+            });
+        }
     };
 
     const handleUpdateCustomer = (updatedCustomer) => {
@@ -106,6 +164,18 @@ const customerList = () => {
             [name]: value,
         });
     };
+    
+    const filteredCustomers = customers.filter((customer) => {
+        const matchesMonth =
+            filters.month === '' ||
+            (customer.birth_date && new Date(customer.birth_date).getMonth() + 1 === parseInt(filters.month));
+        const matchesCustomer =
+            filters.customer === '' ||
+            customer.name.toLowerCase().includes(filters.customer.toLowerCase()) ||
+            customer.email.toLowerCase().includes(filters.customer.toLowerCase());
+
+        return matchesMonth && matchesCustomer;
+    });
 
     return (
         <div className="customer-list-container">
@@ -113,14 +183,19 @@ const customerList = () => {
             {/* Filtros */}
             <Row className="mb-3">
                 <Col md={4}>
-                    <Form.Group controlId="filterDate">
-                        <Form.Label>Fecha:</Form.Label>
+                    <Form.Group controlId="filterMonth">
+                        <Form.Label>Mes de Nacimiento:</Form.Label>
                         <Form.Control
-                            type="date"
-                            name="date"
-                            value={filters.date}
+                            as="select"
+                            name="month"
+                            value={filters.month}
                             onChange={handleFilterChange}
-                        />
+                        >
+                            <option value="">Selecciona el mes</option>
+                            {['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'].map((month, index) => (
+                                <option key={index} value={index + 1}>{month}</option>
+                            ))}
+                        </Form.Control>
                     </Form.Group>
                 </Col>
                 <Col md={4}>
@@ -136,21 +211,21 @@ const customerList = () => {
                     </Form.Group>
                 </Col>
             </Row>
-
-
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>
                         <th>Nombre</th>
                         <th>Email</th>
+                        <th>Fecha de nacimiento</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {customers.map(customer => (
+                    {filteredCustomers.map(customer => (
                         <tr key={customer.id}>
                             <td>{customer.name}</td>
                             <td>{customer.email}</td>
+                            <td>{customer.birth_date}</td>
                             <td>
                                 <Button
                                     variant="info"
@@ -165,7 +240,6 @@ const customerList = () => {
                     ))}
                 </tbody>
             </Table>
-
             {/* Modal para editar cliente */}
             {currentCustomer && (
                 <Modal show={isModalOpen} onHide={closeModal} size="lg" centered>
@@ -192,17 +266,19 @@ const customerList = () => {
                                         <Form.Control
                                             as="select"
                                             name="identification_type"
-                                            value={currentCustomer.identification_type || ''}
+                                            value={currentCustomer.identification_type.value || ''}
                                             onChange={handleChange}
                                         >
-                                            <option value="CC">Cédula</option>
-                                            <option value="TI">Tarjeta de Identidad</option>
-                                            <option value="CE">Cédula de Extranjería</option>
+                                            <option value="">Selecciona</option>
+                                            {select_identification.map(item => (
+                                                <option key={item.value} value={item.value}>
+                                                    {item.label}
+                                                </option>
+                                            ))}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
                             </Row>
-
                             <Row>
                                 <Col md={6}>
                                     <Form.Group controlId="formIdentificationNumber">
@@ -252,7 +328,6 @@ const customerList = () => {
                                     </Form.Group>
                                 </Col>
                             </Row>
-
                             <Form.Group controlId="formResidentialAddress">
                                 <Form.Label>Dirección Residencial</Form.Label>
                                 <Form.Control
@@ -262,18 +337,20 @@ const customerList = () => {
                                     onChange={handleChange}
                                 />
                             </Form.Group>
-
                             <Form.Group controlId="formCityId">
                                 <Form.Label>Ciudad</Form.Label>
                                 <Form.Control
                                     as="select"
-                                    name="city_id"
-                                    value={currentCustomer.city_id || ''}
+                                    name="city"
+                                    value={currentCustomer.city.value || ''}
                                     onChange={handleChange}
                                 >
-                                    <option value="1">Cali</option>
-                                    <option value="2">Ciudad 2</option>
-                                    <option value="3">Ciudad 3</option>
+                                    <option value="">Selecciona la ciudad</option>
+                                    {select_city.map(item => (
+                                        <option key={item.value} value={item.value}>
+                                            {item.label}
+                                        </option>
+                                    ))}
                                 </Form.Control>
                             </Form.Group>
 
