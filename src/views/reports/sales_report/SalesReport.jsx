@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import SalesTable from "./SalesTable"; // Tabla para mostrar los datos
+import { fetchWithToken, fetchWithTokenBlob } from "api/fetchHelpers";
+import axios from "axios"
 
 const SalesReport = () => {
     const [startDate, setStartDate] = useState("");
@@ -27,8 +29,22 @@ const SalesReport = () => {
         console.log("Generando reporte en PDF...");
     };
 
-    const handleExportCSV = () => {
-        console.log("Generando reporte en CSV...");
+    const handleExportCSV = async () => {
+        const downloadFile = (blob, filename) => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+        
+        // Llamada a la función fetchWithToken
+        const blob = await fetchWithTokenBlob(`/reports/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL`, null, 'GET');
+        
+        // Luego, puedes usar la función de descarga si el archivo es un blob
+        if (blob) {
+            alert('Se ha descargado el archivo, revisa las descargas de tu dispositivo')
+            downloadFile(blob, 'reporte_general_de_ventas.xlsx');
+        }
     };
 
     return (
@@ -63,14 +79,12 @@ const SalesReport = () => {
                             Generar Reporte
                         </Button>
                     </Form>
-
-
                     <SalesTable salesData={salesData} />
                     <div className="d-flex justify-content-center mt-3">
                         <Button variant="success" onClick={handleExportPDF} className="me-2">
                             Exportar a PDF
                         </Button>
-                        <Button  variant="info" onClick={handleExportCSV}>
+                        <Button variant="info" onClick={handleExportCSV}>
                             Exportar a CSV
                         </Button>
                     </div>

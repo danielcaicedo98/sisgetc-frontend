@@ -22,11 +22,11 @@ const menuItems = {
           url: '/sales'
         },
         {
-          id: 'reports',
-          title: 'Reportes',
+          id: 'saleslist',
+          title: 'Historial de Ventas',
           type: 'item',
           icon: 'feather icon-clipboard',
-          url: '/reports'
+          url: '/saleslist'
         }
         ,
         {

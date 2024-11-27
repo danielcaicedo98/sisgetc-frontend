@@ -66,6 +66,11 @@ export const routes = [
       },
       {
         exact: 'true',
+        path: '/saleslist',
+        element: lazy(() => import('./views/sales/SalesList'))
+      },
+      {
+        exact: 'true',
         path: '/reports',
         element: lazy(() => import('./views/reports/reports'))
       },
@@ -96,7 +101,6 @@ export const routes = [
         exact: 'true',
         path: '/salesReport',
         element: lazy(() => import('./views/reports/sales_report/SalesReport'))
-
       },
       {
         path: '*',

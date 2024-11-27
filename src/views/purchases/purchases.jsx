@@ -68,7 +68,7 @@ const Purchases = () => {
 
       setProductOptions(data);
     } catch (error) {
-      setIsLoadingProviders(false);
+      setIsLoadingProducts(false);
       console.error('Error fetching products:', error);
     } finally {
       setIsLoadingProducts(false);
