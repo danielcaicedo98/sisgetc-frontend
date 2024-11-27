@@ -90,7 +90,7 @@ const ProductForm = ({ productToEdit, isEdit }) => {
     e.preventDefault();
 
     if (isEditF) {
-     
+
       const setAddProduct = new FormData();
 
       // Desestructuración de formData para mayor claridad y limpieza
@@ -130,14 +130,14 @@ const ProductForm = ({ productToEdit, isEdit }) => {
       // Manejar la respuesta
       if (response.updated) {
         alert('Producto actualizado exitosamente.');
-        window.location.reload(); 
+        window.location.reload();
       } else {
         // Si la respuesta contiene errores, formatear la alerta
         const errorFields = Object.keys(response);
         const errorDescription = Object.values(response).flat()[0];
         alert(`Error en campos: ${errorFields.join(', ')}\nDescripción: ${errorDescription}`);
       }
-    } else if (!isEditF) {     
+    } else if (!isEditF) {
       const addProduct = new FormData();
       for (let key in formData) {
         if (key === 'photo' && formData[key] instanceof File) {
@@ -202,6 +202,7 @@ const ProductForm = ({ productToEdit, isEdit }) => {
 
   return (
     <form className="responsive-form">
+
       <label>
         Nombre:
         <input type="text" name="name" value={formData.name} onChange={handleChange} />

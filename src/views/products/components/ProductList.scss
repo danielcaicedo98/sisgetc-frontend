@@ -8,13 +8,23 @@
     overflow-y: auto;  // Scroll vertical
     max-width: 100%;   // Para asegurarse de que no exceda el contenedor principal
     border: 1px solid #ddd;  // Bordes opcionales para el contenedor
-    border-radius: 8px;  // Bordes redondeados
+    border-radius: 13px;  // Bordes redondeados
+    
+   
   }
 
   table {
     width: 100%;
     border-collapse: collapse;
+    background-color: white;
+    //background-Image: 'linear-gradient(to right, #D98E32, #fe713b)';
 
+    thead th{
+    //background: linear-gradient(to right, #D98E32, #eea750);
+    background-color: rgba(234, 234, 234, 0.597);
+    border: thin solid rgba(158, 157, 157, 0.262);
+    color: black;
+    }
     th, td {
       padding: 10px;
       text-align: left;
