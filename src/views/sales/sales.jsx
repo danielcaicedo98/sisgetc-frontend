@@ -27,7 +27,7 @@ const Sales = () => {
   const [providerOptions, setProviderOptions] = useState([]);
   const [proveedor, setProveedor] = useState([]);
   const [providerDebounceTimer, setProviderDebounceTimer] = useState(null);
-
+  
 
   const navigate = useNavigate();
   useEffect(() => {

@@ -9,13 +9,13 @@ import { fetchWithToken } from 'api/fetchHelpers';
 const DashAnalytics = () => {
 
   const [metrics, setMetrics] = useState({
-    ventas: 5,
-    total_ventas: "274000",
-    compras: 6,
-    total_compras: 7142,
-    utilidad: "266858",
-    clientes_nuevos: 1,
-    todos_los_clientes: 5
+    ventas: '',
+    total_ventas: "",
+    compras: '',
+    total_compras: '',
+    utilidad: "",
+    clientes_nuevos: '',
+    todos_los_clientes: ''
   })
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const DashAnalytics = () => {
 
   const fillMetrics = async () => {
     const date_today = dateToday()
-    const response = await fetchWithToken(`/reports/dashboard/metrics/?filter_date=${date_today}`, null, 'GET')
+    const response = await fetchWithToken(`reports/dashboard/metrics/?filter_date=${date_today}`, null, 'GET')
     setMetrics({
       ventas: response.ventas,
       total_ventas: response.total_ventas,
@@ -43,7 +43,7 @@ const DashAnalytics = () => {
       clientes_nuevos: response.clientes_nuevos,
       todos_los_clientes: response.todos_los_clientes
     })
-    console.log(metrics)
+    
   }
 
   
