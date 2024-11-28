@@ -86,7 +86,7 @@ const Purchases = () => {
 
     try {
       // Llamar a fetchWithToken para obtener los proveedores filtrados por el nombre
-      const res = await fetchWithToken(`/basics/suppliers/?name_like=${encodeURIComponent(query)}`, null, 'GET');
+      const res = await fetchWithToken(`basics/suppliers/?name_like=${encodeURIComponent(query)}`, null, 'GET');
       const data = res.map(item => ({
         id: item.value,   // Cambiar "value" por "id"
         name: item.label  // Cambiar "label" por "name"

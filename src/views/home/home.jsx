@@ -46,8 +46,7 @@ const DashAnalytics = () => {
     })
     
   }
-
-  
+    
   return (
     <React.Fragment>
       <div className='card_home'>
