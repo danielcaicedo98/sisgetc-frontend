@@ -55,7 +55,7 @@ const SalesReport = () => {
         <Container>
             <Card className="mt-4">
                 <Card.Body>
-                    <h2>Reporte de Ventas</h2>
+                    <h2>Informe de Ventas</h2>
                     <Form>
                         <Row className="mb-3">
                             <Col>
