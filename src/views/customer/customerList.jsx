@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Spinner, Form, Row, Col, Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import '../../assets/scss/purchases/PurchasesList.scss';
 import { fetchWithToken } from '../../api/fetchHelpers';
 

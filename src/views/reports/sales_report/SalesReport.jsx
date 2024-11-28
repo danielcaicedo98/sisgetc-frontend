@@ -14,6 +14,10 @@ const SalesReport = () => {
             alert('Por favor ingrese el rango de fechas')
         }
         const res = await fetchWithToken(`reports/sales/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=JSON`, null, 'GET');
+        if(res.detail){
+            alert('No se ha encontrado ningun dato para estas fechas')
+            return
+        }
         const data = res.map(sale => ({
             id: sale.id,
             cliente: sale.cliente,
@@ -21,7 +25,8 @@ const SalesReport = () => {
             product: sale.producto,
             quantity: sale.cantidad,
             total: sale.subtotal
-        }))
+        }));
+
         setSalesData(data);
     };
 
@@ -85,15 +90,7 @@ const SalesReport = () => {
                             Exportar a Excel
                         </Button>
                     </Form>
-                    <SalesTable salesData={salesData} />
-                    {/* <div className="d-flex justify-content-center mt-3">
-                        <Button variant="success" onClick={handleExportPDF} className="me-2">
-                            Exportar a PDF
-                        </Button> 
-                        <Button variant="info" onClick={handleExportCSV}>
-                            Exportar a Excel
-                        </Button>
-                    </div> */}
+                    <SalesTable salesData={salesData} />                   
                 </Card.Body>
             </Card>
         </Container>

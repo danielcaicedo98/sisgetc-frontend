@@ -7,6 +7,7 @@ import '../../assets/scss/themes/_homecustom.scss';
 import { fetchWithToken } from 'api/fetchHelpers';
 
 const DashAnalytics = () => {
+  const [user_name] = useState(localStorage.getItem('name') || '')
 
   const [metrics, setMetrics] = useState({
     ventas: '',
@@ -52,7 +53,7 @@ const DashAnalytics = () => {
       <div className='card_home'>
         <div class="card">
           <div class="card-body">
-            <h5>Bienvenida de nuevo, Esperanza Quiñones!</h5>
+            <h5>Bienvenido de nuevo, {user_name}!</h5>
             {/* <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p> */}
           </div>
         </div>
@@ -66,7 +67,7 @@ const DashAnalytics = () => {
                 title: 'Ventas Mes Actual',
                 class: 'bg-c-green',
                 icon: 'feather icon-tag',
-                primaryText: `$ ${metrics.total_ventas}`,
+                primaryText: `${metrics.total_ventas}`,
                 secondaryText: 'Numero de ventas',
                 extraText: `${metrics.ventas}`
               }}
@@ -80,7 +81,7 @@ const DashAnalytics = () => {
                 title: 'Compras Mes Actual',
                 class: 'bg-c-yellow',
                 icon: 'feather icon-shopping-cart',
-                primaryText: `$ ${metrics.total_compras}`,
+                primaryText: `${metrics.total_compras}`,
                 secondaryText: 'Numero de Compras',
                 extraText: `${metrics.compras}`
               }}
@@ -108,7 +109,7 @@ const DashAnalytics = () => {
                 title: 'Ganancias Mes Actual',
                 class: 'bg-c-red',
                 icon: 'feather icon-activity',
-                primaryText: `$ ${metrics.utilidad}`,
+                primaryText: `${metrics.utilidad}`,
                 secondaryText: '',
                 extraText: ` `
               }}

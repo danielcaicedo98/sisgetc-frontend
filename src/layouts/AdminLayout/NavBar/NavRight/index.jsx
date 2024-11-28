@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // react-bootstrap
@@ -11,6 +11,12 @@ import avatar1 from '../../../../assets/images/user/avatar-1.jpg';
 // ==============================|| NAV RIGHT ||============================== //
 
 const NavRight = () => { 
+  // const user_name = 
+  const [user_name] = useState(localStorage.getItem('name') || '')
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+  }
+
   return (
     <React.Fragment>
       <ListGroup as="ul" bsPrefix=" " className="navbar-nav ml-auto">   
@@ -22,34 +28,14 @@ const NavRight = () => {
             <Dropdown.Menu align="end" className="profile-notification">
               <div className="pro-head">
                 <img src={avatar1} className="img-radius" alt="User Profile" />
-                <span>Esperanza Quiñones</span>
+                <span>{user_name}</span>
                 <Link to="#" className="dud-logout" title="Logout">
                   <i className="feather icon-log-out" />
                 </Link>
               </div>
-              <ListGroup as="ul" bsPrefix=" " variant="flush" className="pro-body">
+              <ListGroup as="ul" bsPrefix=" " variant="flush" className="pro-body">                
                 <ListGroup.Item as="li" bsPrefix=" ">
-                  <Link to="#" className="dropdown-item">
-                    <i className="feather icon-settings" /> Settings
-                  </Link>
-                </ListGroup.Item>
-                <ListGroup.Item as="li" bsPrefix=" ">
-                  <Link to="#" className="dropdown-item">
-                    <i className="feather icon-user" /> Profile
-                  </Link>
-                </ListGroup.Item>
-                <ListGroup.Item as="li" bsPrefix=" ">
-                  <Link to="#" className="dropdown-item">
-                    <i className="feather icon-mail" /> My Messages
-                  </Link>
-                </ListGroup.Item>
-                <ListGroup.Item as="li" bsPrefix=" ">
-                  <Link to="#" className="dropdown-item">
-                    <i className="feather icon-lock" /> Lock Screen
-                  </Link>
-                </ListGroup.Item>
-                <ListGroup.Item as="li" bsPrefix=" ">
-                  <Link to="#" className="dropdown-item">
+                  <Link to="#" className="dropdown-item" onClick={handleLogout}>
                     <i className="feather icon-log-out" /> Logout
                   </Link>
                 </ListGroup.Item>

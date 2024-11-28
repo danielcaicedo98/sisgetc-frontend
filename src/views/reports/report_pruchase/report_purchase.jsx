@@ -23,6 +23,11 @@ const PurchaseReport = () => {
         // Simula generación de informe con referencia a artículos
         const res = await fetchWithToken(`reports/purchases/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=JSON`, null, 'GET');
         console.log(res)
+        if(res.detail){
+            setAlert("No se han encontrado datos para estas fechas")
+            return
+        }
+
         const newReports = res.map(purchase => ({
             article_id: purchase.id,
             proveedor: purchase.proveedor,
@@ -144,13 +149,6 @@ const PurchaseReport = () => {
                             </tbody>
                         </Table>
                     )}
-
-                    {/* <div className="d-flex justify-content-center mt-3">
-                         <Button variant="success" onClick={handleExportPDF} className="me-2">
-                            Exportar a PDF
-                        </Button> 
-                        
-                    </div> */}
                 </Card.Body>
             </Card>
         </Container>
