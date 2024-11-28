@@ -233,6 +233,7 @@ const Sales = () => {
       
       if (response.created) {
         alert('Compra guardada exitosamente.');
+        window.location.reload();
         // navigate('/saleslist');
       }
       else {
