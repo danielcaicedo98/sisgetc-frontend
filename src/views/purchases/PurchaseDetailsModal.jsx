@@ -41,7 +41,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
   const fillMeasurement = async () => {
     setLoading(true); // Indicamos que la carga está en proceso
     try {
-      const res = await fetchWithToken('/basics/measurement_units/', null, 'GET');
+      const res = await fetchWithToken('basics/measurement_units/', null, 'GET');
       console.log(res)
 
       // Aquí suponemos que la respuesta es un array directo. Si es un objeto con una propiedad que contiene el array, ajusta esto.
@@ -102,7 +102,7 @@ const PurchaseDetailsModal = ({ show, handleClose, purchase, onUpdate }) => {
 
     try {
       // Llamar a fetchWithToken para obtener los proveedores filtrados por el nombre
-      const res = await fetchWithToken(`/basics/suppliers/?name_like=${encodeURIComponent(query)}`, null, 'GET');
+      const res = await fetchWithToken(`basics/suppliers/?name_like=${encodeURIComponent(query)}`, null, 'GET');
       const data = res.map(item => ({
         id: item.value,   // Cambiar "value" por "id"
         name: item.label  // Cambiar "label" por "name"
