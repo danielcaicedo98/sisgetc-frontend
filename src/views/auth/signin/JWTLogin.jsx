@@ -13,8 +13,9 @@ const JWTLogin = () => {
       // Comprobar si la respuesta tiene un token
       if (response.token) {
         // Guardar el token en localStorage
-        
+        console.log(response)
         localStorage.setItem('token', response.token.access);
+        localStorage.setItem('name', `${response.user.first_name} ${response.user.last_name}`)
         // Redirigir al usuario a otra página
         window.location.href = '/dashboard'; // Cambia la ruta según sea necesario
       } else {

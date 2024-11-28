@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Table, Form, Alert, Card, CardBody, CardHeader, CardFooter } from 'react-bootstrap';
+import { Button, Modal, Table, Form, Alert, Card, CardBody, CardHeader, CardFooter, Spinner } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { fetchWithToken } from 'api/fetchHelpers';
 import './sales.scss'
@@ -23,7 +23,10 @@ const PurchasesList = () => {
         fetchPaymentMethods();
     }, []);
 
+    const [loading, setLoading] = useState(true);    
+
     const fetchPurchases = async () => {
+        setLoading(true);
         try {
             const res = await fetchWithToken('sales/', null, 'GET'); // Ajusta la ruta
             console.log(res)
@@ -72,6 +75,9 @@ const PurchasesList = () => {
         } catch (error) {
             console.error('Error fetching purchases:', error);
         }
+        finally {
+            setLoading(false);
+        }
     };
 
     const fetchPaymentMethods = async () => {
@@ -81,7 +87,7 @@ const PurchasesList = () => {
         } catch (error) {
             console.error('Error fetching payment methods:', error);
         }
-    };
+    };    
 
     const searchProviders = async (query) => {
         if (!query) {
@@ -109,7 +115,6 @@ const PurchasesList = () => {
         }
     };
 
-
     const handleEditClick = (purchase) => {
         setPaymentMethod(purchase.payment_method)
         setEditPurchase(purchase);
@@ -128,9 +133,9 @@ const PurchasesList = () => {
                     ...p,
                     product: p.product.id
                 })),
-                payment_method: paymentMethod.payment_method
+                payment_method: paymentMethod.value
             };
-            conso
+
             const response = await fetchWithToken(`sales/${editPurchase.id}/`, updatedPurchase, 'PUT');
             setShowModal(false);
             if (response.updated) {
@@ -159,7 +164,7 @@ const PurchasesList = () => {
 
     const handlePaymentMethodChange = (e) => {
         setPaymentMethod({
-            value:e.target.value
+            value: e.target.value
         });
     };
 
@@ -217,10 +222,18 @@ const PurchasesList = () => {
         }
     };
 
-
     const handleProductInputChange = (query) => {
         searchProducts(query);
     };
+
+    if (loading) {
+        return (
+            <div className="loading-spinner">
+                <Spinner animation="border" variant="primary" />
+                <span> Cargando ventas...</span>
+            </div>
+        );
+    }
 
     return (
         <div className='container-historial-sales'>
@@ -350,10 +363,7 @@ const PurchasesList = () => {
                                 <Form.Label>Método de Pago</Form.Label>
                                 <Form.Control
                                     as="select"
-                                    value={paymentMethod?.value || ''}
-                                    // onChange={(e) =>
-                                    //     setEditPurchase({ ...editPurchase, payment_method: { value: e.target.value } })
-                                    // }
+                                    value={paymentMethod?.value || ''}                                    
                                     onChange={handlePaymentMethodChange}
                                 >
                                     <option value="">Selecciona un método</option>

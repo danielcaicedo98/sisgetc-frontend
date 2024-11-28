@@ -19,10 +19,15 @@ const PurchaseReport = () => {
             setAlert("Por favor, selecciona ambas fechas.");
             return;
         }
-        
+
         // Simula generación de informe con referencia a artículos
         const res = await fetchWithToken(`reports/purchases/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=JSON`, null, 'GET');
         console.log(res)
+        if(res.detail){
+            setAlert("No se han encontrado datos para estas fechas")
+            return
+        }
+
         const newReports = res.map(purchase => ({
             article_id: purchase.id,
             proveedor: purchase.proveedor,
@@ -32,7 +37,7 @@ const PurchaseReport = () => {
             subtotal: purchase.subtotal,
 
         }))
-       
+
         setReports(newReports);
         setAlert("Informe generado correctamente.");
     };
@@ -61,7 +66,7 @@ const PurchaseReport = () => {
         if (blob) {
             // alert('Se ha descargado el archivo, revisa las descargas de tu dispositivo')
             downloadFile(blob, 'reporte_general_de_compras_proveedores.xlsx');
-            
+
         }
     };
 
@@ -99,11 +104,17 @@ const PurchaseReport = () => {
                             </Col>
                         </Row>
                         <Button
-                            className="mb-3"
+                            className="mb-3 me-3 "
                             variant="primary"
                             onClick={handleGenerateReport}
                         >
                             Generar Informe
+                        </Button>
+                        <Button
+                            className="mb-3"
+                            variant="info"
+                            onClick={handleExportExcel}>
+                            Exportar a Excel
                         </Button>
                     </Form>
 
@@ -138,15 +149,6 @@ const PurchaseReport = () => {
                             </tbody>
                         </Table>
                     )}
-
-                    <div className="d-flex justify-content-center mt-3">
-                        {/* <Button variant="success" onClick={handleExportPDF} className="me-2">
-                            Exportar a PDF
-                        </Button> */}
-                        <Button variant="info" onClick={handleExportExcel}>
-                            Exportar a Excel
-                        </Button>
-                    </div>
                 </Card.Body>
             </Card>
         </Container>

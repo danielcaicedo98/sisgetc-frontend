@@ -7,15 +7,16 @@ import '../../assets/scss/themes/_homecustom.scss';
 import { fetchWithToken } from 'api/fetchHelpers';
 
 const DashAnalytics = () => {
+  const [user_name] = useState(localStorage.getItem('name') || '')
 
   const [metrics, setMetrics] = useState({
-    ventas: 5,
-    total_ventas: "274000",
-    compras: 6,
-    total_compras: 7142,
-    utilidad: "266858",
-    clientes_nuevos: 1,
-    todos_los_clientes: 5
+    ventas: '',
+    total_ventas: "",
+    compras: '',
+    total_compras: '',
+    utilidad: "",
+    clientes_nuevos: '',
+    todos_los_clientes: ''
   })
 
   useEffect(() => {
@@ -33,7 +34,7 @@ const DashAnalytics = () => {
 
   const fillMetrics = async () => {
     const date_today = dateToday()
-    const response = await fetchWithToken(`/reports/dashboard/metrics/?filter_date=${date_today}`, null, 'GET')
+    const response = await fetchWithToken(`reports/dashboard/metrics/?filter_date=${date_today}`, null, 'GET')
     setMetrics({
       ventas: response.ventas,
       total_ventas: response.total_ventas,
@@ -43,7 +44,7 @@ const DashAnalytics = () => {
       clientes_nuevos: response.clientes_nuevos,
       todos_los_clientes: response.todos_los_clientes
     })
-    console.log(metrics)
+    
   }
 
   
@@ -52,7 +53,7 @@ const DashAnalytics = () => {
       <div className='card_home'>
         <div class="card">
           <div class="card-body">
-            <h5>Bienvenida de nuevo, Esperanza Quiñones!</h5>
+            <h5>Bienvenido de nuevo, {user_name}!</h5>
             {/* <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p> */}
           </div>
         </div>
@@ -66,7 +67,7 @@ const DashAnalytics = () => {
                 title: 'Ventas Mes Actual',
                 class: 'bg-c-green',
                 icon: 'feather icon-tag',
-                primaryText: `$ ${metrics.total_ventas}`,
+                primaryText: `${metrics.total_ventas}`,
                 secondaryText: 'Numero de ventas',
                 extraText: `${metrics.ventas}`
               }}
@@ -80,7 +81,7 @@ const DashAnalytics = () => {
                 title: 'Compras Mes Actual',
                 class: 'bg-c-yellow',
                 icon: 'feather icon-shopping-cart',
-                primaryText: `$ ${metrics.total_compras}`,
+                primaryText: `${metrics.total_compras}`,
                 secondaryText: 'Numero de Compras',
                 extraText: `${metrics.compras}`
               }}
@@ -108,7 +109,7 @@ const DashAnalytics = () => {
                 title: 'Ganancias Mes Actual',
                 class: 'bg-c-red',
                 icon: 'feather icon-activity',
-                primaryText: `$ ${metrics.utilidad}`,
+                primaryText: `${metrics.utilidad}`,
                 secondaryText: '',
                 extraText: ` `
               }}

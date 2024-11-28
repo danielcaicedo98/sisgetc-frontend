@@ -1,13 +1,138 @@
-import React, { Suspense, Fragment, lazy } from 'react';
-import { Routes, Navigate, Route } from 'react-router-dom';
+// import React, { Suspense, Fragment, lazy } from 'react';
+// import { Routes, Navigate, Route } from 'react-router-dom';
 
-// project import
+// // project import
+// import Loader from './components/Loader/Loader';
+// import AdminLayout from './layouts/AdminLayout';
+
+// import { BASE_URL } from './config/constant';
+
+// // ==============================|| ROUTES ||============================== //
+
+// const renderRoutes = (routes = []) => (
+//   <Suspense fallback={<Loader />}>
+//     <Routes>
+//       {routes.map((route, i) => {
+//         const Guard = route.guard || Fragment;
+//         const Layout = route.layout || Fragment;
+//         const Element = route.element;
+//         return (
+//           <Route
+//             key={i}
+//             path={route.path}
+//             exact={route.exact}
+//             element={
+//               <Guard>
+//                 <Layout>{route.routes ? renderRoutes(route.routes) : <Element props={true} />}</Layout>
+//               </Guard>
+//             }
+//           />
+//         );
+//       })}
+//     </Routes>
+//   </Suspense>
+// );
+
+// export const routes = [
+
+//   {
+//     exact: 'true',
+//     path: '/auth/signin',
+//     element: lazy(() => import('./views/auth/signin/SignIn1'))
+//   },
+//   {
+//     path: '*',
+//     layout: AdminLayout,
+//     routes: [
+//       {
+//         exact: 'true',
+//         path: '/',
+//         element: lazy(() => import('./views/home/home'))
+//       },
+//       {
+//         exact: 'true',
+//         path: '/purchases',
+//         element: lazy(() => import('./views/purchases/purchases'))
+//       },
+//       {
+//         exact: 'true',
+//         path: '/purchases-list',
+//         element: lazy(() => import('./views/purchases/PurchaseList'))
+//       },
+//       {
+//         exact: 'true',
+//         path: '/sales',
+//         element: lazy(() => import('./views/sales/sales'))
+//       },
+//       {
+//         exact: 'true',
+//         path: '/saleslist',
+//         element: lazy(() => import('./views/sales/SalesList'))
+//       },
+//       {
+//         exact: 'true',
+//         path: '/reports',
+//         element: lazy(() => import('./views/reports/reports'))
+//       },
+//       {
+//         exact: 'true',
+//         path: '/customer',
+//         element: lazy(() => import('./views/customer/customer'))
+//       },
+//       {
+//         exact: 'true',
+//         path: '/customer-list',
+//         element: lazy(() => import('./views/customer/customerList'))
+
+//       },
+//       ,
+//       {
+//         exact: 'true',
+//         path: '/products',
+//         element: lazy(() => import('./views/products/ProductCrud'))
+
+//       },
+//       {
+//         exact: 'true',
+//         path: '/reportPurchases',
+//         element: lazy(() => import('./views/reports/report_pruchase/report_purchase'))
+
+//       },{
+//         exact: 'true',
+//         path: '/salesReport',
+//         element: lazy(() => import('./views/reports/sales_report/SalesReport'))
+//       },
+//       {
+//         path: '*',
+//         exact: 'true',
+//         element: () => <Navigate to={BASE_URL} />
+//       }
+//     ]
+//   }
+// ];
+
+// export default renderRoutes;
+import React, { Suspense, Fragment, lazy } from 'react';
+import { Routes, Navigate, Route, useNavigate } from 'react-router-dom';
 import Loader from './components/Loader/Loader';
 import AdminLayout from './layouts/AdminLayout';
 
 import { BASE_URL } from './config/constant';
 
-// ==============================|| ROUTES ||============================== //
+// ==============================|| AUTH GUARD ||============================== //
+
+const AuthGuard = ({ children }) => {
+  const token = localStorage.getItem('token'); // Aquí puedes cambiar cómo manejas el token
+  const navigate = useNavigate();
+
+  if (!token) {
+    return <Navigate to="/auth/signin" replace />;
+  }
+
+  return children;
+};
+
+// ==============================|| RENDER ROUTES ||============================== //
 
 const renderRoutes = (routes = []) => (
   <Suspense fallback={<Loader />}>
@@ -33,78 +158,77 @@ const renderRoutes = (routes = []) => (
   </Suspense>
 );
 
-export const routes = [
+// ==============================|| ROUTES CONFIGURATION ||============================== //
 
+export const routes = [
   {
-    exact: 'true',
+    exact: true,
     path: '/auth/signin',
     element: lazy(() => import('./views/auth/signin/SignIn1'))
   },
   {
     path: '*',
     layout: AdminLayout,
+    guard: AuthGuard, // Protege todas las rutas dentro de este bloque
     routes: [
       {
-        exact: 'true',
+        exact: true,
         path: '/',
         element: lazy(() => import('./views/home/home'))
       },
       {
-        exact: 'true',
+        exact: true,
         path: '/purchases',
         element: lazy(() => import('./views/purchases/purchases'))
       },
       {
-        exact: 'true',
+        exact: true,
         path: '/purchases-list',
         element: lazy(() => import('./views/purchases/PurchaseList'))
       },
       {
-        exact: 'true',
+        exact: true,
         path: '/sales',
         element: lazy(() => import('./views/sales/sales'))
       },
       {
-        exact: 'true',
+        exact: true,
         path: '/saleslist',
         element: lazy(() => import('./views/sales/SalesList'))
       },
       {
-        exact: 'true',
+        exact: true,
         path: '/reports',
         element: lazy(() => import('./views/reports/reports'))
       },
       {
-        exact: 'true',
+        exact: true,
         path: '/customer',
         element: lazy(() => import('./views/customer/customer'))
       },
       {
-        exact: 'true',
+        exact: true,
         path: '/customer-list',
         element: lazy(() => import('./views/customer/customerList'))
-
       },
-      ,
       {
-        exact: 'true',
+        exact: true,
         path: '/products',
         element: lazy(() => import('./views/products/ProductCrud'))
-
       },
       {
-        exact: 'true',
+        exact: true,
         path: '/reportPurchases',
         element: lazy(() => import('./views/reports/report_pruchase/report_purchase'))
-
-      },{
-        exact: 'true',
+      },
+      {
+        exact: true,
         path: '/salesReport',
         element: lazy(() => import('./views/reports/sales_report/SalesReport'))
       },
       {
         path: '*',
-        exact: 'true',
+        exact: true,
         element: () => <Navigate to={BASE_URL} />
       }
     ]

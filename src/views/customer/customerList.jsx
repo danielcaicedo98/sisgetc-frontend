@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Spinner, Form, Row, Col, Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import '../../assets/scss/purchases/PurchasesList.scss';
 import { fetchWithToken } from '../../api/fetchHelpers';
 
 const customerList = () => {
-    const [customers, setCustomers] = useState([
-        { id: 1, name: 'Juan Pérez', email: 'juan.perez@mail.com' },
-        { id: 2, name: 'Ana Gómez', email: 'ana.gomez@mail.com' },
-        { id: 3, name: 'Carlos Rivera', email: 'carlos.rivera@mail.com' }
-    ]);
+    const [customers, setCustomers] = useState([ ]);
+    
 
     // Estado para los filtros
     const [filters, setFilters] = useState({
@@ -76,7 +72,7 @@ const customerList = () => {
         } catch (error) {
             console.error('Error fetching purchases:', error);
         } finally {
-            // setLoading(false);
+            setLoading(false);
         }
     };
 
@@ -176,6 +172,15 @@ const customerList = () => {
 
         return matchesMonth && matchesCustomer;
     });
+
+    if (loading) {
+        return (
+            <div className="loading-spinner">
+                <Spinner animation="border" variant="primary" />
+                <span> Cargando clientes...</span>
+            </div>
+        );
+    }
 
     return (
         <div className="customer-list-container">
