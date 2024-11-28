@@ -109,7 +109,6 @@ const PurchasesList = () => {
         }
     };
 
-
     const handleEditClick = (purchase) => {
         setPaymentMethod(purchase.payment_method)
         setEditPurchase(purchase);
@@ -128,9 +127,9 @@ const PurchasesList = () => {
                     ...p,
                     product: p.product.id
                 })),
-                payment_method: paymentMethod.payment_method
+                payment_method: paymentMethod.value
             };
-            conso
+            
             const response = await fetchWithToken(`sales/${editPurchase.id}/`, updatedPurchase, 'PUT');
             setShowModal(false);
             if (response.updated) {
@@ -216,7 +215,6 @@ const PurchasesList = () => {
             setIsLoadingProducts(false);
         }
     };
-
 
     const handleProductInputChange = (query) => {
         searchProducts(query);

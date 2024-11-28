@@ -78,19 +78,22 @@ const SalesReport = () => {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        <Button className="mb-3" variant="primary" onClick={handleGenerateReport}>
+                        <Button className="mb-3 me-3" variant="primary" onClick={handleGenerateReport}>
                             Generar Reporte
+                        </Button>
+                        <Button className="mb-3" variant="info" onClick={handleExportCSV}>
+                            Exportar a Excel
                         </Button>
                     </Form>
                     <SalesTable salesData={salesData} />
-                    <div className="d-flex justify-content-center mt-3">
-                        {/* <Button variant="success" onClick={handleExportPDF} className="me-2">
+                    {/* <div className="d-flex justify-content-center mt-3">
+                        <Button variant="success" onClick={handleExportPDF} className="me-2">
                             Exportar a PDF
-                        </Button> */}
+                        </Button> 
                         <Button variant="info" onClick={handleExportCSV}>
                             Exportar a Excel
                         </Button>
-                    </div>
+                    </div> */}
                 </Card.Body>
             </Card>
         </Container>
