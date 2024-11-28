@@ -128,8 +128,9 @@ const PurchasesList = () => {
                     ...p,
                     product: p.product.id
                 })),
-                payment_method: paymentMethod.payment_method.id
+                payment_method: paymentMethod.payment_method
             };
+            conso
             const response = await fetchWithToken(`sales/${editPurchase.id}/`, updatedPurchase, 'PUT');
             setShowModal(false);
             if (response.updated) {

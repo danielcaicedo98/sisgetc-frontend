@@ -21,7 +21,7 @@ const PurchaseReport = () => {
         }
         
         // Simula generación de informe con referencia a artículos
-        const res = await fetchWithToken(`/reports/purchases/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=JSON`, null, 'GET');
+        const res = await fetchWithToken(`reports/purchases/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=JSON`, null, 'GET');
         console.log(res)
         const newReports = res.map(purchase => ({
             article_id: purchase.id,
@@ -55,7 +55,7 @@ const PurchaseReport = () => {
         }
 
         // Llamada a la función fetchWithToken
-        const blob = await fetchWithTokenBlob(`/reports/purchases/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=EXCEL`, null, 'GET');
+        const blob = await fetchWithTokenBlob(`reports/purchases/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=EXCEL`, null, 'GET');
 
         // Luego, puedes usar la función de descarga si el archivo es un blob
         if (blob) {
