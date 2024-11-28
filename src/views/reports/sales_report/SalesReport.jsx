@@ -11,17 +11,18 @@ const SalesReport = () => {
     const [salesData, setSalesData] = useState([]); // Datos de ventas obtenidos de la API
 
     const handleGenerateReport = async () => {
-        const isDailyReport = startDate === endDate;
-        const data = isDailyReport
-            ? [
-                { id: 1, date: startDate, product: "Pan", quantity: 15, total: 3000 },
-                { id: 2, date: startDate, product: "Torta", quantity: 5, total: 7500 },
-            ]
-            : [
-                { id: 1, date: "2024-11-10", product: "Pan", quantity: 20, total: 5000 },
-                { id: 2, date: "2024-11-11", product: "Torta", quantity: 10, total: 15000 },
-            ];
-
+        if (!startDate) {
+            alert('Por favor ingrese el rango de fechas')
+        }
+        const res = await fetchWithToken(`/reports/sales/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=JSON`, null, 'GET');
+        const data = res.map(sale => ({
+            id: sale.id,
+            cliente: sale.cliente,
+            date: sale.fecha,
+            product: sale.producto,
+            quantity: sale.cantidad,
+            total: sale.subtotal
+        }))
         setSalesData(data);
     };
 
@@ -30,16 +31,19 @@ const SalesReport = () => {
     };
 
     const handleExportCSV = async () => {
+        if (!startDate) {
+            alert('Por favor ingrese el rango de fechas')
+        }
         const downloadFile = (blob, filename) => {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = filename;
             link.click();
         }
-        
+
         // Llamada a la función fetchWithToken
-        const blob = await fetchWithTokenBlob(`/reports/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL`, null, 'GET');
-        
+        const blob = await fetchWithTokenBlob(`/reports/sales/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=EXCEL`, null, 'GET');
+
         // Luego, puedes usar la función de descarga si el archivo es un blob
         if (blob) {
             alert('Se ha descargado el archivo, revisa las descargas de tu dispositivo')
@@ -51,7 +55,7 @@ const SalesReport = () => {
         <Container>
             <Card className="mt-4">
                 <Card.Body>
-                    <h2>Reporte de Ventas</h2>
+                    <h2>Informe de Ventas</h2>
                     <Form>
                         <Row className="mb-3">
                             <Col>
@@ -81,11 +85,11 @@ const SalesReport = () => {
                     </Form>
                     <SalesTable salesData={salesData} />
                     <div className="d-flex justify-content-center mt-3">
-                        <Button variant="success" onClick={handleExportPDF} className="me-2">
+                        {/* <Button variant="success" onClick={handleExportPDF} className="me-2">
                             Exportar a PDF
-                        </Button>
+                        </Button> */}
                         <Button variant="info" onClick={handleExportCSV}>
-                            Exportar a CSV
+                            Exportar a Excel
                         </Button>
                     </div>
                 </Card.Body>
