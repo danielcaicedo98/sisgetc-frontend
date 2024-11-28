@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import SalesTable from "./SalesTable"; // Tabla para mostrar los datos
 import { fetchWithToken, fetchWithTokenBlob } from "api/fetchHelpers";
-import axios from "axios"
 
 const SalesReport = () => {
     const [startDate, setStartDate] = useState("");
