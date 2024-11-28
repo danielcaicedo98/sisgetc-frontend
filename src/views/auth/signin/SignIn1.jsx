@@ -33,7 +33,7 @@ const Signin1 = () => {
             <Card.Body>
               <img src={logoSignIn} alt="" className="img-fluid mb-4" /> 
               <AuthLogin />
-              <p className="mb-2 text-muted">
+              {/* <p className="mb-2 text-muted">
                 Forgot password?{' '}
                 <NavLink to="/auth/reset-password-1" className="f-w-400">
                   Reset
@@ -44,7 +44,7 @@ const Signin1 = () => {
                 <NavLink to="/auth/signup-1" className="f-w-400">
                   Signup
                 </NavLink>
-              </p>              
+              </p>               */}
             </Card.Body>
           </Card>
         </div>

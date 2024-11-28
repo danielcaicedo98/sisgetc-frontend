@@ -70,12 +70,12 @@ const JWTLogin = () => {
               {touched.password && errors.password && <small className="text-danger form-text">{errors.password}</small>}
             </div>
 
-            <div className="custom-control custom-checkbox text-start mb-4 mt-2">
+            {/* <div className="custom-control custom-checkbox text-start mb-4 mt-2">
               <input type="checkbox" className="custom-control-input" id="customCheck1" />
               <label className="custom-control-label" htmlFor="customCheck1">
                 Save credentials.
               </label>
-            </div>
+            </div> */}
 
             {errors.submit && (
               <Col sm={12}>
