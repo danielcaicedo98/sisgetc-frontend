@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import SalesTable from "./SalesTable"; // Tabla para mostrar los datos
 import { fetchWithToken, fetchWithTokenBlob } from "api/fetchHelpers";
-import axios from "axios"
 
 const SalesReport = () => {
     const [startDate, setStartDate] = useState("");
@@ -14,7 +13,7 @@ const SalesReport = () => {
         if (!startDate) {
             alert('Por favor ingrese el rango de fechas')
         }
-        const res = await fetchWithToken(`/reports/sales/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=JSON`, null, 'GET');
+        const res = await fetchWithToken(`reports/sales/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=JSON`, null, 'GET');
         const data = res.map(sale => ({
             id: sale.id,
             cliente: sale.cliente,
@@ -42,7 +41,7 @@ const SalesReport = () => {
         }
 
         // Llamada a la función fetchWithToken
-        const blob = await fetchWithTokenBlob(`/reports/sales/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=EXCEL`, null, 'GET');
+        const blob = await fetchWithTokenBlob(`reports/sales/general/?start_date=${startDate}&end_date=${endDate}&type_report=GENERAL&response_format=EXCEL`, null, 'GET');
 
         // Luego, puedes usar la función de descarga si el archivo es un blob
         if (blob) {

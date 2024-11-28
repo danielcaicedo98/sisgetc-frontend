@@ -16,6 +16,7 @@ const PurchasesList = () => {
     const [error, setError] = useState('');
     const [productos, setProductos] = useState([]);
     const [proveedor, setProveedor] = useState([]);
+    const [paymentMethod, setPaymentMethod] = useState('');
 
     useEffect(() => {
         fetchPurchases();
@@ -110,6 +111,7 @@ const PurchasesList = () => {
 
 
     const handleEditClick = (purchase) => {
+        setPaymentMethod(purchase.payment_method)
         setEditPurchase(purchase);
         setProductos(purchase.sale_details)
         setProveedor([purchase.customer])
@@ -117,7 +119,7 @@ const PurchasesList = () => {
     };
 
     const handleSaveChanges = async () => {
-        console.log(proveedor)
+        console.log(paymentMethod)
         try {
             const updatedPurchase = {
                 ...editPurchase,
@@ -126,8 +128,9 @@ const PurchasesList = () => {
                     ...p,
                     product: p.product.id
                 })),
-                payment_method: editPurchase.payment_method.id
+                payment_method: paymentMethod.payment_method
             };
+            conso
             const response = await fetchWithToken(`sales/${editPurchase.id}/`, updatedPurchase, 'PUT');
             setShowModal(false);
             if (response.updated) {
@@ -152,6 +155,12 @@ const PurchasesList = () => {
         } catch (error) {
             console.error('Error deleting purchase:', error);
         }
+    };
+
+    const handlePaymentMethodChange = (e) => {
+        setPaymentMethod({
+            value:e.target.value
+        });
     };
 
     // Función para manejar cambios en los productos
@@ -277,7 +286,6 @@ const PurchasesList = () => {
                                     clearButton
                                 />
                             </Form.Group>
-
                             {/* Tabla para mostrar y editar productos */}
                             <Form.Group className="mb-3">
                                 <Form.Label>Productos</Form.Label>
@@ -338,15 +346,15 @@ const PurchasesList = () => {
                                 </Table>
                                 <Button variant="secondary" onClick={addNewProduct}>Agregar Producto</Button>
                             </Form.Group>
-
                             <Form.Group className="mb-3">
                                 <Form.Label>Método de Pago</Form.Label>
                                 <Form.Control
                                     as="select"
-                                    value={editPurchase?.payment_method.value || ''}
-                                    onChange={(e) =>
-                                        setEditPurchase({ ...editPurchase, payment_method: { value: e.target.value } })
-                                    }
+                                    value={paymentMethod?.value || ''}
+                                    // onChange={(e) =>
+                                    //     setEditPurchase({ ...editPurchase, payment_method: { value: e.target.value } })
+                                    // }
+                                    onChange={handlePaymentMethodChange}
                                 >
                                     <option value="">Selecciona un método</option>
                                     {paymentMethods.map((method) => (
@@ -357,8 +365,6 @@ const PurchasesList = () => {
                                 </Form.Control>
                             </Form.Group>
                         </Form>
-
-
                     </CardBody>
                     <CardFooter>
                         <Button variant="secondary" onClick={() => setShowModal(false)}>
@@ -368,7 +374,6 @@ const PurchasesList = () => {
                             Guardar Cambios
                         </Button>
                     </CardFooter>
-
                 </Card>
             </Modal>
         </div>
