@@ -9,6 +9,7 @@ const SalesTable = ({ salesData }) => {
         <thead>
           <tr>
             <th>ID</th>
+            <th>Cliente</th>
             <th>Fecha</th>
             <th>Producto</th>
             <th>Cantidad</th>
@@ -24,6 +25,7 @@ const SalesTable = ({ salesData }) => {
             salesData.map((sale) => (
               <tr key={sale.id}>
                 <td>{sale.id}</td>
+                <td>{sale.cliente}</td>
                 <td>{sale.date}</td>
                 <td>{sale.product}</td>
                 <td>{sale.quantity}</td>

@@ -211,6 +211,7 @@ const Sales = () => {
       setError('Por favor, seleccione un método de pago.');
       return;
     }
+    console.log(saleDate)
 
     const addVenta = {
       sale_details: cart.map(p => ({
@@ -223,15 +224,16 @@ const Sales = () => {
       total: totalCartAmount,
       is_active: true,
       customer: proveedor[0].id,
-      sale_status: 1
+      sale_status: 1,
+      sale_date: saleDate
     }
 
     try {
       const response = await fetchWithToken('sales/', addVenta, 'POST'); // Llamar a fetchWithToken
-      console.log(response.created)
+      
       if (response.created) {
         alert('Compra guardada exitosamente.');
-        navigate('/saleslist');
+        // navigate('/saleslist');
       }
       else {
         alert(`Error en campos: ${Object.keys(response)}\nDescripción: ${Object.values(response).flat()[0]}`);
