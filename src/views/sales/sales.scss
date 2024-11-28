@@ -1,6 +1,15 @@
 .custom-modal .modal-dialog {
     max-width: 80%; /* Establece el tamaño original del modal a 200% */
   }
+
+  .container-historial-sales{
+    max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
   
   @media (max-width: 1200px) {
     .custom-modal .modal-dialog {

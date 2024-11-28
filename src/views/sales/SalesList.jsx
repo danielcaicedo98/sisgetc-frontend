@@ -21,7 +21,7 @@ const PurchasesList = () => {
         fetchPurchases();
         fetchPaymentMethods();
     }, []);
-    
+
     const fetchPurchases = async () => {
         try {
             const res = await fetchWithToken('sales/', null, 'GET'); // Ajusta la ruta
@@ -38,7 +38,7 @@ const PurchasesList = () => {
                 return {
                     ...sale,
                     customer: {
-                        name: customerData.name ? customerData.name: '',
+                        name: customerData.name ? customerData.name : '',
                         id: customerData.id ? customerData.id : sale.customer,
                     }    // Cambiar "label" por "name" si el cliente tiene una propiedad 'name'
                 };
@@ -66,7 +66,7 @@ const PurchasesList = () => {
                     sale_details: saleWithDetails
                 };
             }));
-            
+
             setPurchases(dataP);
         } catch (error) {
             console.error('Error fetching purchases:', error);
@@ -166,11 +166,11 @@ const PurchasesList = () => {
 
     // Agregar un nuevo producto
     const addNewProduct = () => {
-        const newProduct = { product: null, quantity: 1, unit_value: 0 };       
+        const newProduct = { product: null, quantity: 1, unit_value: 0 };
         setProductos([
             ...productos, newProduct
         ])
-    };   
+    };
 
     const removeProduct = (index) => {
         const updatedProductos = [...productos];
@@ -214,7 +214,7 @@ const PurchasesList = () => {
     };
 
     return (
-        <div>
+        <div className='container-historial-sales'>
             <h1 className="text-center">Lista de Ventas</h1>
             <Table striped bordered hover>
                 <thead>
