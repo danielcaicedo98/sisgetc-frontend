@@ -36,6 +36,8 @@ const ProductList = ({ products, onEdit, onDelete }) => {
   return (
     <div className="product-list">
       <div className="table-container">
+
+
         <table>
           <thead>
             <tr>
@@ -85,11 +87,11 @@ const ProductList = ({ products, onEdit, onDelete }) => {
       {/* Paginación */}
       <div className="pagination">
         <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-          { '<' }
+          {'<'}
         </button>
         <span className='m-2'>{` Página ${currentPage} de ${totalPages} `}</span>
         <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-        { '>' }
+          {'>'}
         </button>
       </div>
 

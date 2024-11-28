@@ -32,7 +32,7 @@ const ProductCrud = () => {
     setProducts(products.map((p) => (p.id === product.id ? product : p)));
     setProductToEdit(null);
   };
-  
+
   const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
   const [productToDelete, setProductToDelete] = useState(null); // Producto seleccionado para eliminar
   const [confirmationMessage, setConfirmationMessage] = useState(''); // Mensaje de confirmación
@@ -40,7 +40,7 @@ const ProductCrud = () => {
   // Función para eliminar el producto
   const deleteProduct = async (id) => {
     setShowModal(false);
-    const response = await fetchWithToken(`products/${id}/`, null, 'DELETE');   
+    const response = await fetchWithToken(`products/${id}/`, null, 'DELETE');
   };
 
   // Función para abrir el modal

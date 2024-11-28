@@ -19,7 +19,7 @@ const PurchasesList = () => {
 
   const fetchPurchases = async () => {
     setLoading(true);
-    
+
     try {
       const data = await fetchWithToken('purchases/', null, 'GET');
       setPurchases(data);
@@ -84,41 +84,41 @@ const PurchasesList = () => {
   return (
     <div className="purchases-list-container">
       <h2>Lista de Compras</h2>
-      
+
       {/* Filtros */}
       <Row className="mb-3">
         <Col md={4}>
           <Form.Group controlId="filterDate">
             <Form.Label>Fecha:</Form.Label>
-            <Form.Control 
-              type="date" 
-              name="date" 
-              value={filters.date} 
-              onChange={handleFilterChange} 
+            <Form.Control
+              type="date"
+              name="date"
+              value={filters.date}
+              onChange={handleFilterChange}
             />
           </Form.Group>
         </Col>
         <Col md={4}>
           <Form.Group controlId="filterProvider">
             <Form.Label>Proveedor:</Form.Label>
-            <Form.Control 
-              type="text" 
-              name="provider" 
-              value={filters.provider} 
-              onChange={handleFilterChange} 
-              placeholder="Proveedor" 
+            <Form.Control
+              type="text"
+              name="provider"
+              value={filters.provider}
+              onChange={handleFilterChange}
+              placeholder="Proveedor"
             />
           </Form.Group>
         </Col>
         <Col md={4}>
           <Form.Group controlId="filterDescription">
             <Form.Label>Descripción:</Form.Label>
-            <Form.Control 
-              type="text" 
-              name="description" 
-              value={filters.description} 
-              onChange={handleFilterChange} 
-              placeholder="Descripción" 
+            <Form.Control
+              type="text"
+              name="description"
+              value={filters.description}
+              onChange={handleFilterChange}
+              placeholder="Descripción"
             />
           </Form.Group>
         </Col>
@@ -144,14 +144,14 @@ const PurchasesList = () => {
                 <td>{purchase.description || 'Sin descripción'}</td>
                 <td>{purchase.total.toFixed(2)}</td>
                 <td>
-                  <Button 
-                    variant="info" 
-                    size="sm" 
+                  <Button
+                    variant="info"
+                    size="sm"
                     onClick={() => handleViewDetails(purchase)}
                     className="me-2"
                   >
                     Ver Detalles
-                  </Button>                
+                  </Button>
                 </td>
               </tr>
             ))}
@@ -161,10 +161,10 @@ const PurchasesList = () => {
 
       {/* Modal para ver y editar detalles de la compra */}
       {selectedPurchase && (
-        <PurchaseDetailsModal 
-          show={showModal} 
-          handleClose={handleCloseModal} 
-          purchase={selectedPurchase} 
+        <PurchaseDetailsModal
+          show={showModal}
+          handleClose={handleCloseModal}
+          purchase={selectedPurchase}
           onUpdate={handleUpdatePurchase}
         />
       )}
