@@ -46,13 +46,15 @@ const NavBar = () => {
           <span />
         </Link>
         <Link to="/home" className="b-brand">
-          <img id="main-logo" src={logo} alt="" className="logo-home" />
+          <div className="logo-container">
+            <img id="main-logo" src={logo} alt="Logo" className="logo-home" />
+          </div>
         </Link>
         <Link to="#" className={moreClass.join(' ')} onClick={() => setMoreToggle(!moreToggle)}>
           <i className="feather icon-more-vertical" />
         </Link>
       </div>
-      <div style={{ justifyContent: 'end' }} className={collapseClass.join(' ')}>        
+      <div style={{ justifyContent: 'end' }} className={collapseClass.join(' ')}>
         <NavRight />
       </div>
     </React.Fragment>

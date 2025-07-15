@@ -255,7 +255,7 @@ const Sales = () => {
         {/* Panel Izquierdo */}
         <Col md={6}>
           <Card>
-            <Card.Header className="text-center" style={{ backgroundImage: 'linear-gradient(to right, #D98E32, #fe713b)' }}>
+            <Card.Header className="text-center" style={{ backgroundImage: 'linear-gradient(to right, #3363dd, #6b8ce0ff)' }}>
               <h4 className="text-white">Registrar Venta</h4>
             </Card.Header>
             <Card.Body>
@@ -345,7 +345,7 @@ const Sales = () => {
         {/* Panel Derecho */}
         <Col md={6}>
           <Card>
-            <Card.Header className="text-center" style={{ backgroundImage: 'linear-gradient(to left, #D98E32, #fe713b)' }}>
+            <Card.Header className="text-center" style={{ backgroundImage: 'linear-gradient(to left, #3363dd, #6b8ce0ff)' }}>
               <h4 className="text-white">Carrito de Ventas</h4>
             </Card.Header>
             <Card.Body className="mt-3">

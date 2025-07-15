@@ -16,8 +16,27 @@
 }
 
 .navbar-color {
-  background-color: #DD9933;
+  background-color: #3363dd;
 }
+
+.logo-container {
+  background-color: #ffffff; /* fondo blanco */
+  border-radius: 20px;       /* bordes redondeados */
+  padding: 3px;              /* espacio interno */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;              /* ajusta según tu navbar */
+  width: 120px;              /* ajusta el ancho a lo que necesites */
+  overflow: hidden;          /* oculta exceso de imagen */
+}
+
+.logo-home {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;  /* ajusta imagen sin deformar */
+}
+
 
 
 $form-max-width: 600px;
